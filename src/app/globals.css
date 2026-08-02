@@ -1,0 +1,133 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #FBF6EC;
+}
+
+.app{
+  --red:#C7302A; --redDeep:#8E1F1B; --paper:#FBF6EC; --card:#FFFFFF;
+  --ink:#1E1A17; --dim:#7A6E60; --line:#E3D9C8; --yolk:#F5C143;
+  font-family: var(--font-ibm), 'IBM Plex Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+  background:var(--paper); color:var(--ink); min-height:100%;
+  -webkit-font-smoothing:antialiased;
+}
+.app *{box-sizing:border-box;}
+.app button:focus-visible,.app a:focus-visible{outline:3px solid var(--yolk);outline-offset:2px;}
+
+.hero{background:var(--red);color:#FFF6E8;padding:28px 22px 24px;}
+.heroInner{max-width:720px;margin:0 auto;}
+.eyebrow{font-family: var(--font-nanum), 'Nanum Gothic Coding', monospace;font-size:12px;letter-spacing:.16em;
+  opacity:.85;margin:0 0 8px;}
+.hero h1{font-family: var(--font-blackhan), 'Black Han Sans', sans-serif;font-size:clamp(36px,10vw,54px);line-height:.95;
+  margin:0;letter-spacing:-.01em;}
+.hero .sub{margin:12px 0 0;font-size:14.5px;line-height:1.5;opacity:.92;max-width:32ch;}
+
+.tabsBg{background:var(--redDeep);position:sticky;top:0;z-index:20;}
+.tabs{display:flex;gap:0;max-width:720px;margin:0 auto;}
+.tab{flex:1;padding:13px 8px;border:0;background:transparent;color:#F3D9CF;
+  font-family: var(--font-ibm), 'IBM Plex Sans KR', sans-serif;font-size:14px;font-weight:600;cursor:pointer;
+  border-bottom:3px solid transparent;transition:color .15s,border-color .15s;}
+.tab.on{color:#fff;border-bottom-color:var(--yolk);}
+
+.wrap{padding:24px 18px max(40px, env(safe-area-inset-bottom, 24px));max-width:720px;margin:0 auto;}
+
+/* 진단 */
+.progress{display:flex;align-items:center;gap:12px;margin-bottom:26px;}
+.progress span{font-family: var(--font-nanum), 'Nanum Gothic Coding', monospace;font-size:12px;color:var(--dim);}
+.track{flex:1;height:3px;background:var(--line);border-radius:2px;overflow:hidden;}
+.fill{height:100%;background:var(--red);transition:width .35s ease;}
+.qtext{font-family: var(--font-blackhan), 'Black Han Sans', sans-serif;font-size:26px;line-height:1.35;margin:0 0 22px;
+  letter-spacing:-.01em;}
+.opts{display:flex;flex-direction:column;gap:9px;}
+.opt{text-align:left;padding:16px 18px;border:1.5px solid var(--line);background:var(--card);
+  border-radius:2px;font-family: var(--font-ibm), 'IBM Plex Sans KR', sans-serif;font-size:15.5px;font-weight:500;
+  color:var(--ink);cursor:pointer;transition:border-color .12s,transform .12s,background .12s;}
+.opt:hover{border-color:var(--red);background:#FFFDF8;transform:translateX(3px);}
+.opt:focus-visible{outline:3px solid var(--yolk);outline-offset:2px;border-color:var(--red);}
+.back{margin-top:20px;background:none;border:0;color:var(--dim);font-size:13px;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;font-family:inherit;padding:4px 0;}
+
+/* 영수증 */
+.receipt{background:#fff;padding:26px 22px 0;position:relative;
+  box-shadow:0 2px 0 rgba(30,26,23,.06),0 14px 34px -18px rgba(30,26,23,.4);
+  font-family: var(--font-nanum), 'Nanum Gothic Coding', monospace;animation:print .55s cubic-bezier(.2,.7,.3,1) both;}
+@keyframes print{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:none;}}
+.rTop{text-align:center;margin-bottom:16px;}
+.rShop{font-family: var(--font-blackhan), 'Black Han Sans', sans-serif;font-size:19px;letter-spacing:.05em;margin:0 0 8px;}
+.rMeta{margin:2px 0;font-size:11.5px;color:var(--dim);letter-spacing:.04em;}
+.rRule{border-top:1.5px dashed #C9BEAC;margin:14px 0;}
+.rline{display:flex;align-items:baseline;gap:8px;font-size:13px;padding:3px 0;}
+.rlabel{width:38px;flex:none;color:var(--ink);font-weight:700;}
+.rbar{flex:1;letter-spacing:.32em;color:var(--red);font-size:12px;}
+.rval{color:var(--dim);font-size:11.5px;}
+.rval2{color:var(--ink);font-weight:700;}
+.rTotalLabel{margin:0;font-size:11px;letter-spacing:.2em;color:var(--dim);}
+.rTotal{font-family: var(--font-blackhan), 'Black Han Sans', sans-serif;font-size:clamp(24px,7vw,32px);line-height:1.25;
+  margin:6px 0 10px;letter-spacing:-.01em;}
+.rNote{margin:0 0 22px;font-family: var(--font-ibm), 'IBM Plex Sans KR', sans-serif;font-size:13.5px;line-height:1.65;
+  color:#4A423A;}
+.rTear{height:14px;background:
+  radial-gradient(circle at 7px 0, transparent 7px, #fff 7px);
+  background-size:14px 14px;background-position:0 -7px;
+  position:absolute;left:0;right:0;bottom:-13px;filter:drop-shadow(0 3px 6px rgba(30,26,23,.13));}
+
+/* 그래프 */
+.chartBox{margin-top:44px;}
+.chart{background:var(--card);border:1.5px solid var(--line);padding:8px 4px 4px;border-radius:2px;}
+
+/* 섹션 */
+.secHead{margin:44px 0 16px;}
+.secTitle{font-family: var(--font-blackhan), 'Black Han Sans', sans-serif;font-size:22px;margin:0;letter-spacing:-.01em;}
+.secSub{margin:6px 0 0;font-size:13.5px;color:var(--dim);line-height:1.6;}
+
+/* 카드 */
+.grid{display:flex;flex-direction:column;gap:8px;}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:2px;padding:14px 15px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.cardTop{display:flex;align-items:center;gap:13px;min-width:0;}
+.rank{font-family: var(--font-nanum), 'Nanum Gothic Coding', monospace;font-size:12px;color:var(--dim);
+  width:22px;flex:none;text-align:right;}
+.cardName h3{margin:0;font-size:16.5px;font-weight:600;letter-spacing:-.01em;}
+.kind{margin:3px 0 0;font-size:11.5px;color:var(--dim);font-family: var(--font-nanum), 'Nanum Gothic Coding', monospace;}
+.cardBtns{display:flex;gap:6px;flex:none;}
+.btn{display:inline-block;padding:8px 13px;border-radius:2px;font-size:12.5px;font-weight:600;
+  text-decoration:none;white-space:nowrap;transition:opacity .12s,background .12s;}
+.btnMain{background:var(--red);color:#fff;}
+.btnMain:hover{background:var(--redDeep);}
+.btnSub{background:transparent;color:var(--ink);border:1.5px solid var(--line);}
+.btnSub:hover{border-color:var(--ink);}
+
+.more{width:100%;margin-top:14px;padding:15px;background:var(--ink);color:#FFF6E8;border:0;
+  border-radius:2px;font-family: var(--font-ibm), 'IBM Plex Sans KR', sans-serif;font-size:14.5px;font-weight:600;
+  cursor:pointer;}
+.more:hover{background:#000;}
+.moreCount{font-family: var(--font-nanum), 'Nanum Gothic Coding', monospace;font-size:12px;opacity:.6;}
+.endNote{text-align:center;margin:18px 0 0;font-size:13px;color:var(--dim);}
+.restart{width:100%;margin-top:10px;padding:14px;background:transparent;border:1.5px solid var(--line);
+  border-radius:2px;color:var(--dim);font-family:inherit;font-size:14px;cursor:pointer;}
+.restart:hover{border-color:var(--ink);color:var(--ink);}
+
+/* 테마 */
+.chips{display:flex;flex-wrap:wrap;gap:7px;}
+.chip{padding:9px 14px;border:1.5px solid var(--line);background:var(--card);border-radius:100px;
+  font-family:inherit;font-size:13.5px;font-weight:500;color:var(--ink);cursor:pointer;
+  transition:background .12s,border-color .12s,color .12s;}
+.chip:hover{border-color:var(--red);}
+.chip.on{background:var(--red);border-color:var(--red);color:#fff;}
+
+.foot{margin-top:52px;padding:26px 18px max(40px, env(safe-area-inset-bottom, 24px));border-top:1.5px solid var(--line);text-align:center;}
+.foot p{margin:0 0 6px;font-size:12px;color:var(--dim);line-height:1.7;}
+.footDim{opacity:.72;}
+
+@media (min-width:768px){
+  .hero{padding:24px 22px 20px;}
+}
+@media (prefers-reduced-motion:reduce){
+  .app *{animation:none !important;transition:none !important;}
+}
+@media (max-width:400px){
+  .card{align-items:flex-start;}
+  .cardBtns{width:100%;}
+  .btn{flex:1;text-align:center;}
+}
