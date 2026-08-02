@@ -20,6 +20,18 @@ export function FoodCard({
 }: FoodCardProps) {
   const [feedback, setFeedback] = useState<"like" | "dislike" | null>(null);
 
+  const handleFavoriteClick = () => {
+    if (onToggleFavorite) {
+      onToggleFavorite(food.id);
+      logInteraction(
+        diagnosisId || null,
+        food.name,
+        rank,
+        isFavorite ? "unfavorite" : "favorite"
+      );
+    }
+  };
+
   const handleRecipeClick = () => {
     logInteraction(diagnosisId || null, food.name, rank, "recipe_click");
   };
@@ -53,7 +65,7 @@ export function FoodCard({
             <h3>{food.name}</h3>
             {onToggleFavorite && (
               <button
-                onClick={() => onToggleFavorite(food.id)}
+                onClick={handleFavoriteClick}
                 title={isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}
                 style={{
                   background: "none",

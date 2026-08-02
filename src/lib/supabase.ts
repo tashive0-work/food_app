@@ -5,14 +5,28 @@ import { getAnonymousId, getDeviceType } from "./session";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
-export const supabase =
-  supabaseUrl && supabaseAnonKey && !supabaseUrl.includes("your-supabase")
-    ? createClient(supabaseUrl, supabaseAnonKey)
-    : null;
+const isConfigured =
+  Boolean(supabaseUrl) &&
+  Boolean(supabaseAnonKey) &&
+  !supabaseUrl.includes("your-supabase") &&
+  !supabaseAnonKey.includes("your-supabase");
+
+if (!isConfigured && typeof window !== "undefined") {
+  console.warn(
+    "⚠️ [Supabase Warning] NEXT_PUBLIC_SUPABASE_URL 또는 NEXT_PUBLIC_SUPABASE_ANON_KEY 환경변수가 설정되지 않아 Supabase 로그 저장이 비활성화되었습니다. .env.local 및 Vercel 환경변수를 확인해 주세요."
+  );
+}
+
+export const supabase = isConfigured
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
 
 // Fire-and-forget session creation
 export async function logSession(): Promise<string | null> {
-  if (!supabase) return null;
+  if (!supabase) {
+    console.warn("⚠️ [Supabase] Client not initialized. logSession skipped.");
+    return null;
+  }
   try {
     const anon_id = getAnonymousId();
     const device_type = getDeviceType();
@@ -24,12 +38,12 @@ export async function logSession(): Promise<string | null> {
       .single();
 
     if (error) {
-      console.warn("Supabase session log skipped:", error.message);
+      console.warn("⚠️ [Supabase] Session log skipped:", error.message);
       return null;
     }
     return data?.id || null;
   } catch (err) {
-    console.warn("Supabase session log failed:", err);
+    console.warn("⚠️ [Supabase] Session log failed:", err);
     return null;
   }
 }
@@ -41,7 +55,10 @@ export async function logDiagnosis(
   state: AppState,
   verdictTitle: string
 ): Promise<string | null> {
-  if (!supabase) return null;
+  if (!supabase) {
+    console.warn("⚠️ [Supabase] Client not initialized. logDiagnosis skipped.");
+    return null;
+  }
   try {
     const { data, error } = await supabase
       .from("diagnoses")
@@ -63,12 +80,12 @@ export async function logDiagnosis(
       .single();
 
     if (error) {
-      console.warn("Supabase diagnosis log skipped:", error.message);
+      console.warn("⚠️ [Supabase] Diagnosis log skipped:", error.message);
       return null;
     }
     return data?.id || null;
   } catch (err) {
-    console.warn("Supabase diagnosis log failed:", err);
+    console.warn("⚠️ [Supabase] Diagnosis log failed:", err);
     return null;
   }
 }
@@ -78,17 +95,23 @@ export async function logInteraction(
   diagnosisId: string | null,
   foodName: string,
   rank: number,
-  action: "view" | "recipe_click" | "map_click" | "like" | "dislike"
+  action: "view" | "recipe_click" | "map_click" | "like" | "dislike" | "favorite" | "unfavorite"
 ): Promise<void> {
-  if (!supabase) return;
+  if (!supabase) {
+    console.warn(`⚠️ [Supabase] Client not initialized. logInteraction('${action}') skipped.`);
+    return;
+  }
   try {
-    await supabase.from("interactions").insert({
+    const { error } = await supabase.from("interactions").insert({
       diagnosis_id: diagnosisId,
       food_name: foodName,
       rank: rank,
       action: action,
     });
+    if (error) {
+      console.warn("⚠️ [Supabase] Interaction log skipped:", error.message);
+    }
   } catch (err) {
-    console.warn("Supabase interaction log failed:", err);
+    console.warn("⚠️ [Supabase] Interaction log failed:", err);
   }
 }
