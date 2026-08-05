@@ -120,9 +120,117 @@ html, body {
 .foot p{margin:0 0 6px;font-size:12px;color:var(--dim);line-height:1.7;}
 .footDim{opacity:.72;}
 
-@media (min-width:768px){
-  .hero{padding:24px 22px 20px;}
+/* 법적 고지 페이지 */
+.legalWrap{
+  max-width:720px;margin:0 auto;
+  padding:28px 20px max(60px, env(safe-area-inset-bottom, 40px));
 }
+.legalBack{
+  display:inline-block;margin-bottom:22px;
+  font-size:13.5px;color:var(--dim);text-decoration:none;
+  border-bottom:1px solid var(--line);padding-bottom:2px;
+}
+.legalBack:hover{color:var(--ink);border-bottom-color:var(--ink);}
+.legalTitle{
+  font-family:var(--font-blackhan), sans-serif;
+  font-size:clamp(26px,7vw,34px);margin:0 0 8px;letter-spacing:-.01em;
+}
+.legalMeta{
+  font-family:var(--font-nanum), monospace;
+  font-size:12px;color:var(--dim);margin:0 0 32px;
+  padding-bottom:20px;border-bottom:1.5px dashed #C9BEAC;
+}
+.legalSec{margin:0 0 30px;}
+.legalSec h2{
+  font-size:16.5px;font-weight:700;margin:0 0 12px;
+  color:var(--ink);letter-spacing:-.01em;
+}
+.legalSec h3{
+  font-size:14.5px;font-weight:600;margin:20px 0 8px;color:var(--ink);
+}
+.legalSec p{
+  margin:0 0 12px;font-size:14px;line-height:1.75;color:#4A423A;
+}
+.legalSec ul,.legalSec ol{
+  margin:0 0 12px;padding-left:20px;
+}
+.legalSec li{
+  font-size:14px;line-height:1.75;color:#4A423A;margin-bottom:6px;
+}
+.legalSec strong{color:var(--ink);font-weight:700;}
+
+/* 본문 내 표 */
+.legalTable{
+  width:100%;border-collapse:collapse;margin:0 0 16px;font-size:13px;
+}
+.legalTable th,.legalTable td{
+  border:1.5px solid var(--line);padding:9px 11px;text-align:left;
+  line-height:1.6;
+}
+.legalTable th{
+  background:#FFFDF8;font-weight:700;color:var(--ink);
+}
+.legalTable td{color:#4A423A;}
+
+/* 중요 고지 박스 */
+.legalNotice{
+  background:#FFFDF8;border:1.5px solid var(--line);
+  border-left:3px solid var(--red);
+  padding:14px 16px;margin:0 0 16px;border-radius:2px;
+}
+.legalNotice p{margin:0;font-size:13.5px;line-height:1.7;}
+
+/* 푸터 링크 */
+.footLinks{
+  display:flex;justify-content:center;gap:14px;
+  margin:0 0 12px;flex-wrap:wrap;
+}
+.footLinks a{
+  font-size:12px;color:var(--dim);text-decoration:none;
+  border-bottom:1px solid transparent;
+}
+.footLinks a:hover{color:var(--ink);border-bottom-color:var(--line);}
+
+@media (min-width:768px){
+  /* 히어로 — 중앙 정렬로 데스크톱 균형 확보 */
+  .hero{padding:40px 22px 34px;}
+  .heroInner{max-width:900px;text-align:center;}
+  .hero .sub{max-width:none;margin-left:auto;margin-right:auto;}
+
+  /* 콘텐츠 폭 확대 */
+  .wrap{max-width:900px;padding:32px 22px 60px;}
+  .tabs{max-width:900px;}
+
+  /* 추천 카드 2열 그리드 */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:10px;
+    align-items:stretch;
+  }
+  .card{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:14px;
+  }
+  .cardTop{width:100%;}
+  .card > div:last-child{width:100%;justify-content:space-between;}
+
+  /* 영수증은 지나치게 넓어지지 않도록 제한 */
+  .receipt{max-width:520px;margin:0 auto;}
+
+  /* 진단 질문 영역도 중앙 정렬 */
+  .quiz{max-width:640px;margin:0 auto;}
+}
+
+@media (min-width:1200px){
+  /* 큰 화면에서 3열 */
+  .grid{grid-template-columns:repeat(3, 1fr);}
+  .wrap{max-width:1100px;}
+  .tabs{max-width:1100px;}
+  .heroInner{max-width:1100px;}
+}
+
 @media (prefers-reduced-motion:reduce){
   .app *{animation:none !important;transition:none !important;}
 }

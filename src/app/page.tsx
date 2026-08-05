@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import { AppState } from "@/types/food";
 import { FOODS } from "@/data/foods";
@@ -296,9 +297,16 @@ export default function App() {
       )}
 
       <footer className="foot">
+        <div className="footLinks">
+          <Link href="/terms">이용약관</Link>
+          <Link href="/privacy">개인정보 처리방침</Link>
+        </div>
         <p>레시피는 만개의레시피, 식당은 네이버 지도로 연결됩니다.</p>
         <p className="footDim">
           추천 로직은 규칙 기반 점수 모델입니다. 사용 기록이 쌓이면 개인화 학습으로 넘어갑니다.
+        </p>
+        <p className="footDim">
+          추천 결과는 참고용 정보이며 의학적·영양학적 조언이 아닙니다.
         </p>
       </footer>
     </div>
