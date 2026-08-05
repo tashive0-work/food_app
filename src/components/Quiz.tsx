@@ -17,7 +17,7 @@ export function Quiz({ questions, step, onAnswer, onBack }: QuizProps) {
           {step + 1} / {questions.length}
         </span>
         <div className="track">
-          <div className="fill" style={{ width: `${(step / questions.length) * 100}%` }} />
+          <div className="fill" style={{ width: `${((step + 1) / questions.length) * 100}%` }} />
         </div>
       </div>
       <h2 className="qtext">{currentQ.q}</h2>

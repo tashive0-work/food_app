@@ -8,7 +8,7 @@ html, body {
 .app{
   --red:#C7302A; --redDeep:#8E1F1B; --paper:#FBF6EC; --card:#FFFFFF;
   --ink:#1E1A17; --dim:#7A6E60; --line:#E3D9C8; --yolk:#F5C143;
-  font-family: var(--font-ibm), 'IBM Plex Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-ibm), 'IBM Plex Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
   background:var(--paper); color:var(--ink); min-height:100%;
   -webkit-font-smoothing:antialiased;
 }

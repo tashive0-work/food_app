@@ -36,8 +36,8 @@ export function recommend(
     warm: Math.max(0, Math.min(4, s.warm + (delta?.warm || 0))),
   };
 
-  const easeNeed = [0, 4, 3, 2, 1][adjustedState.time];
-  const lightNeed = [0, 4, 3, 2, 1][adjustedState.energy];
+  const easeNeed = [4, 4, 3, 2, 1][adjustedState.time];
+  const lightNeed = [4, 4, 3, 2, 1][adjustedState.energy];
   const rnd = (i: number) => (Math.sin((i + 1) * 12.9898 + seed * 78.233) * 43758.5453) % 1;
 
   const excludedLower = excludeFoods.map((name) => name.trim().toLowerCase());

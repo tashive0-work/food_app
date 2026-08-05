@@ -75,14 +75,14 @@ export function Receipt({ state, verdict, stamp }: ReceiptProps) {
           className="btn btnSub"
           style={{ flex: 1, padding: "12px", fontSize: "13.5px", cursor: "pointer" }}
         >
-          📷 영수증 이미지 저장
+          영수증 이미지 저장
         </button>
         <button
           onClick={handleShare}
           className="btn btnMain"
           style={{ flex: 1, padding: "12px", fontSize: "13.5px", cursor: "pointer" }}
         >
-          🔗 결과 공유하기
+          결과 공유하기
         </button>
       </div>
     </div>

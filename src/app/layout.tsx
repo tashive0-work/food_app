@@ -4,27 +4,27 @@ import "./globals.css";
 
 const ibmPlex = IBM_Plex_Sans_KR({
   weight: ["400", "500", "600", "700"],
-  subsets: ["latin"],
+  preload: false,
   variable: "--font-ibm",
   display: "swap",
 });
 
 const blackHan = Black_Han_Sans({
   weight: ["400"],
-  subsets: ["latin"],
+  preload: false,
   variable: "--font-blackhan",
   display: "swap",
 });
 
 const nanumGothic = Nanum_Gothic_Coding({
   weight: ["400", "700"],
-  subsets: ["latin"],
+  preload: false,
   variable: "--font-nanum",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://food-mood-app.vercel.app"),
+  metadataBase: new URL("https://food-app-three-beta-89.vercel.app"),
   title: "오늘 뭐 먹지 - 상태 기반 음식 추천",
   description: "지금 내 상태에 딱 맞는 메뉴를 진단받고 추천받아 보세요.",
   manifest: "/manifest.json",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "오늘 뭐 먹지 - 상태 기반 음식 추천",
     description: "지금 내 상태에 딱 맞는 메뉴를 진단받고 추천받아 보세요.",
-    url: "https://food-mood-app.vercel.app",
+    url: "https://food-app-three-beta-89.vercel.app",
     siteName: "오늘 뭐 먹지",
     images: [
       {

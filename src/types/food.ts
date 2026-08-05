@@ -30,7 +30,8 @@ export interface AppState {
   time: number;
   warm: number;
   social: string;
-  [key: string]: number | string;
+  ageGroup?: string;
+  [key: string]: number | string | undefined;
 }
 
 export interface Verdict {

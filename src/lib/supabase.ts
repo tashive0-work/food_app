@@ -73,6 +73,7 @@ export async function logDiagnosis(
           time: state.time,
           warm: state.warm,
           social: state.social,
+          ageGroup: state.ageGroup,
         },
         verdict_title: verdictTitle,
       })

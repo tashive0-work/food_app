@@ -68,14 +68,17 @@ export function FoodCard({
                 onClick={handleFavoriteClick}
                 title={isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}
                 style={{
-                  background: "none",
-                  border: "none",
+                  background: isFavorite ? "#FFF3F2" : "transparent",
+                  border: isFavorite ? "1.5px solid var(--red)" : "1.5px solid var(--line)",
+                  color: isFavorite ? "var(--red)" : "var(--dim)",
+                  borderRadius: "2px",
+                  fontWeight: 600,
+                  fontSize: "11px",
+                  padding: "3px 7px",
                   cursor: "pointer",
-                  fontSize: "15px",
-                  padding: "0 2px",
                 }}
               >
-                {isFavorite ? "❤️" : "🤍"}
+                {isFavorite ? "찜" : "찜하기"}
               </button>
             )}
           </div>
@@ -97,10 +100,10 @@ export function FoodCard({
               borderRadius: "2px",
               padding: "5px 8px",
               cursor: "pointer",
-              fontSize: "13px",
+              fontSize: "11px",
             }}
           >
-            👍
+            좋아요
           </button>
           <button
             onClick={handleDislike}
@@ -111,10 +114,10 @@ export function FoodCard({
               borderRadius: "2px",
               padding: "5px 8px",
               cursor: "pointer",
-              fontSize: "13px",
+              fontSize: "11px",
             }}
           >
-            👎
+            별로
           </button>
         </div>
 

@@ -35,20 +35,11 @@ export default function App() {
 
   const resultRef = useRef<HTMLDivElement>(null);
 
-  // 로컬 스토리지에서 즐겨찾기 및 이전 진단 로드
+  // 로컬 스토리지에서 즐겨찾기 로드 (재방문 복원은 해제)
   useEffect(() => {
     try {
       const savedFavs = localStorage.getItem("food_favorites");
       if (savedFavs) setFavorites(JSON.parse(savedFavs));
-
-      const savedPicks = localStorage.getItem("food_last_picks");
-      if (savedPicks) {
-        const parsed = JSON.parse(savedPicks);
-        if (Array.isArray(parsed) && parsed.length === QUESTIONS.length) {
-          setPicks(parsed);
-          setStep(QUESTIONS.length);
-        }
-      }
     } catch (e) {
       console.error("Failed to load local storage:", e);
     }
@@ -81,16 +72,25 @@ export default function App() {
 
   const state = useMemo(() => {
     if (!done) return null;
-    const s: AppState = { hunger: 2, energy: 2, spice: 2, comfort: 2, time: 2, warm: 2, social: "미정" };
+    const s: AppState = {
+      hunger: 2,
+      energy: 2,
+      spice: 2,
+      comfort: 2,
+      time: 2,
+      warm: 2,
+      social: "미정",
+      ageGroup: "unknown",
+    };
     const effects = picks.map((p, i) => QUESTIONS[i].a[p][1]);
-    effects.forEach((e) => Object.assign(s, e.set || {}));
-    effects.forEach((e) =>
+    effects.forEach((e) => {
+      Object.assign(s, e.set || {});
       Object.entries(e.add || {}).forEach(([k, v]) => {
         if (typeof s[k] === "number") {
           (s[k] as number) += v;
         }
-      })
-    );
+      });
+    });
     ["hunger", "energy", "spice", "comfort", "time", "warm"].forEach((k) => {
       s[k] = Math.max(0, Math.min(4, Math.round(s[k] as number)));
     });
@@ -98,7 +98,10 @@ export default function App() {
   }, [picks, done]);
 
   const verdict = useMemo(() => (state ? classify(state) : null), [state]);
-  const list = useMemo(() => (state ? recommend(state, seed, aiDelta, excludeFoods) : []), [state, seed, aiDelta, excludeFoods]);
+  const list = useMemo(
+    () => (state ? recommend(state, seed, aiDelta, excludeFoods) : []),
+    [state, seed, aiDelta, excludeFoods]
+  );
 
   // Fire-and-forget Supabase logging when diagnosis completes
   useEffect(() => {
@@ -120,14 +123,6 @@ export default function App() {
     const nextPicks = [...picks, i];
     setPicks(nextPicks);
     setStep((s) => s + 1);
-
-    if (nextPicks.length === QUESTIONS.length) {
-      try {
-        localStorage.setItem("food_last_picks", JSON.stringify(nextPicks));
-      } catch (e) {
-        console.error("Failed to save picks:", e);
-      }
-    }
   };
 
   const restart = () => {
@@ -138,11 +133,6 @@ export default function App() {
     setAiDelta({});
     setExcludeFoods([]);
     setDiagnosisId(null);
-    try {
-      localStorage.removeItem("food_last_picks");
-    } catch (e) {
-      console.error(e);
-    }
   };
 
   const handleApplyAiDelta = (delta: Record<string, number>, excludes: string[]) => {
@@ -201,7 +191,7 @@ export default function App() {
             className={tab === "favorites" ? "tab on" : "tab"}
             onClick={() => setTab("favorites")}
           >
-            ❤️ 찜한 메뉴 ({favorites.length})
+            찜한 메뉴 ({favorites.length})
           </button>
         </nav>
       </div>
@@ -286,7 +276,7 @@ export default function App() {
           </div>
           {favoriteFoods.length === 0 ? (
             <div style={{ textAlign: "center", padding: "40px 0", color: "var(--dim)" }}>
-              아직 찜한 메뉴가 없어요. 마음에 드는 음식 옆 하트(❤️)를 눌러보세요!
+              아직 찜한 메뉴가 없어요. 마음에 드는 음식 옆 하트를 눌러보세요.
             </div>
           ) : (
             <div className="grid">

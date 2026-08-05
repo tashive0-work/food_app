@@ -65,10 +65,10 @@ export function AiReRecommendInput({
     <section className="aiRecommendBox" style={{ marginTop: "32px" }}>
       <div className="secHead" style={{ margin: "0 0 12px" }}>
         <h3 className="secTitle" style={{ fontSize: "19px" }}>
-          💬 이거 말고 다른 거
+          이거 말고 다른 거
         </h3>
         <p className="secSub">
-          자연어로 원하는 조건을 입력하면 AI가 추천 파라미터를 보정해 줍니다. (최대 5회)
+          이거 말고 다른 게 당기면, 그냥 말해주세요. (최대 5회)
         </p>
       </div>
 
@@ -107,7 +107,7 @@ export function AiReRecommendInput({
 
       {errorMsg && (
         <p style={{ margin: "8px 0 0", fontSize: "13px", color: "var(--red)" }}>
-          ⚠️ {errorMsg}
+          {errorMsg}
         </p>
       )}
 
@@ -123,7 +123,7 @@ export function AiReRecommendInput({
             color: "var(--ink)",
           }}
         >
-          🤖 <strong>AI 보정 내용:</strong> {aiReason} (남은 횟수: {5 - requestCount}회)
+          <strong>AI 보정 내용:</strong> {aiReason} (남은 횟수: {5 - requestCount}회)
         </div>
       )}
     </section>
