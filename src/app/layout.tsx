@@ -1,41 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
-
-// 본문용 — IBM Plex Sans KR (4 weight)
-const ibmPlex = localFont({
-  src: [
-    { path: "../../public/fonts/IBMPlexSansKR-Regular.woff2", weight: "400", style: "normal" },
-    { path: "../../public/fonts/IBMPlexSansKR-Medium.woff2", weight: "500", style: "normal" },
-    { path: "../../public/fonts/IBMPlexSansKR-SemiBold.woff2", weight: "600", style: "normal" },
-    { path: "../../public/fonts/IBMPlexSansKR-Bold.woff2", weight: "700", style: "normal" },
-  ],
-  variable: "--font-ibm",
-  display: "swap",
-  fallback: ["Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"],
-});
-
-// 헤드라인용 — Black Han Sans
-const blackHan = localFont({
-  src: [
-    { path: "../../public/fonts/BlackHanSans-Regular.woff2", weight: "400", style: "normal" },
-  ],
-  variable: "--font-blackhan",
-  display: "swap",
-  fallback: ["Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"],
-});
-
-// 영수증/기계적 정보용 — Nanum Gothic Coding (monospace)
-const nanumGothic = localFont({
-  src: [
-    { path: "../../public/fonts/NanumGothicCoding-Regular.woff2", weight: "400", style: "normal" },
-    { path: "../../public/fonts/NanumGothicCoding-Bold.woff2", weight: "700", style: "normal" },
-  ],
-  variable: "--font-nanum",
-  display: "swap",
-  fallback: ["monospace"],
-});
-
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://food-app-three-beta-89.vercel.app"),
@@ -84,8 +48,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${ibmPlex.variable} ${blackHan.variable} ${nanumGothic.variable}`}>
+    <html lang="ko">
       <head>
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+        />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#C7302A" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
