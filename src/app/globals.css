@@ -1,10 +1,10 @@
 /* ===== 로컬 폰트 직접 선언 =====
-   next/font 처리를 우회하여 public/fonts/의 woff2를 직접 참조합니다.
+   next/font 처리를 우회하여 public/fonts/의 통합 TTF를 직접 참조합니다.
    경로는 public 디렉토리 기준 절대경로(/fonts/...)입니다. */
 
 @font-face{
   font-family:'BlackHanSansLocal';
-  src:url('/fonts/BlackHanSans-Regular.woff2') format('woff2');
+  src:url('/fonts/BlackHanSans-Regular.ttf') format('truetype');
   font-weight:400;
   font-style:normal;
   font-display:swap;
@@ -12,28 +12,28 @@
 
 @font-face{
   font-family:'IBMPlexKRLocal';
-  src:url('/fonts/IBMPlexSansKR-Regular.woff2') format('woff2');
+  src:url('/fonts/IBMPlexSansKR-Regular.ttf') format('truetype');
   font-weight:400;
   font-style:normal;
   font-display:swap;
 }
 @font-face{
   font-family:'IBMPlexKRLocal';
-  src:url('/fonts/IBMPlexSansKR-Medium.woff2') format('woff2');
+  src:url('/fonts/IBMPlexSansKR-Medium.ttf') format('truetype');
   font-weight:500;
   font-style:normal;
   font-display:swap;
 }
 @font-face{
   font-family:'IBMPlexKRLocal';
-  src:url('/fonts/IBMPlexSansKR-SemiBold.woff2') format('woff2');
+  src:url('/fonts/IBMPlexSansKR-SemiBold.ttf') format('truetype');
   font-weight:600;
   font-style:normal;
   font-display:swap;
 }
 @font-face{
   font-family:'IBMPlexKRLocal';
-  src:url('/fonts/IBMPlexSansKR-Bold.woff2') format('woff2');
+  src:url('/fonts/IBMPlexSansKR-Bold.ttf') format('truetype');
   font-weight:700;
   font-style:normal;
   font-display:swap;
@@ -41,14 +41,14 @@
 
 @font-face{
   font-family:'NanumCodingLocal';
-  src:url('/fonts/NanumGothicCoding-Regular.woff2') format('woff2');
+  src:url('/fonts/NanumGothicCoding-Regular.ttf') format('truetype');
   font-weight:400;
   font-style:normal;
   font-display:swap;
 }
 @font-face{
   font-family:'NanumCodingLocal';
-  src:url('/fonts/NanumGothicCoding-Bold.woff2') format('woff2');
+  src:url('/fonts/NanumGothicCoding-Bold.ttf') format('truetype');
   font-weight:700;
   font-style:normal;
   font-display:swap;
