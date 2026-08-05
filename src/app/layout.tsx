@@ -68,11 +68,14 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js').catch(function(err) {
-                    console.log('ServiceWorker registration failed: ', err);
-                  });
+                navigator.serviceWorker.getRegistrations().then(function(rs) {
+                  rs.forEach(function(r) { r.unregister(); });
                 });
+                if (window.caches) {
+                  caches.keys().then(function(ks) {
+                    ks.forEach(function(k) { caches.delete(k); });
+                  });
+                }
               }
             `,
           }}

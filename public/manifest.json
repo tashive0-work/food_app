@@ -4,8 +4,8 @@
   "description": "상태 기반 음식 추천 서비스",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FBF6EC",
-  "theme_color": "#C7302A",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1F6F4A",
   "icons": [
     {
       "src": "/icon-192.png",
