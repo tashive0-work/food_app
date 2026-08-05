@@ -44,5 +44,6 @@ export interface Verdict {
 export interface ThemeItem {
   key: string;
   label: string;
+  icon: string;
   desc: string;
 }

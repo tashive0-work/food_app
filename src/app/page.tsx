@@ -215,6 +215,13 @@ export default function App() {
 
           {done && state && verdict && (
             <div ref={resultRef} aria-live="polite" aria-atomic="true">
+              {list[0] && (
+                <div className="verdictBanner">
+                  <p className="verdictBannerLabel">오늘의 결론</p>
+                  <p className="verdictBannerFood">{list[0].name}</p>
+                  <p className="verdictBannerLine">{verdict.line}</p>
+                </div>
+              )}
               <Receipt state={state} verdict={verdict} stamp={stamp} />
 
               <section className="chartBox">

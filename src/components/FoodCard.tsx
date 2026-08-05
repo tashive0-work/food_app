@@ -77,8 +77,12 @@ export function FoodCard({
             )}
           </div>
           <p className="kind">
-            {food.kind}
-            {food.match != null && <> · 잘 맞아요 {food.match}%</>}
+            <span className="kindMeta">{food.kind}</span>
+            {food.ease >= 4 && <span className="kindMeta">· 10분 안팎</span>}
+            {food.ease === 3 && <span className="kindMeta">· 20분 안팎</span>}
+            {food.match != null && (
+              <span className="kindMatch">· {food.match}% 일치</span>
+            )}
           </p>
           {tags.length > 0 && (
             <div className="tagRow">

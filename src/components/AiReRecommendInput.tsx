@@ -72,57 +72,32 @@ export function AiReRecommendInput({
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} style={{ display: "flex", gap: "8px" }}>
+      <form onSubmit={handleSubmit} className="aiForm">
         <input
           type="text"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="예: 국물 있는 걸로, 어제 치킨 먹었어, 만원 이하"
           disabled={loading}
-          style={{
-            flex: 1,
-            padding: "13px 14px",
-            border: "1.5px solid var(--line)",
-            borderRadius: "2px",
-            fontFamily: "inherit",
-            fontSize: "14px",
-            color: "var(--ink)",
-            background: "#fff",
-          }}
+          className="aiInput"
         />
         <button
           type="submit"
           disabled={loading || !prompt.trim()}
-          className="btn btnMain"
-          style={{
-            padding: "13px 18px",
-            fontSize: "14px",
-            cursor: loading || !prompt.trim() ? "not-allowed" : "pointer",
-            opacity: loading || !prompt.trim() ? 0.6 : 1,
-          }}
+          className="btn btnMain aiSubmit"
         >
           {loading ? "보정 중..." : "적용"}
         </button>
       </form>
 
       {errorMsg && (
-        <p style={{ margin: "8px 0 0", fontSize: "13px", color: "var(--red)" }}>
+        <p className="aiError">
           {errorMsg}
         </p>
       )}
 
       {aiReason && !errorMsg && (
-        <div
-          style={{
-            marginTop: "12px",
-            padding: "12px 14px",
-            background: "#FFFDF8",
-            border: "1.5px solid var(--line)",
-            borderRadius: "2px",
-            fontSize: "13.5px",
-            color: "var(--ink)",
-          }}
-        >
+        <div className="aiReason">
           <strong>AI 보정 내용:</strong> {aiReason} (남은 횟수: {5 - requestCount}회)
         </div>
       )}

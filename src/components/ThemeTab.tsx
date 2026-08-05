@@ -36,6 +36,7 @@ export function ThemeTab({
             className={currentThemeKey === t.key ? "chip on" : "chip"}
             onClick={() => handleSelectTheme(t.key)}
           >
+            <span className="chipIcon" aria-hidden="true">{t.icon}</span>
             {t.label}
           </button>
         ))}
