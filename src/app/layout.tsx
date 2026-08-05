@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#C7302A",
+  themeColor: "#1F6F4A",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -57,7 +57,7 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
         />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#C7302A" />
+        <meta name="theme-color" content="#1F6F4A" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="오늘 뭐 먹지" />
