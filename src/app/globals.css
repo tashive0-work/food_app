@@ -1,3 +1,59 @@
+/* ===== 로컬 폰트 직접 선언 =====
+   next/font 처리를 우회하여 public/fonts/의 woff2를 직접 참조합니다.
+   경로는 public 디렉토리 기준 절대경로(/fonts/...)입니다. */
+
+@font-face{
+  font-family:'BlackHanSansLocal';
+  src:url('/fonts/BlackHanSans-Regular.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
+@font-face{
+  font-family:'IBMPlexKRLocal';
+  src:url('/fonts/IBMPlexSansKR-Regular.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'IBMPlexKRLocal';
+  src:url('/fonts/IBMPlexSansKR-Medium.woff2') format('woff2');
+  font-weight:500;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'IBMPlexKRLocal';
+  src:url('/fonts/IBMPlexSansKR-SemiBold.woff2') format('woff2');
+  font-weight:600;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'IBMPlexKRLocal';
+  src:url('/fonts/IBMPlexSansKR-Bold.woff2') format('woff2');
+  font-weight:700;
+  font-style:normal;
+  font-display:swap;
+}
+
+@font-face{
+  font-family:'NanumCodingLocal';
+  src:url('/fonts/NanumGothicCoding-Regular.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'NanumCodingLocal';
+  src:url('/fonts/NanumGothicCoding-Bold.woff2') format('woff2');
+  font-weight:700;
+  font-style:normal;
+  font-display:swap;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -11,6 +67,13 @@ html, body {
   font-family: var(--font-ibm), 'IBM Plex Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
   background:var(--paper); color:var(--ink); min-height:100%;
   -webkit-font-smoothing:antialiased;
+}
+/* next/font가 주입하는 변수를 로컬 폰트로 덮어씁니다.
+   이 선언이 기존 .app 블록보다 뒤에 와야 적용됩니다. */
+.app{
+  --font-blackhan:'BlackHanSansLocal';
+  --font-ibm:'IBMPlexKRLocal';
+  --font-nanum:'NanumCodingLocal';
 }
 .app *{box-sizing:border-box;}
 .app button:focus-visible,.app a:focus-visible{outline:3px solid var(--yolk);outline-offset:2px;}
