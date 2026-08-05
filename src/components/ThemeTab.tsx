@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Food, ThemeItem } from "@/types/food";
 import { FoodCard } from "./FoodCard";
 
@@ -19,7 +19,13 @@ export function ThemeTab({
   favorites,
   onToggleFavorite,
 }: ThemeTabProps) {
+  const [limit, setLimit] = useState(12);
   const currentTheme = themes.find((t) => t.key === currentThemeKey);
+
+  const handleSelectTheme = (key: string) => {
+    setLimit(12);
+    onSelectTheme(key);
+  };
 
   return (
     <main className="wrap">
@@ -28,7 +34,7 @@ export function ThemeTab({
           <button
             key={t.key}
             className={currentThemeKey === t.key ? "chip on" : "chip"}
-            onClick={() => onSelectTheme(t.key)}
+            onClick={() => handleSelectTheme(t.key)}
           >
             {t.label}
           </button>
@@ -39,16 +45,21 @@ export function ThemeTab({
         <p className="secSub">{currentTheme?.desc}</p>
       </div>
       <div className="grid">
-        {themeFoods.map((f, i) => (
+        {themeFoods.slice(0, limit).map((f) => (
           <FoodCard
             key={f.id}
             food={f}
-            rank={i + 1}
+            rank={0}
             isFavorite={favorites.includes(f.id)}
             onToggleFavorite={onToggleFavorite}
           />
         ))}
       </div>
+      {themeFoods.length > limit && (
+        <button className="more" onClick={() => setLimit((prev) => prev + 12)}>
+          더 보기 <span className="moreCount">({themeFoods.length - limit}개 남음)</span>
+        </button>
+      )}
     </main>
   );
 }

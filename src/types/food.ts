@@ -10,6 +10,8 @@ export interface Food {
   light: number;
   themes: string[];
   match?: number;
+  image?: string;
+  imageCredit?: string;
 }
 
 export interface AnswerEffect {

@@ -9,6 +9,7 @@ import { QUESTIONS } from "@/data/questions";
 import { THEMES } from "@/data/themes";
 import { classify, recommend } from "@/lib/recommend";
 import { FoodCard } from "@/components/FoodCard";
+import { HeroCard } from "@/components/HeroCard";
 import { Receipt } from "@/components/Receipt";
 import { Quiz } from "@/components/Quiz";
 import { ThemeTab } from "@/components/ThemeTab";
@@ -25,7 +26,7 @@ export default function App() {
   const [tab, setTab] = useState<"check" | "theme" | "favorites">("check");
   const [step, setStep] = useState(0);
   const [picks, setPicks] = useState<number[]>([]);
-  const [shown, setShown] = useState(10);
+  const [expanded, setExpanded] = useState(false);
   const [seed, setSeed] = useState(1);
   const [theme, setTheme] = useState("혼자");
   const [stamp, setStamp] = useState("");
@@ -63,17 +64,15 @@ export default function App() {
       try {
         localStorage.setItem("food_favorites", JSON.stringify(next));
       } catch (e) {
-        console.error("Failed to save favorites:", e);
+        console.error("Failed to save local storage:", e);
       }
       return next;
     });
   };
 
-  const done = picks.length === QUESTIONS.length;
-
-  const state = useMemo(() => {
-    if (!done) return null;
-    const s: AppState = {
+  const state: AppState | null = useMemo(() => {
+    if (picks.length < QUESTIONS.length) return null;
+    let st: AppState = {
       hunger: 2,
       energy: 2,
       spice: 2,
@@ -81,28 +80,32 @@ export default function App() {
       time: 2,
       warm: 2,
       social: "미정",
-      ageGroup: "unknown",
     };
-    const effects = picks.map((p, i) => QUESTIONS[i].a[p][1]);
-    effects.forEach((e) => {
-      Object.assign(s, e.set || {});
-      Object.entries(e.add || {}).forEach(([k, v]) => {
-        if (typeof s[k] === "number") {
-          (s[k] as number) += v;
-        }
-      });
+    picks.forEach((idx, qidx) => {
+      const q = QUESTIONS[qidx];
+      const eff = q?.a[idx]?.[1];
+      if (!eff) return;
+      if (eff.set) {
+        Object.entries(eff.set).forEach(([k, v]) => {
+          st[k] = v;
+        });
+      }
+      if (eff.add) {
+        Object.entries(eff.add).forEach(([k, v]) => {
+          const prev = typeof st[k] === "number" ? (st[k] as number) : 0;
+          st[k] = Math.max(0, Math.min(4, prev + (v as number)));
+        });
+      }
     });
-    ["hunger", "energy", "spice", "comfort", "time", "warm"].forEach((k) => {
-      s[k] = Math.max(0, Math.min(4, Math.round(s[k] as number)));
-    });
-    return s;
-  }, [picks, done]);
+    return st;
+  }, [picks]);
 
   const verdict = useMemo(() => (state ? classify(state) : null), [state]);
   const list = useMemo(
     () => (state ? recommend(state, seed, aiDelta, excludeFoods) : []),
     [state, seed, aiDelta, excludeFoods]
   );
+  const done = picks.length === QUESTIONS.length;
 
   // Fire-and-forget Supabase logging when diagnosis completes
   useEffect(() => {
@@ -121,15 +124,14 @@ export default function App() {
   }, [done, state, verdict, picks]);
 
   const answer = (i: number) => {
-    const nextPicks = [...picks, i];
-    setPicks(nextPicks);
-    setStep((s) => s + 1);
+    setPicks((p) => [...p, i]);
+    if (step < QUESTIONS.length - 1) setStep((s) => s + 1);
   };
 
   const restart = () => {
     setPicks([]);
     setStep(0);
-    setShown(10);
+    setExpanded(false);
     setSeed((s) => s + 1);
     setAiDelta({});
     setExcludeFoods([]);
@@ -164,7 +166,7 @@ export default function App() {
             오늘<br />
             뭐 먹지
           </h1>
-          <p className="sub">지금 상태를 일곱 번만 답해주세요. 나머지는 저희가 정할게요.</p>
+          <p className="sub">지금 상태를 여덟 번만 답해주세요. 나머지는 저희가 정할게요.</p>
         </div>
       </header>
 
@@ -224,27 +226,70 @@ export default function App() {
 
               <section>
                 <div className="secHead">
-                  <h2 className="secTitle">이런 분들께는 이런 음식</h2>
-                  <p className="secSub">잘 맞는 순서대로 30가지를 골랐어요.</p>
+                  <h2 className="secTitle">오늘은 이걸 추천해요</h2>
+                  <p className="secSub">지금 상태에 가장 잘 맞는 메뉴예요.</p>
                 </div>
-                <div className="grid">
-                  {list.slice(0, shown).map((f, i) => (
-                    <FoodCard
-                      key={f.id}
-                      food={f}
-                      rank={i + 1}
-                      isFavorite={favorites.includes(f.id)}
-                      onToggleFavorite={toggleFavorite}
-                      diagnosisId={diagnosisId}
-                    />
-                  ))}
-                </div>
-                {shown < 30 ? (
-                  <button className="more" onClick={() => setShown((s) => Math.min(30, s + 10))}>
-                    10개 더 보기 <span className="moreCount">({shown}/30)</span>
+
+                {/* 1위 — 큰 카드 */}
+                {list[0] && (
+                  <HeroCard
+                    food={list[0]}
+                    state={state}
+                    isFavorite={favorites.includes(list[0].id)}
+                    onToggleFavorite={toggleFavorite}
+                    diagnosisId={diagnosisId}
+                  />
+                )}
+
+                {/* 2·3위 — 중간 카드 */}
+                {list.length > 1 && (
+                  <>
+                    <div className="secHead secHeadSm">
+                      <h3 className="secTitleSm">다른 선택지</h3>
+                    </div>
+                    <div className="subGrid">
+                      {list.slice(1, 3).map((f, i) => (
+                        <FoodCard
+                          key={f.id}
+                          food={f}
+                          rank={i + 2}
+                          state={state}
+                          isFavorite={favorites.includes(f.id)}
+                          onToggleFavorite={toggleFavorite}
+                          diagnosisId={diagnosisId}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                {/* 나머지 — 접힘 */}
+                {!expanded ? (
+                  <button className="more" onClick={() => setExpanded(true)}>
+                    나머지 {Math.max(0, list.length - 3)}개 더 보기
                   </button>
                 ) : (
-                  <p className="endNote">30가지를 다 봤어요.</p>
+                  <>
+                    <div className="secHead secHeadSm">
+                      <h3 className="secTitleSm">전체 목록</h3>
+                    </div>
+                    <div className="grid">
+                      {list.slice(3).map((f, i) => (
+                        <FoodCard
+                          key={f.id}
+                          food={f}
+                          rank={i + 4}
+                          state={state}
+                          isFavorite={favorites.includes(f.id)}
+                          onToggleFavorite={toggleFavorite}
+                          diagnosisId={diagnosisId}
+                        />
+                      ))}
+                    </div>
+                    <button className="more" onClick={() => setExpanded(false)}>
+                      접기
+                    </button>
+                  </>
                 )}
 
                 <AiReRecommendInput currentScores={state} onApplyDelta={handleApplyAiDelta} />

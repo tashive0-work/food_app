@@ -332,8 +332,75 @@ html, body {
 }
 .legalNotice p{margin:0;font-size:13.5px;line-height:1.7;color:var(--ink);}
 
+/* ========== HeroCard (1위) ========== */
+.heroCard{
+  background:var(--base);
+  border:1px solid var(--border);
+  border-radius:var(--r-xl);
+  box-shadow:var(--sh2);
+  overflow:hidden;
+  margin-bottom:32px;
+}
+.heroCardImg{
+  position:relative;width:100%;aspect-ratio:4/3;max-height:240px;
+  background:var(--surface);overflow:hidden;
+}
+.heroCardImg img{width:100%;height:100%;object-fit:cover;display:block;}
+.heroCardImgFallback{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--primaryBg),var(--accentBg));
+}
+.heroCardImgFallback span{
+  font-size:clamp(24px,7vw,34px);font-weight:800;
+  color:var(--primary);letter-spacing:-.02em;
+}
+.heroCardBadge{
+  position:absolute;top:14px;left:14px;
+  background:var(--accent);color:#fff;
+  font-size:11.5px;font-weight:700;letter-spacing:.02em;
+  padding:6px 12px;border-radius:99px;
+}
+.heroCardBody{padding:20px;}
+.heroCardHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.heroCardHead h3{margin:0;font-size:22px;font-weight:700;letter-spacing:-.02em;}
+.heroCardKind{margin:5px 0 0;font-size:13px;color:var(--dim);font-weight:500;}
+.heroCardKind strong{color:var(--accent);font-weight:700;}
+.heroCardBtns{display:flex;gap:10px;margin-top:18px;}
+.heroCardBtns .btn{flex:1;}
+.imgCredit{margin:12px 0 0;font-size:10.5px;color:var(--dim);opacity:.65;}
+
+/* ========== 찜 버튼 ========== */
+.favBtn{
+  flex:none;padding:8px 14px;border-radius:99px;
+  border:1.5px solid var(--border);background:var(--base);
+  font-family:inherit;font-size:12px;font-weight:600;
+  color:var(--dim);cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s;
+}
+.favBtn:hover{border-color:var(--primary);color:var(--primary);}
+.favBtn.on{background:var(--primaryBg);border-color:var(--primary);color:var(--primary);}
+
+/* ========== 매칭 근거 태그 ========== */
+.tagRow{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+.tag{
+  font-size:11.5px;font-weight:600;
+  padding:5px 10px;border-radius:var(--r-sm);
+  background:var(--accentBg);color:var(--accent);
+}
+
+/* ========== 2·3위 서브 그리드 ========== */
+.subGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.secHeadSm{margin:28px 0 12px;}
+.secTitleSm{font-size:15px;font-weight:700;margin:0;color:var(--dim);letter-spacing:-.01em;}
+
+@media (max-width:400px){
+  .subGrid{grid-template-columns:1fr;}
+}
+
 /* ========== 반응형 ========== */
 @media (min-width:768px){
+  .heroCardImg{max-height:300px;}
+  .heroCardBody{padding:24px;}
   .hero{padding:40px 20px 32px;}
   .heroInner{max-width:900px;text-align:center;}
   .hero .sub{max-width:none;margin-left:auto;margin-right:auto;}

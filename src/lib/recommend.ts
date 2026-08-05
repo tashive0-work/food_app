@@ -1,5 +1,6 @@
 import { AppState, Verdict, Food } from "@/types/food";
 import { FOODS } from "@/data/foods";
+import { FOOD_IMAGES } from "@/data/foodImages";
 
 export function classify(s: AppState): Verdict {
   const { hunger, energy, spice, comfort, time, warm } = s;
@@ -110,7 +111,12 @@ export function recommend(
       if (adjustedState.social === "혼자" && f.themes.includes("혼자")) p -= 4;
       if (adjustedState.social === "혼자" && f.themes.includes("모임")) p += 3;
       p += Math.abs(rnd(f.id)) * 2.5;
-      return { ...f, match: Math.max(38, Math.min(99, Math.round(100 - p * 1.35))) };
+      return {
+        ...f,
+        image: FOOD_IMAGES[f.name]?.url,
+        imageCredit: FOOD_IMAGES[f.name]?.credit,
+        match: Math.max(38, Math.min(99, Math.round(100 - p * 1.35))),
+      };
     })
     .sort((a, b) => (b.match ?? 0) - (a.match ?? 0))
     .slice(0, 30);
@@ -121,3 +127,30 @@ export const recipeUrl = (n: string) =>
 
 export const mapUrl = (n: string) =>
   `https://map.naver.com/p/search/${encodeURIComponent(n)}`;
+
+/**
+ * 음식이 왜 추천되었는지를 설명하는 태그를 생성합니다.
+ * 사용자 상태와 음식 속성이 잘 맞는 축을 최대 2개 선택합니다.
+ */
+export function matchTags(food: Food, s: AppState): string[] {
+  const tags: { label: string; score: number }[] = [];
+
+  // 조리/대기 시간이 짧음
+  if (food.ease >= 3) tags.push({ label: "빨리 나와요", score: food.ease });
+  // 매운맛이 상태와 일치
+  if (food.spice >= 3 && s.spice >= 3) tags.push({ label: "얼큰해요", score: 5 });
+  // 담백함이 상태와 일치
+  if (food.spice <= 1 && s.spice <= 1) tags.push({ label: "담백해요", score: 5 });
+  // 소화 부담이 적음
+  if (food.light >= 3) tags.push({ label: "속이 편해요", score: food.light });
+  // 든든함
+  if (food.fill >= 4 && s.hunger >= 3) tags.push({ label: "든든해요", score: 5 });
+  // 따뜻한 국물
+  if (food.warm >= 4 && s.warm >= 3) tags.push({ label: "뜨끈해요", score: 5 });
+  // 시원함
+  if (food.warm <= 1 && s.warm <= 1) tags.push({ label: "시원해요", score: 5 });
+  // 위로
+  if (food.comfort >= 3 && s.comfort >= 3) tags.push({ label: "포근해요", score: 4 });
+
+  return tags.sort((a, b) => b.score - a.score).slice(0, 2).map((t) => t.label);
+}

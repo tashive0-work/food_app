@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Food } from "@/types/food";
-import { recipeUrl, mapUrl } from "@/lib/recommend";
+import { Food, AppState } from "@/types/food";
+import { recipeUrl, mapUrl, matchTags } from "@/lib/recommend";
 import { logInteraction } from "@/lib/supabase";
 
 interface FoodCardProps {
   food: Food;
   rank: number;
+  state?: AppState;
   isFavorite?: boolean;
   onToggleFavorite?: (foodId: number) => void;
   diagnosisId?: string | null;
@@ -14,11 +15,13 @@ interface FoodCardProps {
 export function FoodCard({
   food,
   rank,
+  state,
   isFavorite,
   onToggleFavorite,
   diagnosisId,
 }: FoodCardProps) {
   const [feedback, setFeedback] = useState<"like" | "dislike" | null>(null);
+  const tags = state ? matchTags(food, state) : [];
 
   const handleFavoriteClick = () => {
     if (onToggleFavorite) {
@@ -59,26 +62,17 @@ export function FoodCard({
   return (
     <article className="card">
       <div className="cardTop">
-        <span className="rank">{rank}</span>
+        {rank > 0 && <span className="rank">{rank}</span>}
         <div className="cardName">
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <h3>{food.name}</h3>
             {onToggleFavorite && (
               <button
+                className={isFavorite ? "favBtn on" : "favBtn"}
                 onClick={handleFavoriteClick}
                 title={isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}
-                style={{
-                  background: isFavorite ? "#FFF3F2" : "transparent",
-                  border: isFavorite ? "1.5px solid var(--red)" : "1.5px solid var(--line)",
-                  color: isFavorite ? "var(--red)" : "var(--dim)",
-                  borderRadius: "2px",
-                  fontWeight: 600,
-                  fontSize: "11px",
-                  padding: "3px 7px",
-                  cursor: "pointer",
-                }}
               >
-                {isFavorite ? "찜" : "찜하기"}
+                {isFavorite ? "찜함" : "찜하기"}
               </button>
             )}
           </div>
@@ -86,6 +80,13 @@ export function FoodCard({
             {food.kind}
             {food.match != null && <> · 잘 맞아요 {food.match}%</>}
           </p>
+          {tags.length > 0 && (
+            <div className="tagRow">
+              {tags.map((t) => (
+                <span key={t} className="tag">{t}</span>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
