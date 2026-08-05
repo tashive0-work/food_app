@@ -1,27 +1,41 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans_KR, Black_Han_Sans, Nanum_Gothic_Coding } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const ibmPlex = IBM_Plex_Sans_KR({
-  weight: ["400", "500", "600", "700"],
-  preload: false,
+// 본문용 — IBM Plex Sans KR (4 weight)
+const ibmPlex = localFont({
+  src: [
+    { path: "../../public/fonts/IBMPlexSansKR-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../../public/fonts/IBMPlexSansKR-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../../public/fonts/IBMPlexSansKR-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../../public/fonts/IBMPlexSansKR-Bold.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-ibm",
   display: "swap",
+  fallback: ["Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"],
 });
 
-const blackHan = Black_Han_Sans({
-  weight: ["400"],
-  preload: false,
+// 헤드라인용 — Black Han Sans
+const blackHan = localFont({
+  src: [
+    { path: "../../public/fonts/BlackHanSans-Regular.woff2", weight: "400", style: "normal" },
+  ],
   variable: "--font-blackhan",
   display: "swap",
+  fallback: ["Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"],
 });
 
-const nanumGothic = Nanum_Gothic_Coding({
-  weight: ["400", "700"],
-  preload: false,
+// 영수증/기계적 정보용 — Nanum Gothic Coding (monospace)
+const nanumGothic = localFont({
+  src: [
+    { path: "../../public/fonts/NanumGothicCoding-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../../public/fonts/NanumGothicCoding-Bold.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-nanum",
   display: "swap",
+  fallback: ["monospace"],
 });
+
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://food-app-three-beta-89.vercel.app"),

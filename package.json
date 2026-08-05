@@ -16,6 +16,9 @@
     "recharts": "^2.12.7"
   },
   "devDependencies": {
+    "@fontsource/black-han-sans": "^5.3.0",
+    "@fontsource/ibm-plex-sans-kr": "^5.3.0",
+    "@fontsource/nanum-gothic-coding": "^5.3.0",
     "@types/node": "^20.17.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
