@@ -12,6 +12,7 @@ export interface Food {
   match?: number;
   image?: string;
   imageCredit?: string;
+  filterWarning?: string;
 }
 
 export interface AnswerEffect {

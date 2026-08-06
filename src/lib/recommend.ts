@@ -1,6 +1,7 @@
 import { AppState, Verdict, Food } from "@/types/food";
 import { FOODS } from "@/data/foods";
 import { FOOD_IMAGES } from "@/data/foodImages";
+import { loadDietSettings, applyDietFilter } from "./dietFilter";
 
 export function classify(s: AppState): Verdict {
   const { hunger, energy, spice, comfort, time, warm } = s;
@@ -98,7 +99,7 @@ export function recommend(
 
   const excludedLower = excludeFoods.map((name) => name.trim().toLowerCase());
 
-  return FOODS.filter((f) => !excludedLower.some((ex) => f.name.toLowerCase().includes(ex)))
+  const list = FOODS.filter((f) => !excludedLower.some((ex) => f.name.toLowerCase().includes(ex)))
     .map((f) => {
       let p = 0;
       p += 3.2 * Math.abs(f.spice - adjustedState.spice);
@@ -120,6 +121,17 @@ export function recommend(
     })
     .sort((a, b) => (b.match ?? 0) - (a.match ?? 0))
     .slice(0, 30);
+
+  const dietSettings = loadDietSettings();
+  const filtered = applyDietFilter(list, dietSettings);
+
+  if (filtered.length < 3) {
+    return list.map((f, i) =>
+      i === 0 ? { ...f, filterWarning: "설정하신 제외 조건 때문에 추천할 메뉴가 부족해요" } : f
+    );
+  }
+
+  return filtered;
 }
 
 export const recipeUrl = (n: string) =>

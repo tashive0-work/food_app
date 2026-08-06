@@ -4,6 +4,8 @@ import Link from "next/link";
 import { FOODS } from "@/data/foods";
 import { BottomNav } from "@/components/BottomNav";
 
+import { loadDietSettings, applyDietFilter } from "@/lib/dietFilter";
+
 const AXES = [
   { key: "ease",  label: "빨리 되는 순", desc: "조리·대기 시간이 짧은 메뉴" },
   { key: "light", label: "속 편한 순",   desc: "소화 부담이 적은 메뉴" },
@@ -14,9 +16,9 @@ const AXES = [
 export default function RankingPage() {
   const [axis, setAxis] = useState<string>("ease");
   const current = AXES.find(a => a.key === axis)!;
-  const list = [...FOODS]
-    .sort((a,b) => (b[axis as keyof typeof b] as number) - (a[axis as keyof typeof a] as number))
-    .slice(0, 20);
+  const rawList = [...FOODS]
+    .sort((a,b) => (b[axis as keyof typeof b] as number) - (a[axis as keyof typeof a] as number));
+  const list = applyDietFilter(rawList, loadDietSettings()).slice(0, 20);
 
   return (
     <div className="app hasNav">

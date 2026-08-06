@@ -12,6 +12,7 @@ import { Receipt } from "@/components/Receipt";
 import { BottomNav } from "@/components/BottomNav";
 import { AiReRecommendInput } from "@/components/AiReRecommendInput";
 import { loadTodayResult, clearTodayResult, TodayResult } from "@/lib/todayResult";
+import { loadDietSettings, DietSettings } from "@/lib/dietFilter";
 
 const StateRadarChart = dynamic(() => import("@/components/StateRadarChart"), {
   ssr: false,
@@ -28,10 +29,12 @@ export default function ResultPage() {
   const [aiDelta, setAiDelta] = useState<Record<string, number>>({});
   const [excludeFoods, setExcludeFoods] = useState<string[]>([]);
   const [diagnosisId, setDiagnosisId] = useState<string | null>(null);
+  const [dietSettings, setDietSettings] = useState<DietSettings>({ allergens: [], diets: [] });
 
   const resultRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setDietSettings(loadDietSettings());
     try {
       const savedFavs = localStorage.getItem("food_favorites");
       if (savedFavs) setFavorites(JSON.parse(savedFavs));
@@ -46,6 +49,8 @@ export default function ResultPage() {
     setTodayResult(res);
     setIsLoaded(true);
   }, []);
+
+  const activeCount = dietSettings.allergens.length + dietSettings.diets.length;
 
   const toggleFavorite = (foodId: number) => {
     setFavorites((prev) => {
@@ -119,6 +124,18 @@ export default function ResultPage() {
           </div>
         ) : (
           <div ref={resultRef} aria-live="polite" aria-atomic="true">
+            {activeCount > 0 && (
+              <Link href="/settings" className="dietBadge">
+                제외 조건 {activeCount}개 적용 중
+              </Link>
+            )}
+
+            {list[0]?.filterWarning && (
+              <div className="legalNotice" style={{ marginBottom: "16px" }}>
+                <p>{list[0].filterWarning}</p>
+              </div>
+            )}
+
             {list[0] && (
               <div className="verdictBanner">
                 <p className="verdictBannerLabel">오늘의 결론</p>

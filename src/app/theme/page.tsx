@@ -8,6 +8,8 @@ import { THEMES } from "@/data/themes";
 import { ThemeTab } from "@/components/ThemeTab";
 import { BottomNav } from "@/components/BottomNav";
 
+import { loadDietSettings, applyDietFilter } from "@/lib/dietFilter";
+
 function ThemeContent() {
   const searchParams = useSearchParams();
   const initialKey = searchParams.get("k") || "혼자";
@@ -41,7 +43,8 @@ function ThemeContent() {
     });
   };
 
-  const themeFoods = FOODS.filter((f) => f.themes.includes(theme));
+  const rawThemeFoods = FOODS.filter((f) => f.themes.includes(theme));
+  const themeFoods = applyDietFilter(rawThemeFoods, loadDietSettings());
 
   return (
     <div className="app hasNav">
