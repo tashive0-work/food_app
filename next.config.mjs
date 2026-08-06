@@ -4,6 +4,13 @@ const nextConfig = {
   env: {
     APP_VERSION: process.env.npm_package_version || "1.0.0",
   },
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "images.pexels.com" },
+      { protocol: "https", hostname: "cdn.pixabay.com" },
+    ],
+  },
   async headers() {
     return [
       {

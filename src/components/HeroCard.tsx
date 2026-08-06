@@ -4,6 +4,7 @@ import React from "react";
 import { Food, AppState } from "@/types/food";
 import { recipeUrl, mapUrl, matchTags } from "@/lib/recommend";
 import { logInteraction } from "@/lib/supabase";
+import { FoodImage } from "@/components/FoodImage";
 
 interface HeroCardProps {
   food: Food;
@@ -26,13 +27,11 @@ export function HeroCard({
     <article className="heroCard">
       {/* 이미지 영역 — 없으면 폴백 */}
       <div className="heroCardImg">
-        {food.image ? (
-          <img src={food.image} alt={food.name} loading="lazy" />
-        ) : (
-          <div className="heroCardImgFallback">
-            <span>{food.name}</span>
-          </div>
-        )}
+        <FoodImage
+          src={food.image}
+          name={food.name}
+          className="heroCardImgInner"
+        />
         <span className="heroCardBadge">오늘의 추천</span>
       </div>
 
@@ -100,7 +99,7 @@ export function HeroCard({
         </div>
 
         {food.imageCredit && (
-          <p className="imgCredit">사진: {food.imageCredit} / Unsplash</p>
+          <p className="imgCredit">사진: {food.imageCredit}</p>
         )}
       </div>
     </article>

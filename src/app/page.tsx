@@ -6,14 +6,18 @@ import { FOODS } from "@/data/foods";
 import { THEMES } from "@/data/themes";
 import { FOOD_IMAGES } from "@/data/foodImages";
 import { BottomNav } from "@/components/BottomNav";
+import { FoodImage } from "@/components/FoodImage";
 import { loadTodayResult, TodayResult } from "@/lib/todayResult";
 import { getPopularFoods, PopularResult } from "@/lib/popular";
+import { getTrends } from "@/lib/trend";
+import { TrendItem } from "@/types/trend";
 
 export default function Home() {
   const [favorites, setFavorites] = useState<number[]>([]);
   const [today, setToday] = useState<TodayResult | null>(null);
   const [greeting, setGreeting] = useState("");
   const [dateLabel, setDateLabel] = useState("");
+  const [trends, setTrends] = useState<TrendItem[]>([]);
   const [popularData, setPopularData] = useState<PopularResult>({
     foods: [...FOODS].sort((a,b)=>(b.ease+b.light)-(a.ease+a.light)).slice(0,8),
     isRealData: false,
@@ -30,6 +34,7 @@ export default function Home() {
     setToday(loadTodayResult());
 
     getPopularFoods().then((res) => setPopularData(res));
+    getTrends(8).then((res) => setTrends(res));
 
     const now = new Date();
     const h = now.getHours();
@@ -96,6 +101,35 @@ export default function Home() {
           <span className="startCardArrow" aria-hidden="true">→</span>
         </Link>
 
+        {/* 요즘 뜨는 메뉴 트렌드 섹션 */}
+        {trends.length > 0 && (
+          <section className="homeSec">
+            <div className="homeSecHead">
+              <h2>요즘 뜨는 메뉴</h2>
+              <Link href="/trend" className="homeSecMore">
+                전체 보기
+              </Link>
+            </div>
+            <div className="hScroll">
+              {trends.map((t) => (
+                <Link key={t.id} href="/trend" className="miniCard">
+                  <div className="miniCardImg">
+                    <FoodImage
+                      src={t.image_url ?? undefined}
+                      name={t.name}
+                    />
+                    {t.rise_pct != null && t.rise_pct > 0 && (
+                      <span className="trendRise">+{Math.round(t.rise_pct)}%</span>
+                    )}
+                  </div>
+                  <p className="miniCardName">{t.name}</p>
+                  <p className="miniCardKind">{t.kind}</p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* 인기 메뉴 가로 스크롤 */}
         <section className="homeSec">
           <div className="homeSecHead">
@@ -106,16 +140,13 @@ export default function Home() {
           </div>
           <div className="hScroll">
             {popularData.foods.map((f) => {
-              const img = FOOD_IMAGES[f.name]?.url;
               return (
                 <Link key={f.id} href="/theme" className="miniCard">
-                  <div className="miniCardImg">
-                    {img ? (
-                      <img src={img} alt={f.name} loading="lazy" />
-                    ) : (
-                      <span className="miniCardFallback">{f.name}</span>
-                    )}
-                  </div>
+                  <FoodImage
+                    src={FOOD_IMAGES[f.name]?.url}
+                    name={f.name}
+                    className="miniCardImg"
+                  />
                   <p className="miniCardName">{f.name}</p>
                   <p className="miniCardKind">{f.kind}</p>
                 </Link>
@@ -146,7 +177,7 @@ export default function Home() {
 
         {/* 편의도 랭킹 CTA */}
         <section className="homeSec">
-          <Link href="/ranking" className="startCard sub">
+          <Link href="/trend" className="startCard sub">
             <div className="startCardText">
               <p className="startCardTitle">편의도 랭킹 🏆</p>
               <p className="startCardDesc">
@@ -196,6 +227,9 @@ export default function Home() {
         <p className="footDim">레시피는 만개의레시피, 식당은 네이버 지도로 연결됩니다.</p>
         <p className="footDim">
           추천 결과는 참고용 정보이며 의학적·영양학적 조언이 아닙니다.
+        </p>
+        <p className="footDim">
+          일부 음식 사진은 Unsplash, Pexels, Pixabay 의 이미지를 사용합니다.
         </p>
         <p className="footCopy">© 2026 NTD. All rights reserved. · v1.0.0</p>
       </footer>
