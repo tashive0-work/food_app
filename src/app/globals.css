@@ -655,7 +655,10 @@ html, body {
 }
 
 /* ========== 홈 헤더 ========== */
-.homeHead{padding:28px 20px 8px;max-width:720px;margin:0 auto;}
+.homeHead{
+  padding:24px 0 16px;
+  margin-bottom:8px;
+}
 .brandRow{
   display:inline-flex;align-items:center;gap:8px;
   text-decoration:none;color:inherit;margin-bottom:18px;
