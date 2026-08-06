@@ -12,9 +12,14 @@ export async function getTrends(limit = 20): Promise<TrendItem[]> {
       .eq("active", true)
       .order("rank", { ascending: true })
       .limit(limit);
-    if (error || !data) return [];
+    if (error) {
+      console.warn("[trend] 조회 실패:", error);
+      return [];
+    }
+    if (!data) return [];
     return data as TrendItem[];
-  } catch {
+  } catch (e) {
+    console.warn("[trend] 조회 실패:", e);
     return [];
   }
 }

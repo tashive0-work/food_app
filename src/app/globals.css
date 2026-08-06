@@ -450,7 +450,7 @@ html, body {
 }
 .heroCardImg{
   position:relative;width:100%;aspect-ratio:4/3;max-height:240px;
-  background:var(--surface);overflow:hidden;
+  background:linear-gradient(135deg,var(--primaryBg),var(--accentBg));overflow:hidden;
 }
 .heroCardImg img{width:100%;height:100%;object-fit:cover;display:block;}
 .heroCardImgFallback{
@@ -789,7 +789,7 @@ html, body {
 .miniCard.sm{flex:0 0 110px;padding:14px 12px;}
 .miniCardImg{
   width:100%;aspect-ratio:4/3;border-radius:var(--r-md);
-  background:var(--surface);overflow:hidden;margin-bottom:8px;
+  background:linear-gradient(135deg,var(--primaryBg),var(--accentBg));overflow:hidden;margin-bottom:8px;
 }
 .miniCardImg img{width:100%;height:100%;object-fit:cover;display:block;}
 .miniCardFallback{
@@ -831,10 +831,11 @@ html, body {
 /* ========== 이미지 폴백 ========== */
 .imgFallback{
   display:flex;align-items:center;justify-content:center;
-  width:100%;height:100%;padding:0 8px;
-  font-size:clamp(13px,3.5vw,20px);font-weight:800;
+  width:100%;height:100%;padding:0 10px;
+  font-size:clamp(11px,2.6vw,15px);font-weight:700;
   color:var(--primary);text-align:center;
-  letter-spacing:-.02em;word-break:keep-all;line-height:1.25;
+  letter-spacing:-.02em;word-break:keep-all;line-height:1.3;
+  opacity:.75;
 }
 .heroCardImgInner{width:100%;height:100%;}
 .imgCredit{margin:12px 0 0;font-size:11px;color:var(--dim);}
