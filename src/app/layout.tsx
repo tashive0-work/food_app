@@ -20,16 +20,20 @@ export const metadata: Metadata = {
     description: "지금 내 상태에 딱 맞는 메뉴를 진단받고 추천받아 보세요.",
     url: "https://food-app-three-beta-89.vercel.app",
     siteName: "오늘 뭐 먹지",
-    images: [
-      {
-        url: "/icon-512.png",
-        width: 512,
-        height: 512,
-        alt: "오늘 뭐 먹지 로고",
-      },
-    ],
+    images: [{
+      url: "/og-image.png",
+      width: 1200,
+      height: 630,
+      alt: "오늘 뭐 먹지 - 상태 기반 음식 추천",
+    }],
     locale: "ko_KR",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "오늘 뭐 먹지 - 상태 기반 음식 추천",
+    description: "지금 내 상태에 딱 맞는 메뉴를 진단받고 추천받아 보세요.",
+    images: ["/og-image.png"],
   },
 };
 

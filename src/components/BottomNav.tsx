@@ -8,6 +8,7 @@ const ITEMS = [
   { href: "/", label: "홈", icon: "home" },
   { href: "/quiz", label: "진단", icon: "quiz" },
   { href: "/theme", label: "테마", icon: "theme" },
+  { href: "/ranking", label: "랭킹", icon: "rank" },
   { href: "/favorites", label: "찜", icon: "heart" },
 ];
 
@@ -45,6 +46,14 @@ function Icon({ name, active }: { name: string; active: boolean }) {
         <rect x="13.5" y="3" width="7.5" height="7.5" rx="2" />
         <rect x="3" y="13.5" width="7.5" height="7.5" rx="2" />
         <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2" />
+      </svg>
+    );
+  if (name === "rank")
+    return (
+      <svg {...common}>
+        <path d="M12 20V10" />
+        <path d="M18 20V4" />
+        <path d="M6 20v-4" />
       </svg>
     );
   return (

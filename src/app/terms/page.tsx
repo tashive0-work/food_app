@@ -14,12 +14,12 @@ export default function TermsPage() {
           ← 돌아가기
         </Link>
         <h1 className="legalTitle">이용약관</h1>
-        <p className="legalMeta">시행일: 2026년 8월 5일</p>
+        <p className="legalMeta">시행일: 2026년 8월 7일</p>
 
         <section className="legalSec">
           <h2>제1조 (목적)</h2>
           <p>
-            이 약관은 <strong>[ 오늘 뭐 먹지 ]</strong> (이하 "서비스")가 제공하는 음식 추천 서비스의 이용과 관련하여 서비스와 이용자 간의 권리·의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
+            이 약관은 <strong>NTD (Need of The Day)</strong>가 운영하는 <strong>오늘 뭐 먹지</strong>(이하 "서비스")가 제공하는 음식 추천 서비스의 이용과 관련하여 서비스와 이용자 간의 권리·의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
           </p>
         </section>
 
@@ -159,10 +159,10 @@ export default function TermsPage() {
 
         <section className="legalSec">
           <h2>부칙</h2>
-          <p className="legalMeta">이 약관은 2026년 8월 5일부터 시행합니다.</p>
+          <p className="legalMeta">이 약관은 2026년 8월 7일부터 시행합니다.</p>
           <p>
             <strong>문의처</strong>
-            <br />- 이메일: [ 서비스 문의 이메일 기재 필요 ]
+            <br />- 이메일: tashive0@gmail.com
           </p>
         </section>
       </div>

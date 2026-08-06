@@ -14,11 +14,11 @@ export default function PrivacyPage() {
           ← 돌아가기
         </Link>
         <h1 className="legalTitle">개인정보 처리방침</h1>
-        <p className="legalMeta">시행일: 2026년 8월 5일</p>
+        <p className="legalMeta">시행일: 2026년 8월 7일</p>
 
         <section className="legalSec">
           <p>
-            <strong>[ 오늘 뭐 먹지 ]</strong> (이하 "서비스")는 「개인정보 보호법」 등 관련 법령을 준수하며, 이용자의 개인정보를 보호하기 위해 다음과 같이 개인정보 처리방침을 수립·공개합니다.
+            <strong>NTD (Need of The Day)</strong>가 운영하는 <strong>오늘 뭐 먹지</strong>(이하 "서비스")는 「개인정보 보호법」 등 관련 법령을 준수하며, 이용자의 개인정보를 보호하기 위해 다음과 같이 개인정보 처리방침을 수립·공개합니다.
           </p>
         </section>
 
@@ -62,7 +62,7 @@ export default function PrivacyPage() {
             <tbody>
               <tr>
                 <td>연령대</td>
-                <td>10대 / 20–30대 / 40–50대 이상 / 미응답</td>
+                <td>14–19세 / 20–30대 / 40–50대 이상 / 미응답</td>
                 <td>선택 (미응답 가능)</td>
               </tr>
               <tr>
@@ -224,8 +224,8 @@ export default function PrivacyPage() {
           <h2>제9조 (개인정보 보호책임자)</h2>
           <p>이용자는 서비스 이용 중 발생한 개인정보 관련 문의를 아래로 연락하실 수 있습니다.</p>
           <ul>
-            <li><strong>성명:</strong> [ 서비스 운영자 성명 기재 필요 ]</li>
-            <li><strong>이메일:</strong> [ 서비스 문의 이메일 기재 필요 ]</li>
+            <li><strong>성명:</strong> 서동임 (NTD)</li>
+            <li><strong>이메일:</strong> tashive0@gmail.com</li>
           </ul>
           <p>기타 개인정보 침해에 대한 신고나 상담이 필요하신 경우 아래 기관에 문의하실 수 있습니다.</p>
           <ul>
@@ -242,9 +242,9 @@ export default function PrivacyPage() {
             이 개인정보 처리방침은 시행일로부터 적용됩니다. 법령·정책 또는 보안 기술의 변경에 따라 내용의 추가·삭제 및 수정이 있을 시에는 변경사항의 시행 7일 전부터 서비스 내 공지사항을 통하여 고지합니다.
           </p>
           <p className="legalMeta" style={{ marginTop: "20px" }}>
-            공고일자: 2026년 8월 5일
+            공고일자: 2026년 8월 7일
             <br />
-            시행일자: 2026년 8월 5일
+            시행일자: 2026년 8월 7일
           </p>
         </section>
       </div>

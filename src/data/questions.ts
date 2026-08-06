@@ -4,7 +4,7 @@ export const QUESTIONS: Question[] = [
   {
     q: "나이대가 어떻게 되세요?",
     a: [
-      ["10대", { set: { ageGroup: "10s" } }],
+      ["14–19세", { set: { ageGroup: "10s" } }],
       ["20–30대", { set: { ageGroup: "2030s" } }],
       ["40–50대 이상", { set: { ageGroup: "4050s" } }],
       ["말 안 할래요", { set: { ageGroup: "unknown" } }],

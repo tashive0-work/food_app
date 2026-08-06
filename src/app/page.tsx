@@ -7,12 +7,18 @@ import { THEMES } from "@/data/themes";
 import { FOOD_IMAGES } from "@/data/foodImages";
 import { BottomNav } from "@/components/BottomNav";
 import { loadTodayResult, TodayResult } from "@/lib/todayResult";
+import { getPopularFoods, PopularResult } from "@/lib/popular";
 
 export default function Home() {
   const [favorites, setFavorites] = useState<number[]>([]);
   const [today, setToday] = useState<TodayResult | null>(null);
   const [greeting, setGreeting] = useState("");
   const [dateLabel, setDateLabel] = useState("");
+  const [popularData, setPopularData] = useState<PopularResult>({
+    foods: [...FOODS].sort((a,b)=>(b.ease+b.light)-(a.ease+a.light)).slice(0,8),
+    isRealData: false,
+    label: "간편하게 먹기 좋은 메뉴",
+  });
 
   useEffect(() => {
     try {
@@ -22,6 +28,8 @@ export default function Home() {
       console.error(e);
     }
     setToday(loadTodayResult());
+
+    getPopularFoods().then((res) => setPopularData(res));
 
     const now = new Date();
     const h = now.getHours();
@@ -34,16 +42,15 @@ export default function Home() {
     );
   }, []);
 
-  // 인기 메뉴: 조리 편의도와 소화 편의도가 높은 순
-  const popular = [...FOODS]
-    .sort((a, b) => b.ease + b.light - (a.ease + a.light))
-    .slice(0, 8);
-
   const favoriteFoods = FOODS.filter((f) => favorites.includes(f.id)).slice(0, 6);
 
   return (
     <div className="app hasNav">
       <header className="homeHead">
+        <Link href="/" className="brandRow">
+          <span className="brandMark" aria-hidden="true">오늘</span>
+          <span className="brandName">오늘 뭐 먹지?</span>
+        </Link>
         <p className="homeDate">{dateLabel}</p>
         <h1 className="homeGreet">{greeting}</h1>
       </header>
@@ -75,10 +82,13 @@ export default function Home() {
         {/* 인기 메뉴 가로 스크롤 */}
         <section className="homeSec">
           <div className="homeSecHead">
-            <h2>지금 많이 찾는 메뉴</h2>
+            <h2>
+              {popularData.label}
+              {popularData.isRealData && <span className="liveBadge">실시간</span>}
+            </h2>
           </div>
           <div className="hScroll">
-            {popular.map((f) => {
+            {popularData.foods.map((f) => {
               const img = FOOD_IMAGES[f.name]?.url;
               return (
                 <Link key={f.id} href="/theme" className="miniCard">
@@ -117,6 +127,19 @@ export default function Home() {
           </div>
         </section>
 
+        {/* 편의도 랭킹 CTA */}
+        <section className="homeSec">
+          <Link href="/ranking" className="startCard sub">
+            <div className="startCardText">
+              <p className="startCardTitle">편의도 랭킹 🏆</p>
+              <p className="startCardDesc">
+                조리·소화·포만·자극 축별로 메뉴 순위를 비교해 보세요
+              </p>
+            </div>
+            <span className="startCardArrow" aria-hidden="true">→</span>
+          </Link>
+        </section>
+
         {/* 최근 찜 */}
         {favoriteFoods.length > 0 && (
           <section className="homeSec">
@@ -139,14 +162,25 @@ export default function Home() {
       </main>
 
       <footer className="foot">
+        <div className="footBrand">
+          <span className="footMark">NTD</span>
+          <span className="footCorp">NTD <em>Need of The Day</em></span>
+        </div>
+        <p className="footDesc">
+          바쁜 현대인들이 '오늘 당장 필요한' 편리함을 한발 앞서 찾아내는
+          라이프스타일 테크 기업입니다.
+        </p>
         <div className="footLinks">
           <Link href="/terms">이용약관</Link>
           <Link href="/privacy">개인정보 처리방침</Link>
+          <a href="mailto:tashive0@gmail.com">문의</a>
         </div>
-        <p>레시피는 만개의레시피, 식당은 네이버 지도로 연결됩니다.</p>
+        <p className="footDim">호스팅 서비스 제공: Vercel Inc.</p>
+        <p className="footDim">레시피는 만개의레시피, 식당은 네이버 지도로 연결됩니다.</p>
         <p className="footDim">
           추천 결과는 참고용 정보이며 의학적·영양학적 조언이 아닙니다.
         </p>
+        <p className="footCopy">© 2026 NTD. All rights reserved.</p>
       </footer>
 
       <BottomNav favCount={favorites.length} />

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1200" height="8" fill="#1F6F4A"/>
+  <rect x="90" y="140" width="72" height="72" rx="20" fill="#1F6F4A"/>
+  <text x="126" y="188" font-family="Pretendard, sans-serif" font-size="26"
+        font-weight="800" fill="#FFFFFF" text-anchor="middle">오늘</text>
+  <text x="90" y="310" font-family="Pretendard, sans-serif" font-size="88"
+        font-weight="800" fill="#16211C" letter-spacing="-3">오늘 뭐 먹지?</text>
+  <text x="90" y="378" font-family="Pretendard, sans-serif" font-size="30"
+        font-weight="500" fill="#7C8A83">여덟 번만 답하면 지금 상태에 맞는 메뉴를 골라 드려요</text>
+  <rect x="90" y="440" width="150" height="46" rx="23" fill="#EFF7F2"/>
+  <text x="165" y="470" font-family="Pretendard, sans-serif" font-size="20"
+        font-weight="700" fill="#1F6F4A" text-anchor="middle">상태 진단</text>
+  <rect x="256" y="440" width="150" height="46" rx="23" fill="#FDF1E7"/>
+  <text x="331" y="470" font-family="Pretendard, sans-serif" font-size="20"
+        font-weight="700" fill="#E8873A" text-anchor="middle">맞춤 추천</text>
+  <text x="90" y="565" font-family="Pretendard, sans-serif" font-size="22"
+        font-weight="600" fill="#A8B3AD">NTD · Need of The Day</text>
+</svg>
