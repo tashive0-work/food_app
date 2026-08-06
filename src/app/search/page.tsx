@@ -32,11 +32,12 @@ export default function SearchPage() {
 
   return (
     <div className="app hasNav">
-      <header className="pageHead">
-        <Link href="/" className="pageBack" aria-label="홈으로">←</Link>
-        <h1 className="pageTitle">메뉴 검색</h1>
-      </header>
       <main className="wrap">
+        <header className="pageHead">
+          <Link href="/" className="pageBack" aria-label="홈으로">←</Link>
+          <h1 className="pageTitle">메뉴 검색</h1>
+        </header>
+
         <div className="searchBox">
           <svg className="searchIcon" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" strokeWidth="2" strokeLinecap="round">

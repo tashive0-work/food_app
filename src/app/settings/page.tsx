@@ -41,11 +41,12 @@ export default function SettingsPage() {
 
   return (
     <div className="app hasNav">
-      <header className="pageHead">
-        <Link href="/" className="pageBack" aria-label="홈으로">←</Link>
-        <h1 className="pageTitle">제외 조건 설정</h1>
-      </header>
       <main className="wrap">
+        <header className="pageHead">
+          <Link href="/" className="pageBack" aria-label="홈으로">←</Link>
+          <h1 className="pageTitle">제외 조건 설정</h1>
+        </header>
+
         <div className="legalNotice" style={{ marginBottom: "24px" }}>
           <p>
             <strong>주의사항</strong>

@@ -106,14 +106,14 @@ export default function ResultPage() {
 
   return (
     <div className="app hasNav">
-      <header className="pageHead">
-        <Link href="/" className="pageBack" aria-label="홈으로">
-          ←
-        </Link>
-        <h1 className="pageTitle">진단 결과</h1>
-      </header>
-
       <main className="wrap">
+        <header className="pageHead">
+          <Link href="/" className="pageBack" aria-label="홈으로">
+            ←
+          </Link>
+          <h1 className="pageTitle">진단 결과</h1>
+        </header>
+
         {!todayResult || !state || !verdict ? (
           <div className="emptyState">
             <p className="emptyTitle">아직 오늘 진단을 하지 않았어요</p>

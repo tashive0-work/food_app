@@ -93,14 +93,14 @@ export default function QuizPage() {
 
   return (
     <div className="app hasNav">
-      <header className="pageHead">
-        <Link href="/" className="pageBack" aria-label="홈으로">
-          ←
-        </Link>
-        <h1 className="pageTitle">상태 진단</h1>
-      </header>
-
       <main className="wrap">
+        <header className="pageHead">
+          <Link href="/" className="pageBack" aria-label="홈으로">
+            ←
+          </Link>
+          <h1 className="pageTitle">상태 진단</h1>
+        </header>
+
         {!done && (
           <Quiz
             questions={QUESTIONS}

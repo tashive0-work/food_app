@@ -22,11 +22,12 @@ export default function RankingPage() {
 
   return (
     <div className="app hasNav">
-      <header className="pageHead">
-        <Link href="/" className="pageBack" aria-label="홈으로">←</Link>
-        <h1 className="pageTitle">편의도 랭킹</h1>
-      </header>
       <main className="wrap">
+        <header className="pageHead">
+          <Link href="/" className="pageBack" aria-label="홈으로">←</Link>
+          <h1 className="pageTitle">편의도 랭킹 🏆</h1>
+        </header>
+
         <div className="chips" style={{marginBottom:"20px"}}>
           {AXES.map(a => (
             <button key={a.key}

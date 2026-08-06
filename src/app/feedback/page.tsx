@@ -102,11 +102,12 @@ export default function FeedbackPage() {
 
   return (
     <div className="app hasNav">
-      <header className="pageHead">
-        <Link href="/" className="pageBack" aria-label="홈으로">←</Link>
-        <h1 className="pageTitle">고객 문의 및 의견</h1>
-      </header>
       <main className="wrap">
+        <header className="pageHead">
+          <Link href="/" className="pageBack" aria-label="홈으로">←</Link>
+          <h1 className="pageTitle">고객 문의 / 의견</h1>
+        </header>
+
         {/* 자주 묻는 질문 FAQ */}
         <section className="secHead" style={{ marginTop: 0 }}>
           <h2 className="secTitle">자주 묻는 질문</h2>

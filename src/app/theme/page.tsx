@@ -45,24 +45,29 @@ function ThemeContent() {
 
   const rawThemeFoods = FOODS.filter((f) => f.themes.includes(theme));
   const themeFoods = applyDietFilter(rawThemeFoods, loadDietSettings());
+  const curTheme = THEMES.find((t) => t.key === theme);
 
   return (
     <div className="app hasNav">
-      <header className="pageHead">
-        <Link href="/" className="pageBack" aria-label="홈으로">
-          ←
-        </Link>
-        <h1 className="pageTitle">테마별 추천</h1>
-      </header>
+      <main className="wrap">
+        <header className="pageHead">
+          <Link href="/" className="pageBack" aria-label="홈으로">
+            ←
+          </Link>
+          <h1 className="pageTitle">
+            {curTheme ? `${curTheme.icon} ${curTheme.label}` : "테마별 추천"}
+          </h1>
+        </header>
 
-      <ThemeTab
-        themes={THEMES}
-        currentThemeKey={theme}
-        onSelectTheme={setTheme}
-        themeFoods={themeFoods}
-        favorites={favorites}
-        onToggleFavorite={toggleFavorite}
-      />
+        <ThemeTab
+          themes={THEMES}
+          currentThemeKey={theme}
+          onSelectTheme={setTheme}
+          themeFoods={themeFoods}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
+        />
+      </main>
 
       <BottomNav favCount={favorites.length} />
     </div>
