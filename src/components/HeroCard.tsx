@@ -5,6 +5,7 @@ import { Food, AppState } from "@/types/food";
 import { recipeUrl, mapUrl, matchTags } from "@/lib/recommend";
 import { logInteraction } from "@/lib/supabase";
 import { FoodImage } from "@/components/FoodImage";
+import { getFoodCredit } from "@/lib/foodImage";
 
 interface HeroCardProps {
   food: Food;
@@ -22,18 +23,20 @@ export function HeroCard({
   diagnosisId,
 }: HeroCardProps) {
   const tags = matchTags(food, state);
+  const credit = getFoodCredit(food.name) || food.imageCredit;
 
   return (
     <article className="heroCard">
       {/* 이미지 영역 — 없으면 폴백 */}
-      <div className="heroCardImg">
-        <FoodImage
-          src={food.image}
-          name={food.name}
-          className="heroCardImgInner"
-        />
+      <FoodImage
+        name={food.name}
+        src={food.image}
+        className="heroCardImg"
+        width={800}
+        height={600}
+      >
         <span className="heroCardBadge">오늘의 추천</span>
-      </div>
+      </FoodImage>
 
       <div className="heroCardBody">
         <div className="heroCardHead">
@@ -98,8 +101,8 @@ export function HeroCard({
           </a>
         </div>
 
-        {food.imageCredit && (
-          <p className="imgCredit">사진: {food.imageCredit}</p>
+        {credit && (
+          <p className="imgCredit">사진: {credit}</p>
         )}
       </div>
     </article>

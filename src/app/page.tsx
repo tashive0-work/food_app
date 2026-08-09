@@ -143,7 +143,6 @@ export default function Home() {
               return (
                 <Link key={f.id} href="/theme" className="miniCard">
                   <FoodImage
-                    src={FOOD_IMAGES[f.name]?.url}
                     name={f.name}
                     className="miniCardImg"
                   />
