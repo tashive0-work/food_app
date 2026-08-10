@@ -113,15 +113,16 @@ export default function Home() {
             <div className="hScroll">
               {trends.map((t) => (
                 <Link key={t.id} href="/trend" className="miniCard">
-                  <FoodImage
-                    src={t.image_url ?? undefined}
-                    name={t.name}
-                    className="miniCardImg"
-                  >
+                  <div style={{ position: "relative" }}>
+                    <FoodImage
+                      src={t.image_url ?? undefined}
+                      name={t.name}
+                      className="miniCardImg"
+                    />
                     {t.rise_pct != null && t.rise_pct > 0 && (
                       <span className="trendRise">+{Math.round(t.rise_pct)}%</span>
                     )}
-                  </FoodImage>
+                  </div>
                   <p className="miniCardName">{t.name}</p>
                   <p className="miniCardKind">{t.kind}</p>
                 </Link>

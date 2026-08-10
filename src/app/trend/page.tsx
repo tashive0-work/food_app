@@ -125,8 +125,6 @@ export default function TrendPage() {
                       src={t.image_url ?? undefined}
                       name={t.name}
                       className="trendCardImg"
-                      width={200}
-                      height={200}
                     />
                     <div className="trendCardBody">
                       <div className="trendCardTop">

@@ -28,15 +28,14 @@ export function HeroCard({
   return (
     <article className="heroCard">
       {/* 이미지 영역 — 없으면 폴백 */}
-      <FoodImage
-        name={food.name}
-        src={food.image}
-        className="heroCardImg"
-        width={800}
-        height={600}
-      >
+      <div style={{ position: "relative" }}>
+        <FoodImage
+          name={food.name}
+          src={food.image}
+          className="heroCardImg"
+        />
         <span className="heroCardBadge">오늘의 추천</span>
-      </FoodImage>
+      </div>
 
       <div className="heroCardBody">
         <div className="heroCardHead">
