@@ -1,7 +1,31 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { checkRateLimit } from "@/lib/rateLimit";
 
-export async function POST(request: Request) {
+const RATE_LIMIT_MESSAGES = {
+  HOURLY: "추천 요청이 너무 잦습니다. 1시간 후에 다시 시도해 주세요.",
+  DAILY: "오늘의 추천 횟수를 모두 사용했습니다. 내일 다시 만나요!",
+  GLOBAL: "지금 이용자가 많아 잠시 추천을 쉬고 있어요. 잠시 후 다시 시도해 주세요.",
+};
+
+export async function POST(request: NextRequest) {
   try {
+    // 0. Server-side Rate Limit check
+    const rateLimitResult = await checkRateLimit(request);
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        {
+          error: "RATE_LIMIT_EXCEEDED",
+          reason: rateLimitResult.reason,
+          message: RATE_LIMIT_MESSAGES[rateLimitResult.reason],
+          retryAfter: rateLimitResult.retryAfter,
+        },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimitResult.retryAfter) },
+        }
+      );
+    }
+
     const { prompt, currentScores, requestCount } = await request.json();
 
     // 1. Session request count rate limit (Max 5 times)
@@ -115,7 +139,9 @@ export async function POST(request: Request) {
       parsed.reason = parsed.reason.slice(0, 200);
     }
 
-    return NextResponse.json(parsed);
+    const response = NextResponse.json(parsed);
+    response.headers.set("X-RateLimit-Remaining", String(rateLimitResult.remaining));
+    return response;
   } catch (err: unknown) {
     console.error("Re-recommend handler error:", err);
     return NextResponse.json({ error: "서버 처리 중 오류가 발생했습니다." }, { status: 500 });

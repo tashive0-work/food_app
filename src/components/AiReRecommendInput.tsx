@@ -44,7 +44,7 @@ export function AiReRecommendInput({
       const data = await res.json();
 
       if (!res.ok) {
-        setErrorMsg(data.error || "AI 재추천 요청 중 오류가 발생했습니다.");
+        setErrorMsg(data.message || data.error || "AI 재추천 요청 중 오류가 발생했습니다.");
         setLoading(false);
         return;
       }
@@ -85,15 +85,45 @@ export function AiReRecommendInput({
           type="submit"
           disabled={loading || !prompt.trim()}
           className="btn btnMain aiSubmit"
+          style={{ minHeight: "42px" }}
         >
           {loading ? "보정 중..." : "적용"}
         </button>
       </form>
 
       {errorMsg && (
-        <p className="aiError">
-          {errorMsg}
-        </p>
+        <div
+          className="rateLimitNoticeBox"
+          style={{
+            backgroundColor: "#F7F9F8",
+            border: "1px solid #E4EAE6",
+            borderRadius: "16px",
+            padding: "16px",
+            marginTop: "16px",
+            color: "#16211C",
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 600,
+              color: "#E8873A",
+              fontSize: "14px",
+              marginBottom: "4px",
+            }}
+          >
+            안내
+          </div>
+          <p
+            style={{
+              margin: 0,
+              fontSize: "14px",
+              lineHeight: "1.5",
+              color: "#16211C",
+            }}
+          >
+            {errorMsg}
+          </p>
+        </div>
       )}
 
       {aiReason && !errorMsg && (
