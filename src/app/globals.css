@@ -994,4 +994,116 @@ html, body {
 
 @media (prefers-reduced-motion:reduce){
   .app *{animation:none !important;transition:none !important;}
+  .splashOverlay,
+  .splashCenter {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
 }
+
+/* ========== 브랜드 스플래시 화면 ========== */
+.splashOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  background-color: #1F6F4A;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  opacity: 1;
+  transition: opacity 400ms ease-out;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.splashOverlay.fadeOut {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splashCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: splashFadeIn 500ms ease-out forwards;
+}
+
+@keyframes splashFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.splashLogoBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  background-color: #FFFFFF;
+  border-radius: 20px;
+  color: #1F6F4A;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -.03em;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.splashAppName {
+  margin-top: 20px;
+  color: #FFFFFF;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+}
+
+.splashSubCopy {
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.splashBottom {
+  position: absolute;
+  bottom: max(48px, env(safe-area-inset-bottom, 48px));
+  left: 0;
+  right: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.splashNtd {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.splashNeedText {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .02em;
+}
+

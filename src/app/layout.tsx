@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { SplashScreen } from "@/components/SplashScreen";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://food-app-three-beta-89.vercel.app"),
@@ -67,6 +68,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="오늘 뭐 먹지" />
       </head>
       <body>
+        <SplashScreen />
         {children}
         <script
           dangerouslySetInnerHTML={{
