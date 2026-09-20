@@ -711,20 +711,6 @@ html, body {
 .homeDate{margin:0 0 6px;font-size:12.5px;font-weight:600;color:var(--dim);}
 .homeGreet{margin:0;font-size:clamp(24px,6.5vw,30px);font-weight:800;letter-spacing:-.03em;}
 
-/* ========== 페이지 헤더 (서브 화면) ========== */
-.pageHead{
-  display:flex;align-items:center;gap:12px;
-  padding:16px 20px;max-width:720px;margin:0 auto;
-}
-.pageBack{
-  font-size:20px;font-weight:700;color:var(--dim);text-decoration:none;
-  padding:4px 8px;margin-left:-8px;border-radius:var(--r-sm);
-  transition:color .15s,background .15s;
-}
-@media (hover:hover) and (pointer:fine){
-  .pageBack:hover{color:var(--ink);background:var(--surface);}
-}
-.pageTitle{margin:0;font-size:18px;font-weight:700;letter-spacing:-.01em;}
 
 /* ========== 홈 섹션 & 카드 ========== */
 .homeSec{margin-top:32px;}
@@ -969,7 +955,7 @@ html, body {
   .hero{padding:40px 20px 32px;}
   .heroInner{max-width:900px;text-align:center;}
   .hero .sub{max-width:none;margin-left:auto;margin-right:auto;}
-  .wrap{max-width:900px;padding:32px 24px 64px;}
+  .wrap, .legalWrap{max-width:900px;padding:32px 24px 64px;}
   .tabs{max-width:900px;}
   .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;align-items:stretch;}
   .card{flex-direction:column;align-items:flex-start;gap:16px;}
@@ -981,7 +967,7 @@ html, body {
 
 @media (min-width:1200px){
   .grid{grid-template-columns:repeat(3,1fr);}
-  .wrap{max-width:1120px;}
+  .wrap, .legalWrap{max-width:1120px;}
   .tabs{max-width:1120px;}
   .heroInner{max-width:1120px;}
 }

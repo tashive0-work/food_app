@@ -62,3 +62,15 @@ export async function syncLocalFavoritesToUser(userId: string): Promise<void> {
     console.error("Failed to sync favorites to user:", err);
   }
 }
+
+// Client-side authentication cookie synchronizer for Next.js SSR / Server Components
+if (typeof window !== "undefined" && supabase) {
+  supabase.auth.onAuthStateChange((_event, session) => {
+    if (session?.access_token) {
+      document.cookie = `sb-access-token=${session.access_token}; path=/; max-age=604800; SameSite=Lax`;
+    } else {
+      document.cookie = `sb-access-token=; path=/; max-age=0; SameSite=Lax`;
+    }
+  });
+}
+
