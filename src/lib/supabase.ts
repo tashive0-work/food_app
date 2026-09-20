@@ -96,7 +96,7 @@ export async function logInteraction(
   diagnosisId: string | null,
   foodName: string,
   rank: number,
-  action: "view" | "recipe_click" | "map_click" | "like" | "dislike" | "favorite" | "unfavorite"
+  action: "view" | "recipe_click" | "map_click" | "like" | "dislike" | "favorite" | "unfavorite" | "search" | "ai_re_recommend" | "share"
 ): Promise<void> {
   if (!supabase) {
     console.warn(`⚠️ [Supabase] Client not initialized. logInteraction('${action}') skipped.`);

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { AppState, Verdict } from "@/types/food";
 import { Bar } from "./Bar";
 import html2canvas from "html2canvas";
@@ -11,9 +11,11 @@ interface ReceiptProps {
 
 export function Receipt({ state, verdict, stamp }: ReceiptProps) {
   const receiptRef = useRef<HTMLDivElement>(null);
+  const [isCapturing, setIsCapturing] = useState(false);
 
   const handleDownloadImage = async () => {
-    if (!receiptRef.current) return;
+    if (!receiptRef.current || isCapturing) return;
+    setIsCapturing(true);
     try {
       const canvas = await html2canvas(receiptRef.current, { scale: 2 });
       const image = canvas.toDataURL("image/png");
@@ -23,10 +25,13 @@ export function Receipt({ state, verdict, stamp }: ReceiptProps) {
       link.click();
     } catch (err) {
       console.error("Failed to capture receipt:", err);
+    } finally {
+      setIsCapturing(false);
     }
   };
 
   const handleShare = async () => {
+    if (isCapturing) return;
     if (navigator.share) {
       try {
         await navigator.share({
@@ -72,15 +77,17 @@ export function Receipt({ state, verdict, stamp }: ReceiptProps) {
       <div style={{ display: "flex", gap: "8px", marginTop: "24px" }}>
         <button
           onClick={handleDownloadImage}
+          disabled={isCapturing}
           className="btn btnSub"
-          style={{ flex: 1, padding: "12px", fontSize: "13.5px", cursor: "pointer" }}
+          style={{ flex: 1, padding: "12px", fontSize: "13.5px", cursor: isCapturing ? "not-allowed" : "pointer" }}
         >
-          영수증 이미지 저장
+          {isCapturing ? "이미지 생성 중..." : "영수증 이미지 저장"}
         </button>
         <button
           onClick={handleShare}
+          disabled={isCapturing}
           className="btn btnMain"
-          style={{ flex: 1, padding: "12px", fontSize: "13.5px", cursor: "pointer" }}
+          style={{ flex: 1, padding: "12px", fontSize: "13.5px", cursor: isCapturing ? "not-allowed" : "pointer" }}
         >
           결과 공유하기
         </button>

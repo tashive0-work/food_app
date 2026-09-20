@@ -40,6 +40,7 @@ export default function FeedbackPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
 
   useEffect(() => {
@@ -65,9 +66,15 @@ export default function FeedbackPage() {
     }
 
     const trimmedEmail = email.trim();
-    if (trimmedEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
-      setErrorMsg("올바른 이메일 형식을 입력해 주세요.");
-      return;
+    if (trimmedEmail) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+        setErrorMsg("올바른 이메일 형식을 입력해 주세요.");
+        return;
+      }
+      if (!privacyAgreed) {
+        setErrorMsg("이메일 회신을 받으시려면 개인정보 수집·이용 동의에 체크해 주세요.");
+        return;
+      }
     }
 
     setSubmitting(true);
@@ -92,6 +99,7 @@ export default function FeedbackPage() {
       setContent("");
       setFoodName("");
       setEmail("");
+      setPrivacyAgreed(false);
     } catch (err) {
       console.error(err);
       setErrorMsg("접수 중 오류가 발생했습니다.");
@@ -197,6 +205,16 @@ export default function FeedbackPage() {
             <p style={{ margin: "6px 0 0", fontSize: "11.5px", color: "var(--dim)", lineHeight: 1.5 }}>
               회신이 필요하면 이메일을 남겨주세요. 답변 목적으로만 사용하고 처리 후 삭제합니다.
             </p>
+            {email.trim() !== "" && (
+              <label style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "10px", fontSize: "12.5px", color: "var(--ink)", cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={privacyAgreed}
+                  onChange={(e) => setPrivacyAgreed(e.target.checked)}
+                />
+                <span>[필수] 개인정보 수집·이용 동의 (답변 목적으로만 이용 및 답변 처리 후 삭제)</span>
+              </label>
+            )}
           </div>
 
           <button type="submit" className="btn btnMain" disabled={submitting} style={{ marginTop: "12px" }}>

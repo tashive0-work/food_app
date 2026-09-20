@@ -10,6 +10,7 @@ import { loadTodayResult, TodayResult } from "@/lib/todayResult";
 import { getTrends, matchTrendsToState } from "@/lib/trend";
 import { recipeUrl, mapUrl } from "@/lib/recommend";
 import { TrendItem } from "@/types/trend";
+import { logInteraction } from "@/lib/supabase";
 
 const AXES = [
   { key: "ease",  label: "빨리 되는 순", desc: "조리·대기 시간이 짧은 메뉴" },
@@ -30,7 +31,7 @@ export default function TrendPage() {
     setToday(loadTodayResult());
 
     try {
-      const saved = localStorage.getItem("food_app_favorites");
+      const saved = localStorage.getItem("food_favorites");
       if (saved) setFavorites(JSON.parse(saved));
     } catch {}
   }, []);
@@ -38,16 +39,16 @@ export default function TrendPage() {
   const toggleFavByFoodName = (name: string) => {
     const target = FOODS.find((f) => f.name === name);
     if (!target) return;
-    let next: number[];
-    if (favorites.includes(target.id)) {
-      next = favorites.filter((id) => id !== target.id);
-    } else {
-      next = [...favorites, target.id];
-    }
+    const isFav = favorites.includes(target.id);
+    const next = isFav
+      ? favorites.filter((id) => id !== target.id)
+      : [...favorites, target.id];
     setFavorites(next);
     try {
-      localStorage.setItem("food_app_favorites", JSON.stringify(next));
+      localStorage.setItem("food_favorites", JSON.stringify(next));
     } catch {}
+
+    logInteraction(null, target.name, 0, isFav ? "unfavorite" : "favorite");
   };
 
   // 트렌드 매칭 1위

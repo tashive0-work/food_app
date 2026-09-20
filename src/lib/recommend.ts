@@ -2,6 +2,7 @@ import { AppState, Verdict, Food } from "@/types/food";
 import { FOODS } from "@/data/foods";
 import { FOOD_IMAGES } from "@/data/foodImages";
 import { loadDietSettings, applyDietFilter } from "./dietFilter";
+import { getNaverMapUrl } from "./location";
 
 export function classify(s: AppState): Verdict {
   const { hunger, energy, spice, comfort, time, warm } = s;
@@ -137,8 +138,7 @@ export function recommend(
 export const recipeUrl = (n: string) =>
   `https://www.10000recipe.com/recipe/list.html?q=${encodeURIComponent(n)}`;
 
-export const mapUrl = (n: string) =>
-  `https://map.naver.com/p/search/${encodeURIComponent(n)}`;
+export const mapUrl = (n: string) => getNaverMapUrl(n);
 
 /**
  * 음식이 왜 추천되었는지를 설명하는 태그를 생성합니다.

@@ -5,6 +5,7 @@ import { searchFoods } from "@/lib/search";
 import { FoodCard } from "@/components/FoodCard";
 import { BottomNav } from "@/components/BottomNav";
 import { loadDietSettings, applyDietFilter } from "@/lib/dietFilter";
+import { logInteraction } from "@/lib/supabase";
 
 const SUGGESTED = ["김치찌개","라면","비빔밥","떡볶이","마라탕","전복죽"];
 
@@ -21,6 +22,15 @@ export default function SearchPage() {
       if (f) setFavorites(JSON.parse(f));
     } catch (e) { console.error(e); }
   }, []);
+
+  React.useEffect(() => {
+    const trimmed = q.trim();
+    if (trimmed.length < 2) return;
+    const timer = setTimeout(() => {
+      logInteraction(null, trimmed, 0, "search");
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [q]);
 
   const toggleFavorite = (id: number) => {
     setFavorites((prev) => {

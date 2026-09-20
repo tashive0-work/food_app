@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { AppState } from "@/types/food";
+import { logInteraction } from "@/lib/supabase";
 
 interface AiReRecommendInputProps {
   currentScores: AppState;
@@ -49,6 +50,7 @@ export function AiReRecommendInput({
         return;
       }
 
+      logInteraction(null, prompt.trim(), 0, "ai_re_recommend");
       setRequestCount((c) => c + 1);
       setAiReason(data.reason || "요청 조건에 맞게 추천이 재정렬되었습니다.");
       onApplyDelta(data.delta || {}, data.excludeFoods || [], data.reason || "");

@@ -14,4 +14,5 @@ export interface TrendItem {
   light: number | null;
   matched_food_name: string | null;
   rank: number;
+  active?: boolean;
 }

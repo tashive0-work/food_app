@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Question } from "@/types/food";
 
 interface QuizProps {
@@ -9,7 +9,19 @@ interface QuizProps {
 }
 
 export function Quiz({ questions, step, onAnswer, onBack }: QuizProps) {
+  const [disabled, setDisabled] = useState(false);
   const currentQ = questions[step];
+
+  useEffect(() => {
+    setDisabled(false);
+  }, [step]);
+
+  const handleOptClick = (i: number) => {
+    if (disabled) return;
+    setDisabled(true);
+    onAnswer(i);
+  };
+
   return (
     <section className="quiz">
       <div className="progress">
@@ -23,13 +35,13 @@ export function Quiz({ questions, step, onAnswer, onBack }: QuizProps) {
       <h2 className="qtext">{currentQ.q}</h2>
       <div className="opts">
         {currentQ.a.map(([label], i) => (
-          <button key={i} className="opt" onClick={() => onAnswer(i)}>
+          <button key={i} className="opt" disabled={disabled} onClick={() => handleOptClick(i)}>
             {label}
           </button>
         ))}
       </div>
       {step > 0 && (
-        <button className="back" onClick={onBack}>
+        <button className="back" disabled={disabled} onClick={onBack}>
           이전 질문으로
         </button>
       )}

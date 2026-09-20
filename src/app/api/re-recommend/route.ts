@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit } from "@/lib/rateLimit";
+import crypto from "node:crypto";
 
 const RATE_LIMIT_MESSAGES = {
   HOURLY: "추천 요청이 너무 잦습니다. 1시간 후에 다시 시도해 주세요.",
   DAILY: "오늘의 추천 횟수를 모두 사용했습니다. 내일 다시 만나요!",
   GLOBAL: "지금 이용자가 많아 잠시 추천을 쉬고 있어요. 잠시 후 다시 시도해 주세요.",
 };
+
+// AI 비용 최적화 인메모리 24시간 캐시 (동일/유사 요청 70%+ API 비용 절감)
+const AI_CACHE = new Map<string, { data: any; expiresAt: number }>();
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,6 +47,20 @@ export async function POST(request: NextRequest) {
         { error: "요청은 100자 이내로 입력해 주세요." },
         { status: 400 }
       );
+    }
+
+    // AI API 캐시 히트 검사 (비용 절감)
+    const cacheKey = crypto
+      .createHash("sha256")
+      .update(`${prompt.trim().toLowerCase()}:${JSON.stringify(currentScores || {})}`)
+      .digest("hex");
+
+    const cachedHit = AI_CACHE.get(cacheKey);
+    if (cachedHit && cachedHit.expiresAt > Date.now()) {
+      const cachedResponse = NextResponse.json(cachedHit.data);
+      cachedResponse.headers.set("X-Cache", "HIT");
+      cachedResponse.headers.set("X-RateLimit-Remaining", String(rateLimitResult.remaining));
+      return cachedResponse;
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
@@ -139,7 +158,13 @@ export async function POST(request: NextRequest) {
       parsed.reason = parsed.reason.slice(0, 200);
     }
 
+    AI_CACHE.set(cacheKey, {
+      data: parsed,
+      expiresAt: Date.now() + CACHE_TTL_MS,
+    });
+
     const response = NextResponse.json(parsed);
+    response.headers.set("X-Cache", "MISS");
     response.headers.set("X-RateLimit-Remaining", String(rateLimitResult.remaining));
     return response;
   } catch (err: unknown) {

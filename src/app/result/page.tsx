@@ -11,6 +11,8 @@ import { HeroCard } from "@/components/HeroCard";
 import { Receipt } from "@/components/Receipt";
 import { BottomNav } from "@/components/BottomNav";
 import { AiReRecommendInput } from "@/components/AiReRecommendInput";
+import { AdBanner } from "@/components/AdBanner";
+import { SponsoredCard } from "@/components/SponsoredCard";
 import { loadTodayResult, clearTodayResult, TodayResult } from "@/lib/todayResult";
 import { loadDietSettings, DietSettings } from "@/lib/dietFilter";
 
@@ -161,13 +163,23 @@ export default function ResultPage() {
 
               {/* 1위 — 큰 카드 */}
               {list[0] && (
-                <HeroCard
-                  food={list[0]}
-                  state={state}
-                  isFavorite={favorites.includes(list[0].id)}
-                  onToggleFavorite={toggleFavorite}
-                  diagnosisId={diagnosisId}
-                />
+                <>
+                  <HeroCard
+                    food={list[0]}
+                    state={state}
+                    isFavorite={favorites.includes(list[0].id)}
+                    onToggleFavorite={toggleFavorite}
+                    diagnosisId={diagnosisId}
+                  />
+                  <SponsoredCard
+                    storeName="원조 가마솥 김치찌개"
+                    foodName={list[0].name}
+                    description="깊고 진한 3년 숙성지 찌개 전문점. 오늘 진단 상태에 맞춤 추천 매장입니다."
+                    locationLabel="서울 강남구 역삼동 (내 위치 600m)"
+                    linkUrl={`https://map.naver.com/p/search/${encodeURIComponent("가마솥 김치찌개")}`}
+                    badgeText="파트너스 추천 맛집"
+                  />
+                </>
               )}
 
               {/* 2·3위 — 중간 카드 */}
@@ -222,6 +234,8 @@ export default function ResultPage() {
               )}
 
               <AiReRecommendInput currentScores={state} onApplyDelta={handleApplyAiDelta} />
+
+              <AdBanner />
 
               <button className="restart" onClick={restart}>
                 다시 진단하기

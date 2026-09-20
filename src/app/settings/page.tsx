@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ALLERGENS, DIET_PREFS } from "@/data/allergens";
 import { loadDietSettings, saveDietSettings, DietSettings } from "@/lib/dietFilter";
 import { BottomNav } from "@/components/BottomNav";
+import { UserAuthWidget } from "@/components/UserAuthWidget";
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<DietSettings>({ allergens: [], diets: [] });
@@ -44,8 +45,12 @@ export default function SettingsPage() {
       <main className="wrap">
         <header className="pageHead">
           <Link href="/" className="pageBack" aria-label="홈으로">←</Link>
-          <h1 className="pageTitle">제외 조건 설정</h1>
+          <h1 className="pageTitle">설정 및 계정</h1>
         </header>
+
+        <div style={{ marginBottom: "24px" }}>
+          <UserAuthWidget />
+        </div>
 
         <div className="legalNotice" style={{ marginBottom: "24px" }}>
           <p>

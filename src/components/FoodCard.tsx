@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Food, AppState } from "@/types/food";
 import { recipeUrl, mapUrl, matchTags } from "@/lib/recommend";
 import { logInteraction } from "@/lib/supabase";
+import { DELIVERY_APPS } from "@/lib/affiliate";
 
 interface FoodCardProps {
   food: Food;
@@ -22,6 +23,7 @@ export function FoodCard({
 }: FoodCardProps) {
   const [feedback, setFeedback] = useState<"like" | "dislike" | null>(null);
   const tags = state ? matchTags(food, state) : [];
+  const primaryDeliveryApp = DELIVERY_APPS[0];
 
   const handleFavoriteClick = () => {
     if (onToggleFavorite) {
@@ -94,7 +96,7 @@ export function FoodCard({
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
         <div className="feedbackBtns" style={{ display: "flex", gap: "4px" }}>
           <button
             onClick={handleLike}
@@ -128,13 +130,23 @@ export function FoodCard({
 
         <div className="cardBtns">
           <a
+            className="btn btnSub"
+            href={primaryDeliveryApp.getUrl(food.name)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => logInteraction(diagnosisId || null, food.name, rank, "map_click")}
+            title="배달 앱으로 검색"
+          >
+            배달 주문 🛵
+          </a>
+          <a
             className="btn btnMain"
             href={recipeUrl(food.name)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleRecipeClick}
           >
-            레시피 보기
+            레시피
           </a>
           <a
             className="btn btnSub"
