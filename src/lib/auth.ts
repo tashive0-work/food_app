@@ -9,9 +9,14 @@ export interface UserProfile {
 }
 
 /** 소셜 로그인 (카카오, 구글 등) 요청 */
-export async function signInWithProvider(provider: "kakao" | "google") {
+export async function signInWithProvider(provider: "kakao" | "google", nextPath?: string) {
   if (!supabase) return { error: new Error("Supabase client가 설정되지 않았습니다.") };
-  const redirectUrl = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined;
+  
+  let redirectUrl: string | undefined = undefined;
+  if (typeof window !== "undefined") {
+    const targetPath = nextPath || (window.location.pathname + window.location.search);
+    redirectUrl = `${window.location.origin}/auth/callback?next=${encodeURIComponent(targetPath)}`;
+  }
   
   return await supabase.auth.signInWithOAuth({
     provider,

@@ -1,10 +1,33 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+/**
+ * next 경로 보안 검증 함수 (Open Redirect 방지)
+ * - "/" 로 시작하는 상대 경로만 허용
+ * - "//" 로 시작하거나 "http" 가 포함된 값은 거부하고 "/" 로 보낸다
+ */
+function getValidatedNextPath(rawNext: string | null): string {
+  if (!rawNext) return "/";
+
+  if (
+    rawNext.startsWith("/") &&
+    !rawNext.startsWith("//") &&
+    !rawNext.toLowerCase().includes("http")
+  ) {
+    return rawNext;
+  }
+
+  return "/";
+}
+
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
-  const response = NextResponse.redirect(requestUrl.origin);
+  const rawNext = requestUrl.searchParams.get("next");
+
+  const safeNextPath = getValidatedNextPath(rawNext);
+  const redirectTarget = new URL(safeNextPath, requestUrl.origin);
+  const response = NextResponse.redirect(redirectTarget);
 
   if (code) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -23,6 +46,5 @@ export async function GET(request: Request) {
     }
   }
 
-  // URL redirect to origin home page after login
   return response;
 }

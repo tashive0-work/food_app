@@ -13,14 +13,14 @@ const ITEMS = [
 ];
 
 function Icon({ name, active }: { name: string; active: boolean }) {
-  const stroke = active ? "var(--primary)" : "var(--dim)";
+  const stroke = active ? "#FFFFFF" : "var(--dim)";
   const common = {
     width: 22,
     height: 22,
     viewBox: "0 0 24 24",
     fill: "none",
     stroke,
-    strokeWidth: 1.9,
+    strokeWidth: active ? 2.2 : 1.9,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
   };

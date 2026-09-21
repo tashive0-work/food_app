@@ -2,15 +2,15 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
 /* ========================================
-   오늘 뭐 먹지 — Design System v2
-   Base: Neutral / Primary: Deep Green / Accent: Orange
+   오늘 뭐 먹지 — Design System v3 (Toss/Baemin 3D Widget & Capsule)
+   Primary: Warm Mango (#FFB800) / Accent: Pepper Orange (#FF5E36) / Secondary: Mint (#00C7AE)
    ======================================== */
 
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background-color: #FFFFFF;
+  background-color: #F7F8FA;
   font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
 }
 
@@ -22,43 +22,46 @@ html, body {
 }
 
 .app{
-  /* ---- Color ---- */
-  --base:#FFFFFF;
-  --surface:#F7F9F8;
-  --border:#E4EAE6;
-  --ink:#16211C;
-  --dim:#7C8A83;
-  --primary:#1F6F4A;
-  --primaryDeep:#175539;
-  --primaryBg:#EFF7F2;
-  --accent:#E8873A;
-  --accentBg:#FDF1E7;
-  --danger:#C4443A;
+  /* ---- Toss / Baemin 3D Capsule Palette ---- */
+  --base:#F7F8FA;
+  --surface:#FFFFFF;
+  --border:#EAEFEE;
+  --ink:#191F28;
+  --dim:#6B7684;
+  --dimLight:#8B95A1;
+  --primary:#FFB800;
+  --primaryDeep:#E5A500;
+  --primaryBg:#FFF8E6;
+  --accent:#FF5E36;
+  --accentDeep:#E04822;
+  --accentBg:#FFF0EC;
+  --mint:#00C7AE;
+  --mintBg:#E6F9F6;
+  --danger:#F04438;
 
-  /* ---- Elevation ---- */
-  --sh1:0 1px 3px rgba(22,33,28,.06);
-  --sh2:0 1px 3px rgba(22,33,28,.06), 0 8px 24px -12px rgba(22,33,28,.14);
-  --sh3:0 2px 6px rgba(22,33,28,.08), 0 16px 40px -16px rgba(22,33,28,.2);
+  /* ---- Elevation & Floating Shadows ---- */
+  --sh1:0 4px 16px rgba(0,0,0,.04), 0 1px 3px rgba(0,0,0,.02);
+  --sh2:0 10px 28px -4px rgba(0,0,0,.07), 0 2px 8px rgba(0,0,0,.03);
+  --sh3:0 20px 40px -8px rgba(0,0,0,.12), 0 4px 14px rgba(0,0,0,.04);
+  --shPill:0 12px 32px rgba(25,31,40,.15), 0 2px 8px rgba(25,31,40,.08);
 
-  /* ---- Radius ---- */
-  --r-sm:8px;
-  --r-md:12px;
-  --r-lg:16px;
-  --r-xl:20px;
+  /* ---- Toss Capsule Radius ---- */
+  --r-sm:12px;
+  --r-md:18px;
+  --r-lg:24px;
+  --r-xl:30px;
+  --r-full:9999px;
 
   --font-pretendard: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
-  --font-blackhan: var(--font-pretendard);
-  --font-ibm: var(--font-pretendard);
-  --font-nanum: var(--font-pretendard);
 
-  font-family: var(--font-pretendard), 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', -apple-system, sans-serif;
+  font-family: var(--font-pretendard), 'Pretendard', sans-serif;
   background:var(--base); color:var(--ink); min-height:100%;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
 .app *{box-sizing:border-box;font-family:var(--font-pretendard)!important;}
 .app button:focus-visible,.app a:focus-visible{
-  outline:2.5px solid var(--primary);outline-offset:2px;
+  outline:2.5px solid var(--accent);outline-offset:2px;
 }
 
 /* ========== 헤더 ========== */
@@ -105,45 +108,51 @@ html, body {
 }
 
 /* ========== 진단 진행률 ========== */
-.progress{display:flex;align-items:center;gap:12px;margin-bottom:32px;}
+.progress{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
 .progress span{
-  font-size:12px;font-weight:600;color:var(--dim);
+  font-size:13px;font-weight:800;color:var(--dim);
   font-variant-numeric:tabular-nums;
+  background:var(--surface);padding:4px 10px;border-radius:9999px;
+  border:1px solid var(--border);box-shadow:var(--sh1);
 }
-.track{flex:1;height:4px;background:var(--border);border-radius:99px;overflow:hidden;}
-.fill{height:100%;background:var(--primary);border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1);}
+.track{flex:1;height:8px;background:var(--border);border-radius:99px;overflow:hidden;}
+.fill{height:100%;background:linear-gradient(90deg, var(--primary), var(--accent));border-radius:99px;transition:width .4s cubic-bezier(.2,.8,.2,1);}
 
 /* ========== 진단 문항 ========== */
 .qtext{
-  font-size:clamp(21px,5.5vw,24px);font-weight:700;line-height:1.4;
-  margin:0 0 24px;letter-spacing:-.02em;
+  font-size:clamp(22px,5.5vw,26px);font-weight:900;line-height:1.35;
+  margin:0 0 24px;letter-spacing:-.03em;color:var(--ink);
 }
-.opts{display:flex;flex-direction:column;gap:10px;}
+.opts{display:flex;flex-direction:column;gap:12px;}
 .opt{
-  text-align:left;padding:18px 20px;
-  border:1.5px solid var(--border);background:var(--base);
-  border-radius:var(--r-md);
-  font-family:inherit;font-size:15px;font-weight:500;
+  text-align:left;padding:20px 22px;
+  border:1.5px solid var(--border);background:var(--surface);
+  border-radius:var(--r-lg);
+  font-family:inherit;font-size:16px;font-weight:700;
   color:var(--ink);cursor:pointer;
-  transition:border-color .15s,background .15s,transform .15s,box-shadow .15s;
+  box-shadow:var(--sh1);
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all .18s cubic-bezier(.2,.8,.2,1);
 }
 @media (hover:hover) and (pointer:fine){
   .opt:hover{
-    border-color:var(--primary);background:var(--primaryBg);
-    transform:translateY(-1px);box-shadow:var(--sh1);
+    border-color:var(--accent);background:var(--accentBg);
+    transform:translateY(-2px);box-shadow:var(--sh2);
+    color:var(--accentDeep);
   }
 }
 .opt:active{
-  border-color:var(--primary);
-  background:var(--primaryBg);
-  transform:translateY(0);
+  border-color:var(--accent);
+  background:var(--accentBg);
+  transform:scale(0.97) !important;
 }
 .back{
-  margin-top:20px;background:none;border:0;color:var(--dim);
-  font-size:13.5px;cursor:pointer;font-family:inherit;padding:6px 0;
-  text-decoration:underline;text-underline-offset:3px;
+  margin-top:24px;background:var(--surface);border:1px solid var(--border);color:var(--dim);
+  font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;padding:10px 18px;
+  border-radius:9999px;box-shadow:var(--sh1);
+  transition:all .18s cubic-bezier(.2,.8,.2,1);
 }
-.back:hover{color:var(--ink);}
+.back:hover{color:var(--ink);background:var(--border);}
 
 /* ========== 상태 요약 (구 영수증) ========== */
 .receipt{
@@ -506,30 +515,107 @@ html, body {
   .subGrid{grid-template-columns:1fr;}
 }
 
-/* ========== 하단 탭바 ========== */
-.hasNav{padding-bottom:calc(68px + env(safe-area-inset-bottom, 0px));}
+/* ========== 하단 탭바 (Floating Pill Nav) ========== */
+.hasNav{padding-bottom:calc(92px + env(safe-area-inset-bottom, 0px));}
 .bottomNav{
-  position:fixed;left:0;right:0;bottom:0;z-index:50;
-  display:flex;background:var(--base);
-  border-top:1px solid var(--border);
-  padding-bottom:env(safe-area-inset-bottom, 0px);
-  box-shadow:0 -1px 12px rgba(22,33,28,.05);
+  position:fixed;left:50%;bottom:max(16px, env(safe-area-inset-bottom, 16px));
+  transform:translateX(-50%);
+  width:calc(100% - 32px);max-width:480px;z-index:100;
+  display:flex;align-items:center;justify-content:space-around;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.8);
+  border-radius:9999px;
+  padding:6px;
+  box-shadow:var(--shPill);
+  transition:all .25s cubic-bezier(.2,.8,.2,1);
 }
 .navItem{
   flex:1;display:flex;flex-direction:column;align-items:center;
-  gap:3px;padding:9px 0 8px;text-decoration:none;
-  transition:opacity .15s;
+  justify-content:center;gap:3px;padding:8px 4px;
+  border-radius:9999px;text-decoration:none;
+  transition:all .2s cubic-bezier(.2,.8,.2,1);
 }
-.navItem:active{opacity:.6;}
-.navIcon{position:relative;display:flex;}
-.navLabel{font-size:10px;font-weight:600;color:var(--dim);white-space:nowrap;}
-.navItem.on .navLabel{color:var(--primary);}
+.navItem:active{transform:scale(0.92);}
+.navIcon{position:relative;display:flex;align-items:center;justify-content:center;}
+.navLabel{font-size:10.5px;font-weight:600;color:var(--dim);white-space:nowrap;transition:color .2s;}
+.navItem.on{
+  background:var(--ink);
+  color:#FFFFFF;
+  box-shadow:0 4px 14px rgba(25,31,40,.22);
+  transform:translateY(-1px);
+}
+.navItem.on .navLabel{color:#FFFFFF;font-weight:700;}
 .navBadge{
   position:absolute;top:-4px;right:-8px;
-  min-width:16px;height:16px;padding:0 4px;
+  min-width:16px;height:16px;padding:0 5px;
   background:var(--accent);color:#fff;
-  border-radius:99px;font-size:9.5px;font-weight:700;
+  border-radius:99px;font-size:9.5px;font-weight:800;
   display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 6px rgba(255,94,54,.4);
+}
+
+/* ========== Toss 3D Bento Grid Widgets ========== */
+.bentoGrid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:12px;
+  margin-bottom:24px;
+}
+.bentoCard{
+  background:var(--surface);
+  border-radius:var(--r-lg);
+  padding:18px;
+  border:1px solid var(--border);
+  box-shadow:var(--sh1);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  text-decoration:none;
+  color:var(--ink);
+  position:relative;
+  overflow:hidden;
+  transition:transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .18s cubic-bezier(.2,.8,.2,1);
+}
+.bentoCard:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--sh2);
+}
+.bentoCard:active{
+  transform:scale(0.97);
+}
+.bentoCard.span2{
+  grid-column:span 2;
+}
+.bentoIcon{
+  font-size:28px;
+  line-height:1;
+  margin-bottom:10px;
+}
+.bentoBadge{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:4px 10px;
+  border-radius:var(--r-full);
+  font-size:11px;
+  font-weight:700;
+  background:var(--primaryBg);
+  color:var(--primaryDeep);
+  width:fit-content;
+  margin-bottom:8px;
+}
+.bentoTitle{
+  font-size:16px;
+  font-weight:800;
+  margin:0 0 4px;
+  letter-spacing:-.02em;
+}
+.bentoDesc{
+  font-size:12.5px;
+  color:var(--dim);
+  margin:0;
+  line-height:1.45;
 }
 
 /* ========== 랭킹 ========== */
