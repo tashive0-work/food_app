@@ -45,7 +45,7 @@ export default function TermsPage() {
         <section className="legalSec">
           <h2>제4조 (서비스의 제공)</h2>
           <ol>
-            <li>서비스는 <strong>회원가입 없이 무료로</strong> 제공됩니다.</li>
+            <li>서비스는 <strong>가입 없이도 추천 기능을 모두 무료로 이용할 수 있으며</strong>, 찜 목록 동기화 등을 위한 선택적 로그인 기능을 제공합니다.</li>
             <li>서비스는 다음의 기능을 제공합니다.
               <ul>
                 <li>상태 진단 및 음식 추천</li>

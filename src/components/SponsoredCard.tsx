@@ -19,7 +19,7 @@ export function SponsoredCard({
   description,
   locationLabel,
   linkUrl,
-  badgeText = "지역 추천 맛집",
+  badgeText = "주변 식당 검색",
 }: SponsoredCardProps) {
   if (!SHOW_SPONSORED) return null;
 

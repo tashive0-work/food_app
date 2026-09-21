@@ -61,8 +61,8 @@ export default function SettingsPage() {
         </div>
 
         <section className="secHead" style={{ marginTop: 0 }}>
-          <h2 className="secTitle">알레르기 유발 성분 제외</h2>
-          <p className="secSub">해당 식재료가 포함된 메뉴를 추천에서 제외합니다.</p>
+          <h2 className="secTitle">알레르기 유발 성분 제외 (참고용)</h2>
+          <p className="secSub">메뉴명을 기준으로 해당 식재료가 포함된 메뉴를 추천에서 제외하는 참고용 필터입니다.</p>
         </section>
         <div>
           {ALLERGENS.map((item) => {

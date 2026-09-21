@@ -140,15 +140,10 @@ export default function ResultPage() {
             )}
 
             {list[0] && (
-              <div className="verdictBanner" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
-                <div style={{ flex: 1 }}>
-                  <p className="verdictBannerLabel">오늘의 결론</p>
-                  <p className="verdictBannerFood">{list[0].name}</p>
-                  <p className="verdictBannerLine">{verdict.line}</p>
-                </div>
-                <div style={{ flexShrink: 0 }}>
-                  <Mascot expression="happy" size={80} priority />
-                </div>
+              <div className="verdictBanner">
+                <p className="verdictBannerLabel">오늘의 결론</p>
+                <p className="verdictBannerFood">{list[0].name}</p>
+                <p className="verdictBannerLine">{verdict.line}</p>
               </div>
             )}
 
@@ -170,20 +165,46 @@ export default function ResultPage() {
               {/* 1위 — 큰 카드 */}
               {list[0] && (
                 <>
-                  <HeroCard
-                    food={list[0]}
-                    state={state}
-                    isFavorite={favorites.includes(list[0].id)}
-                    onToggleFavorite={toggleFavorite}
-                    diagnosisId={diagnosisId}
-                  />
+                  <div style={{ position: "relative", marginTop: "48px" }}>
+                    {/* 카드 우측 상단에 걸쳐 빼꼼 튀어나온 오먹이 happy (160px) + 말풍선 */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "-52px",
+                        right: "2px",
+                        zIndex: 10,
+                        pointerEvents: "none",
+                      }}
+                    >
+                      <Mascot
+                        expression="happy"
+                        size={160}
+                        priority
+                        bubble="오늘은 이거다! 오먹 오먹~"
+                        bubblePosition="left"
+                        bubbleStyle={{
+                          fontSize: "13.5px",
+                          padding: "8px 13px",
+                          boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+                          marginTop: "16px",
+                        }}
+                      />
+                    </div>
+                    <HeroCard
+                      food={list[0]}
+                      state={state}
+                      isFavorite={favorites.includes(list[0].id)}
+                      onToggleFavorite={toggleFavorite}
+                      diagnosisId={diagnosisId}
+                    />
+                  </div>
                   <SponsoredCard
                     storeName="원조 가마솥 김치찌개"
                     foodName={list[0].name}
                     description="깊고 진한 3년 숙성지 찌개 전문점. 오늘 진단 상태에 맞춤 추천 매장입니다."
-                    locationLabel="서울 강남구 역삼동 (내 위치 600m)"
+                    locationLabel="내 위치 근처 식당"
                     linkUrl={`https://map.naver.com/p/search/${encodeURIComponent("가마솥 김치찌개")}`}
-                    badgeText="파트너스 추천 맛집"
+                    badgeText="파트너스 주변 식당 검색"
                   />
                 </>
               )}

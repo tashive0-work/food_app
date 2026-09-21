@@ -67,7 +67,6 @@ export default function Home() {
           <p className="homeDate" style={{ margin: "0 0 4px", fontSize: "13px", color: "var(--dim)", fontWeight: 600 }}>{dateLabel}</p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
             <h1 className="homeGreet" style={{ fontSize: "24px", fontWeight: 800, margin: 0, letterSpacing: "-0.03em" }}>{greeting}</h1>
-            <Mascot expression="default" size={40} priority />
           </div>
         </header>
 
@@ -97,61 +96,125 @@ export default function Home() {
           background: "#FFFFFF",
           border: "1px solid var(--border)",
           borderRadius: "var(--r-xl)",
-          padding: "24px 22px",
+          padding: "22px 20px 20px",
           color: "var(--ink)",
           boxShadow: "var(--sh1)",
           marginBottom: "24px",
-          position: "relative"
+          position: "relative",
+          overflow: "hidden"
         }}>
-          <div style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            background: "var(--primaryBg)",
-            color: "#E8663D",
-            padding: "4px 10px",
-            borderRadius: "9999px",
-            fontSize: "12px",
-            fontWeight: 800,
-            marginBottom: "12px"
-          }}>
-            <span>맞춤 진단</span>
+          {/* 말풍선: 캐릭터 왼쪽 위 (상단 빈 영역에 배치) */}
+          <div
+            style={{
+              position: "absolute",
+              top: "14px",
+              right: "68px",
+              zIndex: 3,
+              pointerEvents: "none",
+            }}
+          >
+            <div
+              style={{
+                background: "#FFFFFF",
+                borderRadius: "16px",
+                padding: "7px 12px",
+                fontSize: "13px",
+                fontWeight: 600,
+                color: "var(--ink)",
+                boxShadow: "0 4px 14px rgba(0, 0, 0, 0.08)",
+                border: "1px solid var(--border)",
+                whiteSpace: "nowrap",
+                position: "relative",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              오먹 오먹~ 오늘 뭐 먹지?
+              <span
+                style={{
+                  position: "absolute",
+                  bottom: "-6px",
+                  right: "16px",
+                  width: 0,
+                  height: 0,
+                  borderLeft: "6px solid transparent",
+                  borderRight: "6px solid transparent",
+                  borderTop: "7px solid #FFFFFF",
+                  filter: "drop-shadow(0 1px 0 var(--border))",
+                }}
+                aria-hidden="true"
+              />
+            </div>
           </div>
 
-          <h2 style={{
-            fontSize: "22px",
-            fontWeight: 800,
-            margin: "0 0 6px",
-            letterSpacing: "-0.03em",
-            color: "var(--ink)",
-            lineHeight: 1.3
-          }}>
-            {today ? `오늘의 결론: ${today.topFoodName}` : "지금 내 상태에 딱 맞는\n오늘의 메뉴 진단받기"}
-          </h2>
+          {/* 오먹이 default 180px: 카드 하단 경계선에 딱 걸쳐 앉음 */}
+          <div
+            style={{
+              position: "absolute",
+              right: "-12px",
+              bottom: "-6px",
+              zIndex: 1,
+              pointerEvents: "none",
+            }}
+          >
+            <Mascot
+              expression="default"
+              size={180}
+              priority
+            />
+          </div>
 
-          <p style={{
-            fontSize: "13.5px",
-            margin: "0 0 20px",
-            color: "var(--dim)",
-            lineHeight: 1.5,
-            fontWeight: 500
-          }}>
-            {today ? today.verdict.title : "기분, 소화 상태, 건강 조건에 맞춘 스마트 추천"}
-          </p>
+          {/* 좌측 텍스트 콘텐츠 */}
+          <div style={{ position: "relative", zIndex: 2, maxWidth: "56%" }}>
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              background: "var(--primaryBg)",
+              color: "#E8663D",
+              padding: "4px 10px",
+              borderRadius: "9999px",
+              fontSize: "12px",
+              fontWeight: 800,
+              marginBottom: "12px"
+            }}>
+              <span>맞춤 진단</span>
+            </div>
 
-          <div style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            background: "#191F28",
-            color: "#FFFFFF",
-            padding: "11px 18px",
-            borderRadius: "9999px",
-            fontSize: "13.5px",
-            fontWeight: 800
-          }}>
-            <span>{today ? "다시 진단해 보기" : "추천 시작하기"}</span>
-            <span>→</span>
+            <h2 style={{
+              fontSize: "20px",
+              fontWeight: 800,
+              margin: "0 0 6px",
+              letterSpacing: "-0.03em",
+              color: "var(--ink)",
+              lineHeight: 1.3
+            }}>
+              {today ? `오늘의 결론: ${today.topFoodName}` : "지금 내 상태에 딱 맞는\n오늘의 메뉴 진단받기"}
+            </h2>
+
+            <p style={{
+              fontSize: "12.5px",
+              margin: "0 0 16px",
+              color: "var(--dim)",
+              lineHeight: 1.45,
+              fontWeight: 500
+            }}>
+              {today ? today.verdict.title : "기분, 소화 상태, 식사 취향에 맞춘 스마트 추천"}
+            </p>
+
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              background: "#191F28",
+              color: "#FFFFFF",
+              padding: "9px 15px",
+              borderRadius: "9999px",
+              fontSize: "12.5px",
+              fontWeight: 800
+            }}>
+              <span>{today ? "다시 진단해 보기" : "추천 시작하기"}</span>
+              <span>→</span>
+            </div>
           </div>
         </Link>
 
@@ -161,7 +224,7 @@ export default function Home() {
             <span className="bentoIcon">🔥</span>
             <div>
               <h3 className="bentoTitle">요즘 뜨는 메뉴</h3>
-              <p className="bentoDesc">성수/강남 이번 주 트렌드</p>
+              <p className="bentoDesc">요즘 많이 찾는 메뉴</p>
             </div>
           </Link>
 
@@ -195,7 +258,7 @@ export default function Home() {
           <div className="homeSecHead" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
             <h2 style={{ fontSize: "19px", fontWeight: 800, margin: 0, letterSpacing: "-0.02em" }}>
               {popularData.label}
-              {popularData.isRealData && <span className="liveBadge" style={{ marginLeft: "8px" }}>실시간 Live</span>}
+              {popularData.isRealData && <span className="liveBadge" style={{ marginLeft: "8px" }}>인기</span>}
             </h2>
           </div>
           <div className="hScroll">
@@ -207,10 +270,10 @@ export default function Home() {
                 border: "1px solid var(--border)",
                 boxShadow: "var(--sh1)",
                 textDecoration: "none",
-                display: "inline-block",
-                minWidth: "124px"
+                overflow: "hidden",
+                boxSizing: "border-box"
               }}>
-                <FoodImage name={f.name} className="miniCardImg" />
+                <FoodImage name={f.name} className="miniCardImg" showLabel={false} />
                 <p className="miniCardName" style={{ marginTop: "8px", fontWeight: 700, fontSize: "14px", color: "var(--ink)" }}>{f.name}</p>
                 <p className="miniCardKind" style={{ margin: "2px 0 0", fontSize: "11.5px", color: "var(--dim)" }}>{f.kind}</p>
               </Link>

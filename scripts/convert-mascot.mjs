@@ -38,7 +38,7 @@ const mapping = [
   },
 ];
 
-console.log('=== 마스코트 오먹이 이미지 512x512 변환 시작 ===\n');
+console.log('=== 마스코트 오먹이 이미지 1024x1024 변환 시작 ===\n');
 
 for (const item of mapping) {
   let foundSrc = null;
@@ -59,7 +59,7 @@ for (const item of mapping) {
   console.log(`변환 중: ${path.basename(foundSrc)} -> ${item.output}`);
 
   await sharp(foundSrc)
-    .resize(512, 512, {
+    .resize(1024, 1024, {
       fit: 'contain',
       background: { r: 0, g: 0, b: 0, alpha: 0 },
     })

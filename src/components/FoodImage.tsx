@@ -9,6 +9,8 @@ interface FoodImageProps {
   src?: string;
   /** 컨테이너에 적용할 클래스 (크기·배경 담당) */
   className?: string;
+  /** 이모지 아래 텍스트 라벨 표시 여부 (기본값: true) */
+  showLabel?: boolean;
 }
 
 /**
@@ -20,6 +22,7 @@ export function FoodImage({
   name,
   src,
   className,
+  showLabel = true,
 }: FoodImageProps) {
   const [failed, setFailed] = useState(false);
   const url = src && src.trim() !== "" ? src : getFoodImageUrl(name);
@@ -40,7 +43,7 @@ export function FoodImage({
           <span className="imgFallbackEmoji" aria-hidden="true">
             {getFoodEmoji(name)}
           </span>
-          <span className="imgFallbackName">{name}</span>
+          {showLabel && <span className="imgFallbackName">{name}</span>}
         </span>
       )}
     </div>

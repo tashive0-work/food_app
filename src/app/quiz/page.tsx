@@ -102,7 +102,6 @@ export default function QuizPage() {
             </Link>
             <h1 className="pageTitle">상태 진단</h1>
           </div>
-          <Mascot expression="thinking" size={64} priority />
         </header>
 
         {!done && (
