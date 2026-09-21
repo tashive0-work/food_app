@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import Link from "next/link";
 import { Food, AppState } from "@/types/food";
 import { recipeUrl, mapUrl, matchTags } from "@/lib/recommend";
 import { logInteraction } from "@/lib/supabase";
 import { DELIVERY_APPS } from "@/lib/affiliate";
 import { SHOW_DELIVERY } from "@/lib/features";
+import { getFoodGuide } from "@/data/foodGuides";
 
 interface FoodCardProps {
   food: Food;
@@ -25,6 +27,7 @@ export function FoodCard({
   const [feedback, setFeedback] = useState<"like" | "dislike" | null>(null);
   const tags = state ? matchTags(food, state) : [];
   const primaryDeliveryApp = DELIVERY_APPS[0];
+  const guide = getFoodGuide(food.name, food.kind, food.spice, food.warm);
 
   const handleFavoriteClick = () => {
     if (onToggleFavorite) {
@@ -97,6 +100,32 @@ export function FoodCard({
         </div>
       </div>
 
+      {/* 1초 결정 가이드 (추천 상황 & 베스트 꿀조합) */}
+      <div
+        className="foodGuideBox"
+        style={{
+          margin: "12px 0 14px",
+          padding: "10px 12px",
+          background: "var(--bg, #F9FAFB)",
+          borderRadius: "8px",
+          border: "1px solid var(--border, #E5E7EB)",
+          fontSize: "12px",
+          lineHeight: "1.5",
+          display: "flex",
+          flexDirection: "column",
+          gap: "6px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "6px" }}>
+          <span style={{ color: "#E8663D", fontWeight: 700, flexShrink: 0 }}>💡 추천 상황</span>
+          <span style={{ color: "var(--ink)", fontWeight: 500 }}>{guide.bestWhen}</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "6px" }}>
+          <span style={{ color: "#059669", fontWeight: 700, flexShrink: 0 }}>✨ 꿀조합</span>
+          <span style={{ color: "var(--ink)", fontWeight: 500 }}>{guide.pairing}</span>
+        </div>
+      </div>
+
       <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
         <div className="feedbackBtns" style={{ display: "flex", gap: "4px" }}>
           <button
@@ -161,6 +190,15 @@ export function FoodCard({
             근처 식당
           </a>
         </div>
+      </div>
+
+      <div style={{ marginTop: "10px", textAlign: "right" }}>
+        <Link
+          href={`/feedback?type=new_food&name=${encodeURIComponent(food.name)}`}
+          style={{ fontSize: "11px", color: "var(--dim)", textDecoration: "none" }}
+        >
+          원하는 메뉴가 없으신가요? <span style={{ textDecoration: "underline", color: "#E8663D" }}>메뉴 건의하기</span>
+        </Link>
       </div>
     </article>
   );

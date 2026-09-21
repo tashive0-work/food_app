@@ -101,6 +101,27 @@ export default function SettingsPage() {
             );
           })}
         </div>
+
+        <section className="secHead" style={{ marginTop: "32px" }}>
+          <h2 className="secTitle">서비스 지원 및 의견</h2>
+        </section>
+        <div>
+          <Link
+            href="/feedback"
+            className="settingRow"
+            style={{ textDecoration: "none", color: "inherit", display: "flex" }}
+          >
+            <div>
+              <span className="settingLabel" style={{ display: "block", fontWeight: 700 }}>
+                💌 고객의 소리함 (메뉴 제안 & 건의)
+              </span>
+              <span style={{ fontSize: "12px", color: "var(--dim)" }}>
+                원하는 메뉴 추가 제안 및 서비스 개선 의견 보내기
+              </span>
+            </div>
+            <span style={{ color: "var(--dim)", fontSize: "16px" }}>→</span>
+          </Link>
+        </div>
       </main>
       <BottomNav favCount={favorites.length} />
     </div>

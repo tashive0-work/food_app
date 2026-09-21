@@ -234,6 +234,68 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        {/* 고객의 소리함 배너 카드 */}
+        <section className="homeSec" style={{ marginTop: "28px", marginBottom: "8px" }}>
+          <Link
+            href="/feedback"
+            style={{
+              display: "block",
+              background: "linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)",
+              border: "1px solid #FED7AA",
+              borderRadius: "16px",
+              padding: "18px 20px",
+              textDecoration: "none",
+              boxShadow: "var(--sh1)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
+                  <span style={{ fontSize: "16px" }}>💌</span>
+                  <span style={{ fontSize: "15px", fontWeight: 800, color: "#9A3412" }}>
+                    고객의 소리함
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      background: "#E8663D",
+                      color: "#FFFFFF",
+                      padding: "2px 6px",
+                      borderRadius: "6px",
+                    }}
+                  >
+                    메뉴 제안
+                  </span>
+                </div>
+                <p style={{ margin: 0, fontSize: "13px", color: "#C2410C", lineHeight: 1.5, fontWeight: 500 }}>
+                  찾으시는 메뉴가 없거나 앱에 바라는 점이 있나요?
+                  <br />
+                  언제든 편하게 알려주시면 빠르게 반영할게요!
+                </p>
+              </div>
+              <div
+                style={{
+                  background: "#FFFFFF",
+                  color: "#E8663D",
+                  borderRadius: "50%",
+                  width: "36px",
+                  height: "36px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "18px",
+                  fontWeight: 700,
+                  boxShadow: "0 2px 6px rgba(232, 102, 61, 0.15)",
+                  flexShrink: 0,
+                }}
+              >
+                →
+              </div>
+            </div>
+          </Link>
+        </section>
       </main>
 
       <footer className="foot">
@@ -247,7 +309,7 @@ export default function Home() {
         <div className="footLinks">
           <Link href="/terms">이용약관</Link>
           <Link href="/privacy">개인정보 처리방침</Link>
-          <Link href="/feedback">문의하기</Link>
+          <Link href="/feedback">고객의 소리함</Link>
         </div>
         <p className="footCopy">© 2026 NTD. All rights reserved. · v2.0.0 (Toss/Baemin 3D Capsule)</p>
       </footer>
