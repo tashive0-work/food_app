@@ -13,6 +13,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { AiReRecommendInput } from "@/components/AiReRecommendInput";
 import { AdBanner } from "@/components/AdBanner";
 import { SponsoredCard } from "@/components/SponsoredCard";
+import { Mascot } from "@/components/Mascot";
 import { loadTodayResult, clearTodayResult, TodayResult } from "@/lib/todayResult";
 import { loadDietSettings, DietSettings } from "@/lib/dietFilter";
 
@@ -139,10 +140,15 @@ export default function ResultPage() {
             )}
 
             {list[0] && (
-              <div className="verdictBanner">
-                <p className="verdictBannerLabel">오늘의 결론</p>
-                <p className="verdictBannerFood">{list[0].name}</p>
-                <p className="verdictBannerLine">{verdict.line}</p>
+              <div className="verdictBanner" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
+                <div style={{ flex: 1 }}>
+                  <p className="verdictBannerLabel">오늘의 결론</p>
+                  <p className="verdictBannerFood">{list[0].name}</p>
+                  <p className="verdictBannerLine">{verdict.line}</p>
+                </div>
+                <div style={{ flexShrink: 0 }}>
+                  <Mascot expression="happy" size={80} priority />
+                </div>
               </div>
             )}
 

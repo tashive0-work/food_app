@@ -10,6 +10,7 @@ import { loadTodayResult, TodayResult } from "@/lib/todayResult";
 import { getPopularFoods, PopularResult } from "@/lib/popular";
 import { getTrends } from "@/lib/trend";
 import { TrendItem } from "@/types/trend";
+import { Mascot } from "@/components/Mascot";
 
 export default function Home() {
   const [favorites, setFavorites] = useState<number[]>([]);
@@ -64,7 +65,10 @@ export default function Home() {
             </Link>
           </div>
           <p className="homeDate" style={{ margin: "0 0 4px", fontSize: "13px", color: "var(--dim)", fontWeight: 600 }}>{dateLabel}</p>
-          <h1 className="homeGreet" style={{ fontSize: "24px", fontWeight: 800, margin: 0, letterSpacing: "-0.03em" }}>{greeting}</h1>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
+            <h1 className="homeGreet" style={{ fontSize: "24px", fontWeight: 800, margin: 0, letterSpacing: "-0.03em" }}>{greeting}</h1>
+            <Mascot expression="default" size={40} priority />
+          </div>
         </header>
 
         {/* 캡슐 검색 진입점 */}

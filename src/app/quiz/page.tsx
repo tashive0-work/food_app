@@ -8,6 +8,7 @@ import { QUESTIONS } from "@/data/questions";
 import { classify, recommend } from "@/lib/recommend";
 import { Quiz } from "@/components/Quiz";
 import { BottomNav } from "@/components/BottomNav";
+import { Mascot } from "@/components/Mascot";
 import { saveTodayResult } from "@/lib/todayResult";
 import { logSession, logDiagnosis } from "@/lib/supabase";
 
@@ -94,11 +95,14 @@ export default function QuizPage() {
   return (
     <div className="app hasNav">
       <main className="wrap">
-        <header className="pageHead">
-          <Link href="/" className="pageBack" aria-label="홈으로">
-            ←
-          </Link>
-          <h1 className="pageTitle">상태 진단</h1>
+        <header className="pageHead" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <Link href="/" className="pageBack" aria-label="홈으로">
+              ←
+            </Link>
+            <h1 className="pageTitle">상태 진단</h1>
+          </div>
+          <Mascot expression="thinking" size={64} priority />
         </header>
 
         {!done && (
