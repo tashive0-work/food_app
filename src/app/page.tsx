@@ -53,10 +53,10 @@ export default function Home() {
         <header className="homeHead" style={{ padding: "16px 0 12px" }}>
           <div className="homeHeadRow">
             <Link href="/" className="brandRow" style={{ marginBottom: 0, gap: "6px" }}>
-              <span className="brandMark" style={{ background: "var(--primary)", color: "#191F28", fontWeight: 900, borderRadius: "10px" }} aria-hidden="true">오늘</span>
+              <span className="brandMark" style={{ background: "#FF5000", color: "#FFFFFF", fontWeight: 900, borderRadius: "10px" }} aria-hidden="true">오늘</span>
               <span className="brandName" style={{ fontSize: "19px", fontWeight: 900, letterSpacing: "-0.03em" }}>오늘 뭐 먹지?</span>
             </Link>
-            <Link href="/settings" className="settingsBtn" aria-label="설정" style={{ background: "#FFFFFF", boxShadow: "var(--sh1)", width: "36px", height: "36px" }}>
+            <Link href="/settings" className="settingsBtn" aria-label="설정" style={{ background: "#FFFFFF", border: "1px solid var(--border)", width: "36px", height: "36px" }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="3" />
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -80,60 +80,59 @@ export default function Home() {
           gap: "12px",
           textDecoration: "none"
         }}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" style={{ width: "20px", height: "20px", flex: "none" }}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FF5000" strokeWidth="2.5" strokeLinecap="round" style={{ width: "19px", height: "19px", flex: "none" }}>
             <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
           </svg>
           <span style={{ fontSize: "14.5px", color: "var(--dim)", fontWeight: 500 }}>어떤 메뉴가 당기시나요? 검색해 보세요</span>
         </Link>
 
-        {/* 히어로 맞춤 추천 메인 카드 */}
+        {/* 정갈한 프리미엄 화이트 히어로 카운터 카드 */}
         <Link href="/quiz" style={{
           display: "block",
           textDecoration: "none",
-          background: "linear-gradient(135deg, #FFB800 0%, #FF5E36 100%)",
+          background: "#FFFFFF",
+          border: "1px solid var(--border)",
           borderRadius: "var(--r-xl)",
-          padding: "26px 24px",
-          color: "#FFFFFF",
-          boxShadow: "0 12px 28px rgba(255, 94, 54, 0.28)",
+          padding: "24px 22px",
+          color: "var(--ink)",
+          boxShadow: "var(--sh1)",
           marginBottom: "24px",
-          position: "relative",
-          overflow: "hidden"
+          position: "relative"
         }}>
           <div style={{
             display: "inline-flex",
             alignItems: "center",
             gap: "6px",
-            background: "rgba(255, 255, 255, 0.22)",
-            backdropFilter: "blur(8px)",
-            padding: "5px 12px",
+            background: "var(--primaryBg)",
+            color: "#FF5000",
+            padding: "4px 10px",
             borderRadius: "9999px",
             fontSize: "12px",
             fontWeight: 800,
-            letterSpacing: "-0.01em",
             marginBottom: "12px"
           }}>
-            <span>✨</span>
-            <span>{today ? "결과 갱신 가능" : "8문항 초간단 추천"}</span>
+            <span>맞춤 진단</span>
           </div>
 
           <h2 style={{
-            fontSize: "23px",
-            fontWeight: 900,
-            margin: "0 0 8px",
+            fontSize: "22px",
+            fontWeight: 800,
+            margin: "0 0 6px",
             letterSpacing: "-0.03em",
-            lineHeight: 1.25
+            color: "var(--ink)",
+            lineHeight: 1.3
           }}>
-            {today ? `오늘의 결론: ${today.topFoodName}` : "지금 상태에 딱 맞는\n오늘의 메뉴 진단받기 🎲"}
+            {today ? `오늘의 결론: ${today.topFoodName}` : "지금 내 상태에 딱 맞는\n오늘의 메뉴 진단받기"}
           </h2>
 
           <p style={{
             fontSize: "13.5px",
-            margin: "0 0 18px",
-            opacity: 0.92,
-            lineHeight: 1.55,
+            margin: "0 0 20px",
+            color: "var(--dim)",
+            lineHeight: 1.5,
             fontWeight: 500
           }}>
-            {today ? today.verdict.title : "기분, 소화 상태, 건강 조건에 딱 맞는 맞춤 음식을 골라드려요!"}
+            {today ? today.verdict.title : "기분, 소화 상태, 건강 조건에 맞춘 스마트 추천"}
           </p>
 
           <div style={{
@@ -142,23 +141,21 @@ export default function Home() {
             gap: "8px",
             background: "#191F28",
             color: "#FFFFFF",
-            padding: "12px 20px",
+            padding: "11px 18px",
             borderRadius: "9999px",
-            fontSize: "14px",
-            fontWeight: 800,
-            boxShadow: "0 4px 12px rgba(25, 31, 40, 0.3)"
+            fontSize: "13.5px",
+            fontWeight: 800
           }}>
             <span>{today ? "다시 진단해 보기" : "추천 시작하기"}</span>
             <span>→</span>
           </div>
         </Link>
 
-        {/* 2x2 토스/배민 스타일 벤토 위젯 그리드 */}
+        {/* 2x2 정돈된 화이트 벤토 그리드 */}
         <section className="bentoGrid">
           <Link href="/trend" className="bentoCard">
             <span className="bentoIcon">🔥</span>
             <div>
-              <span className="bentoBadge" style={{ background: "var(--accentBg)", color: "var(--accent)" }}>실시간 핫</span>
               <h3 className="bentoTitle">요즘 뜨는 메뉴</h3>
               <p className="bentoDesc">성수/강남 이번 주 트렌드</p>
             </div>
@@ -167,7 +164,6 @@ export default function Home() {
           <Link href="/theme" className="bentoCard">
             <span className="bentoIcon">🎯</span>
             <div>
-              <span className="bentoBadge" style={{ background: "var(--mintBg)", color: "var(--mint)" }}>상황별 테마</span>
               <h3 className="bentoTitle">이럴 땐 이 메뉴</h3>
               <p className="bentoDesc">야식, 해장, 다이어트 특화</p>
             </div>
@@ -176,7 +172,6 @@ export default function Home() {
           <Link href="/quiz" className="bentoCard">
             <span className="bentoIcon">🤖</span>
             <div>
-              <span className="bentoBadge">AI 보조</span>
               <h3 className="bentoTitle">AI 재추천</h3>
               <p className="bentoDesc">원하는 조건 직접 입력</p>
             </div>
@@ -185,11 +180,8 @@ export default function Home() {
           <Link href="/favorites" className="bentoCard">
             <span className="bentoIcon">❤️</span>
             <div>
-              <span className="bentoBadge" style={{ background: "#FFF0F3", color: "#FF3366" }}>
-                {favorites.length}개 보관
-              </span>
               <h3 className="bentoTitle">내 찜한 메뉴</h3>
-              <p className="bentoDesc">자주 찾는 인생 메뉴 모음</p>
+              <p className="bentoDesc">{favorites.length}개 메뉴 보관 중</p>
             </div>
           </Link>
         </section>

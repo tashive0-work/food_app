@@ -2,15 +2,15 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
 /* ========================================
-   오늘 뭐 먹지 — Design System v3 (Toss/Baemin 3D Widget & Capsule)
-   Primary: Warm Mango (#FFB800) / Accent: Pepper Orange (#FF5E36) / Secondary: Mint (#00C7AE)
+   오늘 뭐 먹지 — Design System v4 (Premium Crisp Minimal)
+   Base: Soft Light Tint (#F2F4F6) / Accent: Signature Coral Orange (#FF5000) / Ink: Deep Charcoal (#191F28)
    ======================================== */
 
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background-color: #F7F8FA;
+  background-color: #F2F4F6;
   font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
 }
 
@@ -22,34 +22,34 @@ html, body {
 }
 
 .app{
-  /* ---- Toss / Baemin 3D Capsule Palette ---- */
-  --base:#F7F8FA;
+  /* ---- Premium Crisp Minimal Palette ---- */
+  --base:#F2F4F6;
   --surface:#FFFFFF;
-  --border:#EAEFEE;
+  --border:#E5E8EB;
   --ink:#191F28;
-  --dim:#6B7684;
-  --dimLight:#8B95A1;
-  --primary:#FFB800;
-  --primaryDeep:#E5A500;
-  --primaryBg:#FFF8E6;
-  --accent:#FF5E36;
-  --accentDeep:#E04822;
-  --accentBg:#FFF0EC;
-  --mint:#00C7AE;
-  --mintBg:#E6F9F6;
+  --dim:#8B95A1;
+  --dimLight:#B0B8C1;
+  --primary:#FF5000;
+  --primaryDeep:#E04400;
+  --primaryBg:#FFF0EB;
+  --accent:#FF5000;
+  --accentDeep:#E04400;
+  --accentBg:#FFF0EB;
+  --mint:#00B39B;
+  --mintBg:#E6F7F5;
   --danger:#F04438;
 
-  /* ---- Elevation & Floating Shadows ---- */
-  --sh1:0 4px 16px rgba(0,0,0,.04), 0 1px 3px rgba(0,0,0,.02);
-  --sh2:0 10px 28px -4px rgba(0,0,0,.07), 0 2px 8px rgba(0,0,0,.03);
-  --sh3:0 20px 40px -8px rgba(0,0,0,.12), 0 4px 14px rgba(0,0,0,.04);
-  --shPill:0 12px 32px rgba(25,31,40,.15), 0 2px 8px rgba(25,31,40,.08);
+  /* ---- Elevation & Refined Shadows ---- */
+  --sh1:0 2px 8px rgba(0,0,0,.04);
+  --sh2:0 6px 20px -2px rgba(0,0,0,.06);
+  --sh3:0 12px 32px -4px rgba(0,0,0,.09);
+  --shPill:0 4px 16px rgba(0,0,0,.08);
 
-  /* ---- Toss Capsule Radius ---- */
-  --r-sm:12px;
-  --r-md:18px;
-  --r-lg:24px;
-  --r-xl:30px;
+  /* ---- Refined Radius ---- */
+  --r-sm:10px;
+  --r-md:16px;
+  --r-lg:20px;
+  --r-xl:26px;
   --r-full:9999px;
 
   --font-pretendard: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
@@ -61,7 +61,7 @@ html, body {
 }
 .app *{box-sizing:border-box;font-family:var(--font-pretendard)!important;}
 .app button:focus-visible,.app a:focus-visible{
-  outline:2.5px solid var(--accent);outline-offset:2px;
+  outline:2px solid var(--accent);outline-offset:2px;
 }
 
 /* ========== 헤더 ========== */
@@ -515,47 +515,36 @@ html, body {
   .subGrid{grid-template-columns:1fr;}
 }
 
-/* ========== 하단 탭바 (Floating Pill Nav) ========== */
-.hasNav{padding-bottom:calc(92px + env(safe-area-inset-bottom, 0px));}
+/* ========== 하단 탭바 (Standard Modern Bottom Bar) ========== */
+.hasNav{padding-bottom:calc(64px + env(safe-area-inset-bottom, 0px));}
 .bottomNav{
-  position:fixed;left:50%;bottom:max(16px, env(safe-area-inset-bottom, 16px));
-  transform:translateX(-50%);
-  width:calc(100% - 32px);max-width:480px;z-index:100;
+  position:fixed;left:0;right:0;bottom:0;z-index:100;
   display:flex;align-items:center;justify-content:space-around;
-  background:rgba(255,255,255,0.92);
+  background:rgba(255,255,255,0.96);
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,0.8);
-  border-radius:9999px;
-  padding:6px;
-  box-shadow:var(--shPill);
-  transition:all .25s cubic-bezier(.2,.8,.2,1);
+  border-top:1px solid var(--border);
+  padding-bottom:env(safe-area-inset-bottom, 0px);
+  box-shadow:0 -2px 10px rgba(0,0,0,0.03);
 }
 .navItem{
   flex:1;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:3px;padding:8px 4px;
-  border-radius:9999px;text-decoration:none;
-  transition:all .2s cubic-bezier(.2,.8,.2,1);
+  justify-content:center;gap:3px;padding:9px 0 7px;
+  text-decoration:none;color:var(--dim);
+  transition:color .15s ease, transform .12s ease;
 }
-.navItem:active{transform:scale(0.92);}
+.navItem:active{transform:scale(0.95);}
 .navIcon{position:relative;display:flex;align-items:center;justify-content:center;}
-.navLabel{font-size:10.5px;font-weight:600;color:var(--dim);white-space:nowrap;transition:color .2s;}
-.navItem.on{
-  background:var(--ink);
-  color:#FFFFFF;
-  box-shadow:0 4px 14px rgba(25,31,40,.22);
-  transform:translateY(-1px);
-}
-.navItem.on .navLabel{color:#FFFFFF;font-weight:700;}
+.navLabel{font-size:11px;font-weight:600;color:var(--dim);white-space:nowrap;transition:color .15s;}
+.navItem.on .navLabel{color:var(--ink);font-weight:800;}
 .navBadge{
   position:absolute;top:-4px;right:-8px;
   min-width:16px;height:16px;padding:0 5px;
   background:var(--accent);color:#fff;
   border-radius:99px;font-size:9.5px;font-weight:800;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 2px 6px rgba(255,94,54,.4);
 }
 
-/* ========== Toss 3D Bento Grid Widgets ========== */
+/* ========== Clean Refined Bento Grid Widgets ========== */
 .bentoGrid{
   display:grid;
   grid-template-columns:repeat(2, 1fr);
@@ -565,7 +554,7 @@ html, body {
 .bentoCard{
   background:var(--surface);
   border-radius:var(--r-lg);
-  padding:18px;
+  padding:18px 16px;
   border:1px solid var(--border);
   box-shadow:var(--sh1);
   display:flex;
@@ -574,12 +563,12 @@ html, body {
   text-decoration:none;
   color:var(--ink);
   position:relative;
-  overflow:hidden;
-  transition:transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .18s cubic-bezier(.2,.8,.2,1);
+  transition:all .18s cubic-bezier(.2,.8,.2,1);
 }
 .bentoCard:hover{
-  transform:translateY(-3px);
+  transform:translateY(-2px);
   box-shadow:var(--sh2);
+  border-color:var(--dimLight);
 }
 .bentoCard:active{
   transform:scale(0.97);
@@ -588,34 +577,30 @@ html, body {
   grid-column:span 2;
 }
 .bentoIcon{
-  font-size:28px;
+  font-size:22px;
   line-height:1;
-  margin-bottom:10px;
-}
-.bentoBadge{
-  display:inline-flex;
+  margin-bottom:12px;
+  width:40px;
+  height:40px;
+  border-radius:var(--r-md);
+  background:var(--base);
+  display:flex;
   align-items:center;
-  gap:4px;
-  padding:4px 10px;
-  border-radius:var(--r-full);
-  font-size:11px;
-  font-weight:700;
-  background:var(--primaryBg);
-  color:var(--primaryDeep);
-  width:fit-content;
-  margin-bottom:8px;
+  justify-content:center;
 }
 .bentoTitle{
-  font-size:16px;
+  font-size:15px;
   font-weight:800;
-  margin:0 0 4px;
+  margin:0 0 3px;
   letter-spacing:-.02em;
+  color:var(--ink);
 }
 .bentoDesc{
-  font-size:12.5px;
+  font-size:12px;
   color:var(--dim);
   margin:0;
-  line-height:1.45;
+  line-height:1.4;
+  font-weight:500;
 }
 
 /* ========== 랭킹 ========== */

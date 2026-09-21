@@ -13,7 +13,7 @@ const ITEMS = [
 ];
 
 function Icon({ name, active }: { name: string; active: boolean }) {
-  const stroke = active ? "#FFFFFF" : "var(--dim)";
+  const stroke = active ? "var(--primary)" : "var(--dim)";
   const common = {
     width: 22,
     height: 22,
