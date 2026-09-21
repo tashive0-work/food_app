@@ -3,6 +3,7 @@ import { Food, AppState } from "@/types/food";
 import { recipeUrl, mapUrl, matchTags } from "@/lib/recommend";
 import { logInteraction } from "@/lib/supabase";
 import { DELIVERY_APPS } from "@/lib/affiliate";
+import { SHOW_DELIVERY } from "@/lib/features";
 
 interface FoodCardProps {
   food: Food;
@@ -129,16 +130,18 @@ export function FoodCard({
         </div>
 
         <div className="cardBtns">
-          <a
-            className="btn btnSub"
-            href={primaryDeliveryApp.getUrl(food.name)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => logInteraction(diagnosisId || null, food.name, rank, "map_click")}
-            title="배달 앱으로 검색"
-          >
-            배달 주문 🛵
-          </a>
+          {SHOW_DELIVERY && (
+            <a
+              className="btn btnSub"
+              href={primaryDeliveryApp.getUrl(food.name)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => logInteraction(diagnosisId || null, food.name, rank, "map_click")}
+              title="배달 앱으로 검색"
+            >
+              배달 주문 🛵
+            </a>
+          )}
           <a
             className="btn btnMain"
             href={recipeUrl(food.name)}

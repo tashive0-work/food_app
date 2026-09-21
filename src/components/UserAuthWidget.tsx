@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { signInWithProvider, signOut, getCurrentUser, syncLocalFavoritesToUser } from "@/lib/auth";
+import { SHOW_KAKAO_LOGIN } from "@/lib/features";
 
 export function UserAuthWidget() {
   const [user, setUser] = useState<any>(null);
@@ -81,22 +82,24 @@ export function UserAuthWidget() {
         </p>
       </div>
       <div style={{ display: "flex", gap: "8px", width: "100%" }}>
-        <button
-          onClick={() => handleLogin("kakao")}
-          className="btn"
-          style={{
-            flex: 1,
-            backgroundColor: "#FEE500",
-            color: "#000000",
-            border: "none",
-            fontSize: "13px",
-            fontWeight: 700,
-            padding: "10px",
-            cursor: "pointer",
-          }}
-        >
-          카카오 로그인
-        </button>
+        {SHOW_KAKAO_LOGIN && (
+          <button
+            onClick={() => handleLogin("kakao")}
+            className="btn"
+            style={{
+              flex: 1,
+              backgroundColor: "#FEE500",
+              color: "#000000",
+              border: "none",
+              fontSize: "13px",
+              fontWeight: 700,
+              padding: "10px",
+              cursor: "pointer",
+            }}
+          >
+            카카오 로그인
+          </button>
+        )}
         <button
           onClick={() => handleLogin("google")}
           className="btn btnSub"

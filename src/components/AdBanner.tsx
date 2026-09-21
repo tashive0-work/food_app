@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { SHOW_ADS } from "@/lib/features";
 
 interface AdBannerProps {
   unitId?: string;
@@ -9,6 +10,8 @@ interface AdBannerProps {
 }
 
 export function AdBanner({ unitId, format = "banner", className }: AdBannerProps) {
+  if (!SHOW_ADS) return null;
+
   useEffect(() => {
     try {
       if (typeof window !== "undefined" && (window as any).adsbygoogle) {

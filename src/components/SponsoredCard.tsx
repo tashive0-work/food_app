@@ -2,6 +2,7 @@
 
 import React from "react";
 import { logInteraction } from "@/lib/supabase";
+import { SHOW_SPONSORED } from "@/lib/features";
 
 interface SponsoredCardProps {
   storeName: string;
@@ -20,6 +21,8 @@ export function SponsoredCard({
   linkUrl,
   badgeText = "지역 추천 맛집",
 }: SponsoredCardProps) {
+  if (!SHOW_SPONSORED) return null;
+
   const handleClick = () => {
     logInteraction(null, storeName, 0, "map_click");
   };
