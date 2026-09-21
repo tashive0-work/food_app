@@ -53,7 +53,7 @@ export default function Home() {
         <header className="homeHead" style={{ padding: "16px 0 12px" }}>
           <div className="homeHeadRow">
             <Link href="/" className="brandRow" style={{ marginBottom: 0, gap: "6px" }}>
-              <span className="brandMark" style={{ background: "#FF5000", color: "#FFFFFF", fontWeight: 900, borderRadius: "10px" }} aria-hidden="true">오늘</span>
+              <span className="brandMark" style={{ background: "#E8663D", color: "#FFFFFF", fontWeight: 900, borderRadius: "10px" }} aria-hidden="true">오늘</span>
               <span className="brandName" style={{ fontSize: "19px", fontWeight: 900, letterSpacing: "-0.03em" }}>오늘 뭐 먹지?</span>
             </Link>
             <Link href="/settings" className="settingsBtn" aria-label="설정" style={{ background: "#FFFFFF", border: "1px solid var(--border)", width: "36px", height: "36px" }}>
@@ -80,7 +80,7 @@ export default function Home() {
           gap: "12px",
           textDecoration: "none"
         }}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="#FF5000" strokeWidth="2.5" strokeLinecap="round" style={{ width: "19px", height: "19px", flex: "none" }}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#E8663D" strokeWidth="2.5" strokeLinecap="round" style={{ width: "19px", height: "19px", flex: "none" }}>
             <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
           </svg>
           <span style={{ fontSize: "14.5px", color: "var(--dim)", fontWeight: 500 }}>어떤 메뉴가 당기시나요? 검색해 보세요</span>
@@ -104,7 +104,7 @@ export default function Home() {
             alignItems: "center",
             gap: "6px",
             background: "var(--primaryBg)",
-            color: "#FF5000",
+            color: "#E8663D",
             padding: "4px 10px",
             borderRadius: "9999px",
             fontSize: "12px",

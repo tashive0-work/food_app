@@ -3,7 +3,7 @@
 
 /* ========================================
    오늘 뭐 먹지 — Design System v4 (Premium Crisp Minimal)
-   Base: Soft Light Tint (#F2F4F6) / Accent: Signature Coral Orange (#FF5000) / Ink: Deep Charcoal (#191F28)
+   Base: Soft Light Tint (#F2F4F6) / Accent: Terracotta (#E8663D) / Ink: Deep Charcoal (#191F28)
    ======================================== */
 
 html, body {
@@ -29,12 +29,12 @@ html, body {
   --ink:#191F28;
   --dim:#8B95A1;
   --dimLight:#B0B8C1;
-  --primary:#FF5000;
-  --primaryDeep:#E04400;
-  --primaryBg:#FFF0EB;
-  --accent:#FF5000;
-  --accentDeep:#E04400;
-  --accentBg:#FFF0EB;
+  --primary:#E8663D;
+  --primaryDeep:#D2532B;
+  --primaryBg:#FDF2EE;
+  --accent:#E8663D;
+  --accentDeep:#D2532B;
+  --accentBg:#FDF2EE;
   --mint:#00B39B;
   --mintBg:#E6F7F5;
   --danger:#F04438;
