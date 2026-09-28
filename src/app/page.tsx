@@ -7,10 +7,11 @@ import { THEMES } from "@/data/themes";
 import { BottomNav } from "@/components/BottomNav";
 import { FoodImage } from "@/components/FoodImage";
 import { loadTodayResult, TodayResult } from "@/lib/todayResult";
-import { getPopularFoods, PopularResult } from "@/lib/popular";
 import { getTrends } from "@/lib/trend";
 import { TrendItem } from "@/types/trend";
 import { Mascot } from "@/components/Mascot";
+import { getRotatedFoods, RotationResult } from "@/lib/rotation";
+import { loadDietSettings } from "@/lib/dietFilter";
 
 export default function Home() {
   const [favorites, setFavorites] = useState<number[]>([]);
@@ -18,11 +19,7 @@ export default function Home() {
   const [greeting, setGreeting] = useState("");
   const [dateLabel, setDateLabel] = useState("");
   const [trends, setTrends] = useState<TrendItem[]>([]);
-  const [popularData, setPopularData] = useState<PopularResult>({
-    foods: [...FOODS].sort((a,b)=>(b.ease+b.light)-(a.ease+a.light)).slice(0,8),
-    isRealData: false,
-    label: "간편하게 먹기 좋은 메뉴",
-  });
+  const [rotatedData, setRotatedData] = useState<RotationResult>(() => getRotatedFoods());
 
   useEffect(() => {
     try {
@@ -33,7 +30,9 @@ export default function Home() {
     }
     setToday(loadTodayResult());
 
-    getPopularFoods().then((res) => setPopularData(res));
+    const dietSettings = loadDietSettings();
+    setRotatedData(getRotatedFoods({ dietSettings }));
+
     getTrends(8).then((res) => setTrends(res));
 
     const now = new Date();
@@ -253,17 +252,16 @@ export default function Home() {
           </Link>
         </section>
 
-        {/* 인기 메뉴 카드 섹션 */}
+        {/* 시간대별 로테이션 메뉴 카드 섹션 */}
         <section className="homeSec" style={{ marginBottom: "28px" }}>
           <div className="homeSecHead" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
             <h2 style={{ fontSize: "19px", fontWeight: 800, margin: 0, letterSpacing: "-0.02em" }}>
-              {popularData.label}
-              {popularData.isRealData && <span className="liveBadge" style={{ marginLeft: "8px" }}>인기</span>}
+              {rotatedData.title}
             </h2>
           </div>
           <div className="hScroll">
-            {popularData.foods.map((f) => (
-              <Link key={f.id} href="/theme" className="miniCard" style={{
+            {rotatedData.foods.map((f) => (
+              <Link key={f.id} href={`/food/${encodeURIComponent(f.name)}`} className="miniCard" style={{
                 background: "#FFFFFF",
                 borderRadius: "var(--r-lg)",
                 padding: "12px",

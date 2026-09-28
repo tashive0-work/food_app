@@ -924,8 +924,36 @@ html, body {
 /* ========== 이미지 폴백 ========== */
 .miniCardImg,
 .heroCardImg,
-.trendCardImg{
+.trendCardImg,
+.detailHeroImg,
+.relatedItemThumb{
   background:linear-gradient(135deg,var(--primaryBg),var(--accentBg));
+}
+.detailHeroImg,
+.relatedItemThumb{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.detailHeroImg img,
+.relatedItemThumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.detailHeroImg .imgFallbackEmoji{
+  font-size:64px;
+}
+.relatedItemThumb .imgFallbackEmoji{
+  font-size:32px;
+}
+@media (hover:hover) and (pointer:fine){
+  .relatedItemThumb:hover{
+    opacity:.9;
+  }
 }
 .imgFallback{
   display:flex;
