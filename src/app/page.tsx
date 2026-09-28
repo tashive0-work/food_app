@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { FOODS } from "@/data/foods";
 import { THEMES } from "@/data/themes";
@@ -20,6 +20,38 @@ export default function Home() {
   const [dateLabel, setDateLabel] = useState("");
   const [trends, setTrends] = useState<TrendItem[]>([]);
   const [rotatedData, setRotatedData] = useState<RotationResult>(() => getRotatedFoods());
+
+  // 가로 스크롤 영역 제어
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const updateScrollButtons = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanScrollLeft(scrollLeft > 4);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 4);
+  }, []);
+
+  const handleScroll = (direction: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    // 카드 약 2~3개 분량 스크롤
+    const scrollAmount = 300;
+    el.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    updateScrollButtons();
+    window.addEventListener("resize", updateScrollButtons);
+    return () => window.removeEventListener("resize", updateScrollButtons);
+  }, [updateScrollButtons, rotatedData.foods]);
 
   useEffect(() => {
     try {
@@ -259,23 +291,51 @@ export default function Home() {
               {rotatedData.title}
             </h2>
           </div>
-          <div className="hScroll">
-            {rotatedData.foods.map((f) => (
-              <Link key={f.id} href={`/food/${encodeURIComponent(f.name)}`} className="miniCard" style={{
-                background: "#FFFFFF",
-                borderRadius: "var(--r-lg)",
-                padding: "12px",
-                border: "1px solid var(--border)",
-                boxShadow: "var(--sh1)",
-                textDecoration: "none",
-                overflow: "hidden",
-                boxSizing: "border-box"
-              }}>
-                <FoodImage name={f.name} className="miniCardImg" showLabel={false} />
-                <p className="miniCardName" style={{ marginTop: "8px", fontWeight: 700, fontSize: "14px", color: "var(--ink)" }}>{f.name}</p>
-                <p className="miniCardKind" style={{ margin: "2px 0 0", fontSize: "11.5px", color: "var(--dim)" }}>{f.kind}</p>
-              </Link>
-            ))}
+          <div className="hScrollContainer">
+            {canScrollLeft && (
+              <button
+                type="button"
+                className="scrollArrowBtn left"
+                onClick={() => handleScroll("left")}
+                aria-label="이전 메뉴 보기"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+            )}
+
+            <div className="hScroll" ref={scrollRef} onScroll={updateScrollButtons}>
+              {rotatedData.foods.map((f) => (
+                <Link key={f.id} href={`/food/${encodeURIComponent(f.name)}`} className="miniCard" style={{
+                  background: "#FFFFFF",
+                  borderRadius: "var(--r-lg)",
+                  padding: "12px",
+                  border: "1px solid var(--border)",
+                  boxShadow: "var(--sh1)",
+                  textDecoration: "none",
+                  overflow: "hidden",
+                  boxSizing: "border-box"
+                }}>
+                  <FoodImage name={f.name} className="miniCardImg" showLabel={false} />
+                  <p className="miniCardName" style={{ marginTop: "8px", fontWeight: 700, fontSize: "14px", color: "var(--ink)" }}>{f.name}</p>
+                  <p className="miniCardKind" style={{ margin: "2px 0 0", fontSize: "11.5px", color: "var(--dim)" }}>{f.kind}</p>
+                </Link>
+              ))}
+            </div>
+
+            {canScrollRight && (
+              <button
+                type="button"
+                className="scrollArrowBtn right"
+                onClick={() => handleScroll("right")}
+                aria-label="다음 메뉴 보기"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </button>
+            )}
           </div>
         </section>
 

@@ -829,6 +829,48 @@ html, body {
 }
 
 /* 가로 스크롤 영역 */
+.hScrollContainer{
+  position:relative;
+  width:100%;
+}
+
+/* 터치·모바일 환경에서는 기본 숨김 (스와이프 우선, 카드 가림 방지) */
+.scrollArrowBtn{
+  display:none;
+}
+
+/* 데스크톱 마우스 환경에서만 표시 */
+@media (hover:hover) and (pointer:fine){
+  .scrollArrowBtn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:absolute;
+    top:calc(50% - 4px);
+    transform:translateY(-50%);
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#FFFFFF;
+    border:1px solid var(--border);
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    color:var(--ink);
+    cursor:pointer;
+    z-index:10;
+    transition:background-color .15s ease;
+    padding:0;
+  }
+  .scrollArrowBtn.left{
+    left:-14px;
+  }
+  .scrollArrowBtn.right{
+    right:-14px;
+  }
+  .scrollArrowBtn:hover{
+    background:#F8F9FA;
+  }
+}
+
 .hScroll{
   display:flex;
   gap:12px;
