@@ -10,6 +10,7 @@ const ITEMS = [
   { href: "/theme", label: "테마", icon: "theme" },
   { href: "/trend", label: "트렌드", icon: "trend" },
   { href: "/favorites", label: "찜", icon: "heart" },
+  { href: "/settings", label: "내 정보", icon: "user" },
 ];
 
 function Icon({ name, active }: { name: string; active: boolean }) {
@@ -53,6 +54,13 @@ function Icon({ name, active }: { name: string; active: boolean }) {
       <svg {...common}>
         <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
         <polyline points="17 6 23 6 23 12" />
+      </svg>
+    );
+  if (name === "user")
+    return (
+      <svg {...common}>
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
       </svg>
     );
   return (
