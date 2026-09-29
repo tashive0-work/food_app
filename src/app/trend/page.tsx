@@ -126,6 +126,7 @@ export default function TrendPage() {
                       src={t.image_url ?? undefined}
                       name={t.name}
                       className="trendCardImg"
+                      showLabel={false}
                     />
                     <div className="trendCardBody">
                       <div className="trendCardTop">
@@ -143,11 +144,17 @@ export default function TrendPage() {
                           </span>
                         )}
                         {t.sources?.map((s) => {
-                          const cls = s === "naver" ? "n" : s === "youtube" ? "y" : "g";
-                          const label = s === "naver" ? "네이버" : s === "youtube" ? "유튜브" : "구글";
+                          const SRC: Record<string, { cls: string; label: string }> = {
+                            naver: { cls: "n", label: "네이버" },
+                            youtube: { cls: "y", label: "유튜브" },
+                            google: { cls: "g", label: "구글" },
+                            curated: { cls: "g", label: "큐레이션" },
+                          };
+                          const meta = SRC[s];
+                          if (!meta) return null;
                           return (
-                            <span key={s} className={`srcBadge ${cls}`}>
-                              {label}
+                            <span key={s} className={`srcBadge ${meta.cls}`}>
+                              {meta.label}
                             </span>
                           );
                         })}
