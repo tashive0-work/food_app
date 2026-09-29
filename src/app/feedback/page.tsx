@@ -142,6 +142,11 @@ function FeedbackContent() {
         });
         if (error) {
           console.warn("Supabase feedback insert error:", error.message);
+          setErrorMsg(
+            "전송이 완료되지 않았습니다. 잠시 후 다시 시도해 주세요. (내용은 이 기기에 임시 저장되어 있습니다)"
+          );
+          setSubmitting(false);
+          return;
         }
       }
       setSuccessMsg("💌 소중한 의견이 정상 접수되었습니다! 정성껏 검토하여 반영하겠습니다.");
