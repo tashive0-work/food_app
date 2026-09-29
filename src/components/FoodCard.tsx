@@ -127,34 +127,32 @@ export function FoodCard({
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-        <div className="feedbackBtns" style={{ display: "flex", gap: "4px" }}>
+        <div className="reactBtns">
           <button
+            type="button"
             onClick={handleLike}
+            className={feedback === "like" ? "reactBtn like on" : "reactBtn like"}
+            aria-label="좋아요"
+            aria-pressed={feedback === "like"}
             title="좋아요"
-            style={{
-              background: feedback === "like" ? "#FFF3F2" : "transparent",
-              border: feedback === "like" ? "1.5px solid var(--red)" : "1.5px solid var(--line)",
-              borderRadius: "2px",
-              padding: "5px 8px",
-              cursor: "pointer",
-              fontSize: "11px",
-            }}
           >
-            좋아요
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 10.5V20H4.5A1.5 1.5 0 0 1 3 18.5v-6.5A1.5 1.5 0 0 1 4.5 10.5H7Z" />
+              <path d="M7 10.5 11.3 3.6a1.6 1.6 0 0 1 2.9 1.2l-.9 4.2h5a2 2 0 0 1 1.96 2.4l-1.2 6A2 2 0 0 1 17.1 19H7" />
+            </svg>
           </button>
           <button
+            type="button"
             onClick={handleDislike}
+            className={feedback === "dislike" ? "reactBtn dislike on" : "reactBtn dislike"}
+            aria-label="별로예요"
+            aria-pressed={feedback === "dislike"}
             title="별로예요"
-            style={{
-              background: feedback === "dislike" ? "#F5F5F5" : "transparent",
-              border: feedback === "dislike" ? "1.5px solid var(--dim)" : "1.5px solid var(--line)",
-              borderRadius: "2px",
-              padding: "5px 8px",
-              cursor: "pointer",
-              fontSize: "11px",
-            }}
           >
-            별로
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M17 13.5V4h2.5A1.5 1.5 0 0 1 21 5.5V12a1.5 1.5 0 0 1-1.5 1.5H17Z" />
+              <path d="M17 13.5 12.7 20.4a1.6 1.6 0 0 1-2.9-1.2l.9-4.2h-5a2 2 0 0 1-1.96-2.4l1.2-6A2 2 0 0 1 6.9 5H17" />
+            </svg>
           </button>
         </div>
 

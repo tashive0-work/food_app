@@ -1333,3 +1333,34 @@ a.rankItem{text-decoration:none;color:inherit;transition:background-color .15s;}
   .sortChip:hover{border-color:var(--accent,#E8663D);color:var(--accent,#E8663D);}
   .sortChip.on:hover{color:#FFFFFF;}
 }
+
+/* ========== 좋아요 / 별로 아이콘 버튼 ========== */
+.reactBtns{display:flex;align-items:center;gap:6px;}
+.reactBtn{
+  width:34px;height:34px;flex:none;
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:9999px;
+  background:#FFFFFF;border:1px solid var(--border);
+  cursor:pointer;padding:0;
+  transition:border-color .15s,background .15s,transform .12s;
+}
+.reactBtn svg{
+  width:17px;height:17px;
+  fill:none;stroke:var(--dim);stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;
+  transition:stroke .15s,fill .15s;
+}
+.reactBtn:active{transform:scale(0.92);}
+
+/* 선택 상태 — 아이콘을 채워서 눌린 것이 분명히 보이게 */
+.reactBtn.like.on{background:var(--accentBg);border-color:var(--accent);}
+.reactBtn.like.on svg{stroke:var(--accent);fill:var(--accent);}
+.reactBtn.dislike.on{background:#F2F4F6;border-color:var(--dim);}
+.reactBtn.dislike.on svg{stroke:var(--dim);fill:var(--dim);}
+
+@media (hover: hover) and (pointer: fine){
+  .reactBtn:hover{border-color:var(--dimLight);}
+  .reactBtn.like:hover svg{stroke:var(--accent);}
+  .reactBtn.like.on:hover{border-color:var(--accentDeep);}
+  .reactBtn.dislike.on:hover{border-color:var(--ink);}
+}
