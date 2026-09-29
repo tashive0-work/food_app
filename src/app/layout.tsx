@@ -3,9 +3,9 @@ import "./globals.css";
 import { SplashScreen } from "@/components/SplashScreen";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://food-app-three-beta-89.vercel.app"),
-  title: "오늘 뭐 먹지 - 상태 기반 음식 추천",
-  description: "지금 내 상태에 딱 맞는 메뉴를 진단받고 추천받아 보세요.",
+  metadataBase: new URL("https://eatodayme.com"),
+  title: "오늘 뭐 먹지? 고민은 여기까지!",
+  description: "점심·저녁 메뉴 고민될 때, 8문항만 답하면 지금 상태에 맞는 메뉴를 골라드려요. 무료.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -17,23 +17,23 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "오늘 뭐 먹지 - 상태 기반 음식 추천",
-    description: "지금 내 상태에 딱 맞는 메뉴를 진단받고 추천받아 보세요.",
-    url: "https://food-app-three-beta-89.vercel.app",
+    title: "오늘 뭐 먹지? 고민은 여기까지!",
+    description: "점심·저녁 메뉴 고민될 때, 8문항만 답하면 지금 상태에 맞는 메뉴를 골라드려요. 무료.",
+    url: "https://eatodayme.com",
     siteName: "오늘 뭐 먹지",
     images: [{
       url: "/og-image.png",
       width: 1200,
       height: 630,
-      alt: "오늘 뭐 먹지 - 상태 기반 음식 추천",
+      alt: "오늘 뭐 먹지? 고민은 여기까지!",
     }],
     locale: "ko_KR",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "오늘 뭐 먹지 - 상태 기반 음식 추천",
-    description: "지금 내 상태에 딱 맞는 메뉴를 진단받고 추천받아 보세요.",
+    title: "오늘 뭐 먹지? 고민은 여기까지!",
+    description: "점심·저녁 메뉴 고민될 때, 8문항만 답하면 지금 상태에 맞는 메뉴를 골라드려요. 무료.",
     images: ["/og-image.png"],
   },
 };
