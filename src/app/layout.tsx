@@ -13,8 +13,8 @@ export const metadata: Metadata = {
     title: "오늘 뭐 먹지",
   },
   icons: {
-    icon: "/icon-192.png",
-    apple: "/icon-192.png",
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
   },
   openGraph: {
     title: "오늘 뭐 먹지 - 상태 기반 음식 추천",
