@@ -9,6 +9,7 @@ import { ThemeTab } from "@/components/ThemeTab";
 import { BottomNav } from "@/components/BottomNav";
 
 import { loadDietSettings, applyDietFilter } from "@/lib/dietFilter";
+import { sortThemeFoods, SortKey } from "@/lib/themeSort";
 
 function ThemeContent() {
   const searchParams = useSearchParams();
@@ -16,10 +17,14 @@ function ThemeContent() {
 
   const [theme, setTheme] = useState(initialKey);
   const [favorites, setFavorites] = useState<number[]>([]);
+  const [sort, setSort] = useState<SortKey>("relevant");
 
   useEffect(() => {
     const k = searchParams.get("k");
-    if (k) setTheme(k);
+    if (k) {
+      setTheme(k);
+      setSort("relevant");
+    }
   }, [searchParams]);
 
   useEffect(() => {
@@ -44,7 +49,11 @@ function ThemeContent() {
   };
 
   const rawThemeFoods = FOODS.filter((f) => f.themes.includes(theme));
-  const themeFoods = applyDietFilter(rawThemeFoods, loadDietSettings());
+  const themeFoods = sortThemeFoods(
+    applyDietFilter(rawThemeFoods, loadDietSettings()),
+    theme,
+    sort
+  );
   const curTheme = THEMES.find((t) => t.key === theme);
 
   return (
@@ -64,6 +73,8 @@ function ThemeContent() {
           currentThemeKey={theme}
           onSelectTheme={setTheme}
           themeFoods={themeFoods}
+          sort={sort}
+          onSelectSort={setSort}
           favorites={favorites}
           onToggleFavorite={toggleFavorite}
         />

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Food, ThemeItem } from "@/types/food";
+import { SORT_OPTIONS, SortKey } from "@/lib/themeSort";
 import { FoodCard } from "./FoodCard";
 
 interface ThemeTabProps {
@@ -7,6 +8,8 @@ interface ThemeTabProps {
   currentThemeKey: string;
   onSelectTheme: (key: string) => void;
   themeFoods: Food[];
+  sort: SortKey;
+  onSelectSort: (key: SortKey) => void;
   favorites: number[];
   onToggleFavorite?: (foodId: number) => void;
 }
@@ -16,6 +19,8 @@ export function ThemeTab({
   currentThemeKey,
   onSelectTheme,
   themeFoods,
+  sort,
+  onSelectSort,
   favorites,
   onToggleFavorite,
 }: ThemeTabProps) {
@@ -44,6 +49,21 @@ export function ThemeTab({
       <div className="secHead">
         <h2 className="secTitle">{currentTheme?.label}</h2>
         <p className="secSub">{currentTheme?.desc}</p>
+      </div>
+
+      <div className="sortRow" role="group" aria-label="정렬">
+        {SORT_OPTIONS.map((o) => (
+          <button
+            key={o.key}
+            type="button"
+            className={sort === o.key ? "sortChip on" : "sortChip"}
+            aria-pressed={sort === o.key}
+            onClick={() => onSelectSort(o.key)}
+          >
+            {o.label}
+          </button>
+        ))}
+        <span className="sortCount">{themeFoods.length}개</span>
       </div>
       <div className="grid">
         {themeFoods.slice(0, limit).map((f) => (
