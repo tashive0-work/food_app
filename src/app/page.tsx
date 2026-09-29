@@ -24,14 +24,15 @@ export default function Home() {
   // 가로 스크롤 영역 제어
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
   const updateScrollButtons = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
+    const hasOverflow = scrollWidth > clientWidth + 2;
     setCanScrollLeft(scrollLeft > 4);
-    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 4);
+    setCanScrollRight(hasOverflow && scrollLeft + clientWidth < scrollWidth - 4);
   }, []);
 
   const handleScroll = (direction: "left" | "right") => {
@@ -48,9 +49,25 @@ export default function Home() {
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
+
     updateScrollButtons();
+    const rafId = requestAnimationFrame(() => updateScrollButtons());
+    const timer = setTimeout(() => updateScrollButtons(), 150);
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(() => updateScrollButtons());
+      ro.observe(el);
+    }
+
     window.addEventListener("resize", updateScrollButtons);
-    return () => window.removeEventListener("resize", updateScrollButtons);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearTimeout(timer);
+      if (ro) ro.disconnect();
+      window.removeEventListener("resize", updateScrollButtons);
+    };
   }, [updateScrollButtons, rotatedData.foods]);
 
   useEffect(() => {

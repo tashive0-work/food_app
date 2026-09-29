@@ -839,8 +839,8 @@ html, body {
   display:none;
 }
 
-/* 데스크톱 마우스 환경에서만 표시 */
-@media (hover:hover) and (pointer:fine){
+/* 데스크톱 마우스 환경에서만 표시 (터치스크린 장착 노트북 포괄 및 모바일 배제) */
+@media (hover:hover) and (pointer:fine), (any-hover:hover) and (any-pointer:fine) and (min-width:768px){
   .scrollArrowBtn{
     display:flex;
     align-items:center;
@@ -857,14 +857,14 @@ html, body {
     color:var(--ink);
     cursor:pointer;
     z-index:10;
-    transition:background-color .15s ease;
+    transition:background-color .15s ease, opacity .15s ease;
     padding:0;
   }
   .scrollArrowBtn.left{
-    left:-14px;
+    left:2px;
   }
   .scrollArrowBtn.right{
-    right:-14px;
+    right:2px;
   }
   .scrollArrowBtn:hover{
     background:#F8F9FA;
@@ -894,6 +894,9 @@ html, body {
   flex-direction:column;
   box-sizing:border-box;
   overflow:hidden;
+}
+@media (min-width:768px){
+  .miniCard{flex:0 0 148px;}
 }
 .miniCard.sm{flex:0 0 110px;padding:14px 12px;}
 .miniCardImg{
