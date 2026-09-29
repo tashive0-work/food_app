@@ -1150,7 +1150,7 @@ html, body {
   right: 0;
   bottom: 0;
   z-index: 9999;
-  background-color: #1F6F4A;
+  background-color: #E8663D;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1190,18 +1190,18 @@ html, body {
 }
 
 .splashLogoBadge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 72px;
-  height: 72px;
-  background-color: #FFFFFF;
-  border-radius: 20px;
-  color: #1F6F4A;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -.03em;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  display: block;
+  width: 148px;
+  height: 148px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.18));
+}
+
+@media (max-width: 380px) {
+  .splashLogoBadge {
+    width: 124px;
+    height: 124px;
+  }
 }
 
 .splashAppName {

@@ -85,7 +85,13 @@ export function SplashScreen() {
       aria-hidden="true"
     >
       <div className="splashCenter">
-        <div className="splashLogoBadge">오늘</div>
+        <img
+          className="splashLogoBadge"
+          src="/mascot/omeok-default.png"
+          alt=""
+          width={148}
+          height={148}
+        />
         <div className="splashAppName">오늘 뭐 먹지?</div>
         <div className="splashSubCopy">오늘 뭐 먹을지 대신 정해드려요</div>
       </div>
