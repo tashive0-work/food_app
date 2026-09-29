@@ -102,7 +102,9 @@ export default function Home() {
         <header className="homeHead" style={{ padding: "16px 0 12px" }}>
           <div className="homeHeadRow">
             <Link href="/" className="brandRow" style={{ marginBottom: 0, gap: "6px" }}>
-              <span className="brandMark" style={{ background: "#E8663D", color: "#FFFFFF", fontWeight: 900, borderRadius: "10px" }} aria-hidden="true">오늘</span>
+              <span className="brandMarkImg" aria-hidden="true">
+                <img src="/mascot/omeok-default.png" alt="" width={34} height={34} />
+              </span>
               <span className="brandName" style={{ fontSize: "19px", fontWeight: 900, letterSpacing: "-0.03em" }}>오늘 뭐 먹지?</span>
             </Link>
             <Link href="/settings" className="settingsEntry" aria-label="내 정보 및 설정">
