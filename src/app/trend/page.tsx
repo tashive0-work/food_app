@@ -240,7 +240,7 @@ export default function TrendPage() {
                               근처 식당
                             </a>
                           </div>
-                          <p className="trendNotInDb">아직 추천 메뉴에는 없어요</p>
+                          <p className="trendNotInDb">메뉴 추가 예정</p>
                         </div>
                       )}
                     </div>
