@@ -13,10 +13,26 @@ import { TrendItem } from "@/types/trend";
 import { logInteraction } from "@/lib/supabase";
 
 const AXES = [
-  { key: "ease",  label: "빨리 되는 순", desc: "조리·대기 시간이 짧은 메뉴" },
-  { key: "light", label: "속 편한 순",   desc: "소화 부담이 적은 메뉴" },
-  { key: "fill",  label: "든든한 순",    desc: "포만감이 큰 메뉴" },
-  { key: "spice", label: "얼큰한 순",    desc: "자극이 강한 메뉴" },
+  {
+    key: "ease", label: "빨리 되는", desc: "조리·대기 시간이 짧은 메뉴",
+    tiers: { 4: "바로 되는", 3: "금방 되는", 2: "조금 걸리는" },
+    tie: ["light", "comfort"],
+  },
+  {
+    key: "light", label: "속 편한", desc: "소화 부담이 적은 메뉴",
+    tiers: { 4: "아주 가벼운", 3: "가벼운 편", 2: "보통" },
+    tie: ["ease", "comfort"],
+  },
+  {
+    key: "fill", label: "든든한", desc: "포만감이 큰 메뉴",
+    tiers: { 4: "아주 든든한", 3: "든든한 편", 2: "적당한" },
+    tie: ["warm", "comfort"],
+  },
+  {
+    key: "spice", label: "얼큰한", desc: "자극이 강한 메뉴",
+    tiers: { 4: "아주 얼큰한", 3: "얼큰한 편", 2: "살짝 매운" },
+    tie: ["warm", "fill"],
+  },
 ] as const;
 
 export default function TrendPage() {
@@ -57,10 +73,29 @@ export default function TrendPage() {
 
   // 랭킹 탭 데이터
   const currentAxis = AXES.find((a) => a.key === axis)!;
-  const rawRankList = [...FOODS].sort(
-    (a, b) => (b[axis as keyof typeof b] as number) - (a[axis as keyof typeof a] as number)
-  );
-  const rankList = applyDietFilter(rawRankList, loadDietSettings()).slice(0, 20);
+  const axisKey = currentAxis.key as "ease" | "light" | "fill" | "spice";
+
+  // 같은 점수 안에서는 보조 축으로, 그래도 같으면 이름순으로 정렬해
+  // 순서가 매번 달라지지 않도록 한다
+  const sorted = [...FOODS].sort((a, b) => {
+    const diff = (b[axisKey] as number) - (a[axisKey] as number);
+    if (diff !== 0) return diff;
+    for (const t of currentAxis.tie) {
+      const d = (b[t as keyof typeof b] as number) - (a[t as keyof typeof a] as number);
+      if (d !== 0) return d;
+    }
+    return a.name.localeCompare(b.name, "ko");
+  });
+  const filtered = applyDietFilter(sorted, loadDietSettings());
+
+  // 점수별 등급으로 묶는다 (같은 점수를 1위·5위로 줄 세우지 않는다)
+  const tierGroups = ([4, 3, 2] as const)
+    .map((score) => ({
+      score,
+      label: (currentAxis.tiers as Record<number, string>)[score],
+      items: filtered.filter((f) => (f[axisKey] as number) === score).slice(0, 12),
+    }))
+    .filter((g) => g.items.length > 0);
 
   return (
     <div className="app hasNav">
@@ -166,7 +201,7 @@ export default function TrendPage() {
                             href={recipeUrl(t.matched_food_name)}
                             target="_blank"
                             rel="noreferrer"
-                            className="btnSub sm"
+                            className="btn btnSub sm"
                           >
                             레시피 보기
                           </a>
@@ -174,13 +209,13 @@ export default function TrendPage() {
                             href={mapUrl(t.matched_food_name)}
                             target="_blank"
                             rel="noreferrer"
-                            className="btnSub sm"
+                            className="btn btnSub sm"
                           >
                             근처 식당
                           </a>
                           <button
                             onClick={() => toggleFavByFoodName(t.matched_food_name!)}
-                            className={isFav ? "btnSub sm fav on" : "btnSub sm fav"}
+                            className={isFav ? "btn btnSub sm fav on" : "btn btnSub sm fav"}
                           >
                             {isFav ? "♥ 찜함" : "♡ 찜하기"}
                           </button>
@@ -192,7 +227,7 @@ export default function TrendPage() {
                               href={recipeUrl(t.name)}
                               target="_blank"
                               rel="noreferrer"
-                              className="btnSub sm"
+                              className="btn btnSub sm"
                             >
                               레시피 검색
                             </a>
@@ -200,7 +235,7 @@ export default function TrendPage() {
                               href={mapUrl(t.name)}
                               target="_blank"
                               rel="noreferrer"
-                              className="btnSub sm"
+                              className="btn btnSub sm"
                             >
                               근처 식당
                             </a>
@@ -230,31 +265,37 @@ export default function TrendPage() {
             </div>
 
             <div className="secHead">
-              <h2 className="secTitle">{currentAxis.label}</h2>
+              <h2 className="secTitle">{currentAxis.label} 메뉴</h2>
               <p className="secSub">{currentAxis.desc}</p>
             </div>
 
-            <div className="rankList">
-              {rankList.map((f, i) => {
-                const v = f[axis as keyof typeof f] as number;
-                return (
-                  <div key={f.id} className="rankItem">
-                    <span className="rankItemNo">{i + 1}</span>
-                    <div className="rankItemMain">
-                      <p className="rankItemName">{f.name}</p>
-                      <p className="rankItemKind">{f.kind}</p>
-                    </div>
-                    <div className="rankItemBar">
-                      <div
-                        className="rankItemFill"
-                        style={{ width: `${(v / 4) * 100}%` }}
-                      />
-                    </div>
-                    <span className="rankItemVal">{v}/4</span>
+            {tierGroups.length === 0 ? (
+              <p className="rankEmpty">조건에 맞는 메뉴가 없어요</p>
+            ) : (
+              tierGroups.map((g) => (
+                <section key={g.score} className="tierBlock">
+                  <div className="tierHead">
+                    <span className="tierLabel">{g.label}</span>
+                    <span className="tierCount">{g.items.length}개</span>
                   </div>
-                );
-              })}
-            </div>
+                  <div className="rankList">
+                    {g.items.map((f) => (
+                      <Link
+                        key={f.id}
+                        href={`/food/${encodeURIComponent(f.name)}`}
+                        className="rankItem"
+                      >
+                        <div className="rankItemMain">
+                          <p className="rankItemName">{f.name}</p>
+                          <p className="rankItemKind">{f.kind}</p>
+                        </div>
+                        <span className="rankItemGo" aria-hidden="true">›</span>
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              ))
+            )}
           </div>
         )}
       </main>
