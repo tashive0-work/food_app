@@ -1,29 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 
-const KEY = "beta_banner_dismissed_v1";
-
+/**
+ * 베타 안내 배너.
+ * 닫기는 "이번 화면에서만" 유효합니다. 새로고침하면 다시 나타납니다.
+ * (저장하지 않으므로 localStorage 를 쓰지 않습니다)
+ */
 export function BetaBanner() {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    try {
-      if (localStorage.getItem(KEY) !== "1") setShow(true);
-    } catch {
-      setShow(true);
-    }
-  }, []);
-
-  const close = () => {
-    setShow(false);
-    try {
-      localStorage.setItem(KEY, "1");
-    } catch {
-      /* 사생활 보호 모드 등에서는 저장이 막힐 수 있습니다 */
-    }
-  };
+  const [show, setShow] = useState(true);
 
   if (!show) return null;
 
@@ -40,7 +26,12 @@ export function BetaBanner() {
           . 그대로 반영됩니다.
         </p>
       </div>
-      <button type="button" className="betaClose" onClick={close} aria-label="베타 안내 닫기">
+      <button
+        type="button"
+        className="betaClose"
+        onClick={() => setShow(false)}
+        aria-label="베타 안내 닫기"
+      >
         ✕
       </button>
     </div>

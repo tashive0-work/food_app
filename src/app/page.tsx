@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FOODS } from "@/data/foods";
 import { THEMES } from "@/data/themes";
 import { BetaBanner } from "@/components/BetaBanner";
+import { BetaModal } from "@/components/BetaModal";
 import { BottomNav } from "@/components/BottomNav";
 import { FoodImage } from "@/components/FoodImage";
 import { loadTodayResult, TodayResult } from "@/lib/todayResult";
@@ -121,6 +122,8 @@ export default function Home() {
             <h1 className="homeGreet" style={{ fontSize: "24px", fontWeight: 800, margin: 0, letterSpacing: "-0.03em" }}>{greeting}</h1>
           </div>
         </header>
+
+        <BetaModal />
 
         <BetaBanner />
 
