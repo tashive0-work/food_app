@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "sync:foods": "node scripts/sync-foods.mjs",
+    "prebuild": "node scripts/sync-foods.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.111.0",
