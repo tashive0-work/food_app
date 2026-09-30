@@ -5,13 +5,33 @@ import Link from "next/link";
 
 /**
  * 시범 운영 안내 팝업.
- * 화면을 열 때마다 뜹니다. (저장하지 않으므로 새로고침하면 다시 나타납니다)
+ * 한 번 닫으면 그 방문(탭) 동안은 다시 뜨지 않습니다. 새로고침해도 유지됩니다.
+ * 탭을 닫았다가 새로 들어오면 다시 뜹니다. (sessionStorage 사용)
  * 0.6초 뒤에 떠서 첫 화면이 그려진 다음에 보이도록 했습니다.
  */
+const SEEN_KEY = "beta_modal_seen";
+
 export function BetaModal() {
   const [open, setOpen] = useState(false);
 
+  // 닫기 = 이번 방문 동안 다시 띄우지 않음
+  const dismiss = () => {
+    setOpen(false);
+    try {
+      sessionStorage.setItem(SEEN_KEY, "1");
+    } catch {
+      // 시크릿 모드 등에서 저장이 막히면 그냥 넘어갑니다
+    }
+  };
+
   useEffect(() => {
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem(SEEN_KEY) === "1";
+    } catch {
+      seen = false;
+    }
+    if (seen) return;
     const t = setTimeout(() => setOpen(true), 600);
     return () => clearTimeout(t);
   }, []);
@@ -30,7 +50,7 @@ export function BetaModal() {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") dismiss();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -43,7 +63,7 @@ export function BetaModal() {
       className="betaModalBack"
       role="presentation"
       onClick={(e) => {
-        if (e.target === e.currentTarget) setOpen(false);
+        if (e.target === e.currentTarget) dismiss();
       }}
     >
       <div
@@ -55,7 +75,7 @@ export function BetaModal() {
         <button
           type="button"
           className="betaModalClose"
-          onClick={() => setOpen(false)}
+          onClick={dismiss}
           aria-label="닫기"
         >
           ✕
@@ -86,10 +106,10 @@ export function BetaModal() {
         </ul>
 
         <div className="betaModalBtns">
-          <Link href="/feedback" className="betaModalPrimary" onClick={() => setOpen(false)}>
+          <Link href="/feedback" className="betaModalPrimary" onClick={dismiss}>
             의견 남기기
           </Link>
-          <button type="button" className="betaModalGhost" onClick={() => setOpen(false)}>
+          <button type="button" className="betaModalGhost" onClick={dismiss}>
             둘러볼게요
           </button>
         </div>

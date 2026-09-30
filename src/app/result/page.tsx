@@ -8,6 +8,7 @@ import { AppState } from "@/types/food";
 import { classify, recommend } from "@/lib/recommend";
 import { FAST_SKIP_AXES } from "@/data/questions";
 import { FoodCard } from "@/components/FoodCard";
+import { HScroll } from "@/components/HScroll";
 import { HeroCard } from "@/components/HeroCard";
 import { Receipt } from "@/components/Receipt";
 import { BottomNav } from "@/components/BottomNav";
@@ -219,7 +220,7 @@ export default function ResultPage() {
                     <h3 className="secTitleSm">이런 것도 잘 맞아요</h3>
                     <p className="secSub">1번이 안 당기면 여기서 고르셔도 좋아요.</p>
                   </div>
-                  <div className="subGrid">
+                  <HScroll className="subGrid">
                     {list.slice(1, 5).map((f, i) => (
                       <FoodCard
                         key={f.id}
@@ -231,7 +232,7 @@ export default function ResultPage() {
                         diagnosisId={diagnosisId}
                       />
                     ))}
-                  </div>
+                  </HScroll>
                 </>
               )}
 
