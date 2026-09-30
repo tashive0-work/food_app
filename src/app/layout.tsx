@@ -13,7 +13,11 @@ export const metadata: Metadata = {
     title: "오늘 뭐 먹지",
   },
   icons: {
-    icon: "/favicon.ico",
+    // 구글 검색결과 아이콘은 48px 배수 PNG를 가장 안정적으로 인식합니다.
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+    ],
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
@@ -80,6 +84,19 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="오늘 뭐 먹지" />
+        {/* 구글 검색결과에 도메인 대신 사이트 이름을 표시하기 위한 구조화 데이터 */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "오늘 뭐 먹지",
+              alternateName: ["오늘뭐먹지", "오먹이", "eatodayme"],
+              url: "https://eatodayme.com/",
+            }),
+          }}
+        />
       </head>
       <body>
         <SplashScreen />
