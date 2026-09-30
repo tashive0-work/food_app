@@ -31,17 +31,18 @@ export async function logSession(): Promise<string | null> {
     const anon_id = getAnonymousId();
     const device_type = getDeviceType();
 
-    const { data, error } = await supabase
-      .from("sessions")
-      .insert({ anon_id, device_type })
-      .select("id")
-      .single();
+    // 테이블에 직접 쓰지 않고 RPC 를 씁니다.
+    // 익명 사용자에게 테이블 접근권을 주지 않고도 기록만 남길 수 있습니다.
+    const { data, error } = await supabase.rpc("log_session", {
+      p_anon_id: anon_id,
+      p_device_type: device_type,
+    });
 
     if (error) {
-      console.warn("⚠️ [Supabase] Session log skipped:", error.message);
+      console.warn("⚠️ [Supabase] Session log failed:", error.message);
       return null;
     }
-    return data?.id || null;
+    return (data as string) || null;
   } catch (err) {
     console.warn("⚠️ [Supabase] Session log failed:", err);
     return null;
@@ -60,31 +61,27 @@ export async function logDiagnosis(
     return null;
   }
   try {
-    const { data, error } = await supabase
-      .from("diagnoses")
-      .insert({
-        session_id: sessionId,
-        answers: picks,
-        scores: {
-          hunger: state.hunger,
-          energy: state.energy,
-          spice: state.spice,
-          comfort: state.comfort,
-          time: state.time,
-          warm: state.warm,
-          social: state.social,
-          ageGroup: state.ageGroup,
-        },
-        verdict_title: verdictTitle,
-      })
-      .select("id")
-      .single();
+    const { data, error } = await supabase.rpc("log_diagnosis", {
+      p_session_id: sessionId ?? "",
+      p_answers: picks,
+      p_scores: {
+        hunger: state.hunger,
+        energy: state.energy,
+        spice: state.spice,
+        comfort: state.comfort,
+        time: state.time,
+        warm: state.warm,
+        social: state.social,
+        ageGroup: state.ageGroup,
+      },
+      p_verdict_title: verdictTitle,
+    });
 
     if (error) {
-      console.warn("⚠️ [Supabase] Diagnosis log skipped:", error.message);
+      console.warn("⚠️ [Supabase] Diagnosis log failed:", error.message);
       return null;
     }
-    return data?.id || null;
+    return (data as string) || null;
   } catch (err) {
     console.warn("⚠️ [Supabase] Diagnosis log failed:", err);
     return null;
@@ -103,14 +100,14 @@ export async function logInteraction(
     return;
   }
   try {
-    const { error } = await supabase.from("interactions").insert({
-      diagnosis_id: diagnosisId,
-      food_name: foodName,
-      rank: rank,
-      action: action,
+    const { error } = await supabase.rpc("log_interaction", {
+      p_diagnosis_id: diagnosisId ?? "",
+      p_food_name: foodName,
+      p_rank: rank,
+      p_action: action,
     });
     if (error) {
-      console.warn("⚠️ [Supabase] Interaction log skipped:", error.message);
+      console.warn("⚠️ [Supabase] Interaction log failed:", error.message);
     }
   } catch (err) {
     console.warn("⚠️ [Supabase] Interaction log failed:", err);
