@@ -13,14 +13,24 @@ const MASCOT_QUIZ_BUBBLES = [
   "오늘 식사는 누구와 함께해요?",
 ];
 
+const FAST_BUBBLES = [
+  "빠르게 갈게요! 나이대만 알려주세요",
+  "지금 배는 어느 정도세요?",
+  "어떤 맛이 당기세요?",
+  "시간은 얼마나 있으세요?",
+];
+
 interface QuizProps {
   questions: Question[];
   step: number;
+  fastMode?: boolean;
+  /** 첫 문항에서만 전달됩니다. 누르면 3문항 모드로 바뀝니다. */
+  onSwitchFast?: () => void;
   onAnswer: (index: number) => void;
   onBack: () => void;
 }
 
-export function Quiz({ questions, step, onAnswer, onBack }: QuizProps) {
+export function Quiz({ questions, step, fastMode, onSwitchFast, onAnswer, onBack }: QuizProps) {
   const [disabled, setDisabled] = useState(false);
   const currentQ = questions[step];
 
@@ -38,6 +48,7 @@ export function Quiz({ questions, step, onAnswer, onBack }: QuizProps) {
     <section className="quiz">
       <div className="progress">
         <span>
+          {fastMode && <b className="fastTag">빠르게</b>}
           {step + 1} / {questions.length}
         </span>
         <div className="track">
@@ -51,7 +62,11 @@ export function Quiz({ questions, step, onAnswer, onBack }: QuizProps) {
           expression="thinking"
           size={120}
           priority
-          bubble={MASCOT_QUIZ_BUBBLES[step] || "음... 골라볼까요?"}
+          bubble={
+            fastMode
+              ? FAST_BUBBLES[step] || "금방 골라드릴게요!"
+              : MASCOT_QUIZ_BUBBLES[step] || "음... 골라볼까요?"
+          }
           bubblePosition="right"
           bubbleStyle={{
             maxWidth: "200px",
@@ -71,6 +86,12 @@ export function Quiz({ questions, step, onAnswer, onBack }: QuizProps) {
           </button>
         ))}
       </div>
+      {onSwitchFast && (
+        <button type="button" className="fastSwitch" disabled={disabled} onClick={onSwitchFast}>
+          <span aria-hidden="true">⚡</span> 3문항으로 빠르게 받을래요
+        </button>
+      )}
+
       {step > 0 && (
         <button className="back" disabled={disabled} onClick={onBack}>
           이전 질문으로

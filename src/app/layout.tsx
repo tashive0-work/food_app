@@ -30,6 +30,20 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     type: "website",
   },
+  // 네이버 서치어드바이저 / 구글 서치 콘솔 소유확인
+  verification: {
+    google: "VGRzWxLfRkUeTxWemr6hRaA7l43IEAzPc29B_OpPpQM",
+    other: {
+      "naver-site-verification": "e2784fad6a60e9ca28e22376b274e06aace5ba31",
+    },
+  },
+  alternates: {
+    canonical: "https://eatodayme.com",
+  },
+  keywords: [
+    "메뉴 추천", "점심 메뉴 추천", "저녁 메뉴 추천", "메뉴 고르기",
+    "오늘 뭐 먹지", "혼밥 메뉴", "메뉴 고민", "음식 추천 사이트",
+  ],
   twitter: {
     card: "summary_large_image",
     title: "오늘 뭐 먹지? 고민은 여기까지!",

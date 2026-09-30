@@ -78,12 +78,30 @@ export function classify(s: AppState): Verdict {
   };
 }
 
+export type SkipAxis = "comfort" | "light";
+
+/**
+ * 지금 계절·시각으로 「원하는 온도」를 추정합니다.
+ * 빠른 모드에서 온기를 묻지 않을 때만 씁니다.
+ * 월과 시각은 실제 정보이므로 추측이 아닙니다.
+ */
+export function estimateWarm(now: Date = new Date()): number {
+  const month = now.getMonth() + 1;
+  const hour = now.getHours();
+  if (month >= 6 && month <= 8 && hour >= 10 && hour <= 18) return 1; // 한여름 낮
+  if (month === 12 || month <= 2) return 4;                            // 한겨울
+  if (hour >= 21 || hour <= 7) return 3;                               // 늦은 밤·이른 아침
+  return 2;
+}
+
 export function recommend(
   s: AppState,
   seed: number,
   delta?: Record<string, number>,
-  excludeFoods: string[] = []
+  excludeFoods: string[] = [],
+  skipAxes: readonly SkipAxis[] = []
 ): Food[] {
+  const skip = new Set<string>(skipAxes);
   const adjustedState: AppState = {
     ...s,
     hunger: Math.max(0, Math.min(4, s.hunger + (delta?.hunger || 0))),
@@ -106,13 +124,13 @@ export function recommend(
       p += 3.2 * Math.abs(f.spice - adjustedState.spice);
       p += 2.6 * Math.abs(f.fill - adjustedState.hunger);
       p += 2.2 * Math.abs(f.warm - adjustedState.warm);
-      p += 1.8 * Math.abs(f.comfort - adjustedState.comfort);
+      if (!skip.has("comfort")) p += 1.8 * Math.abs(f.comfort - adjustedState.comfort);
       p += 3.0 * Math.max(0, easeNeed - f.ease);
-      p += 2.4 * Math.max(0, lightNeed - f.light);
+      if (!skip.has("light")) p += 2.4 * Math.max(0, lightNeed - f.light);
       if (adjustedState.social === "모임" && f.themes.includes("모임")) p -= 5;
       if (adjustedState.social === "혼자" && f.themes.includes("혼자")) p -= 4;
       if (adjustedState.social === "혼자" && f.themes.includes("모임")) p += 3;
-      p += Math.abs(rnd(f.id)) * 2.5;
+      p += Math.abs(rnd(f.id)) * 4.0;
       return {
         ...f,
         image: FOOD_IMAGES[f.name]?.url,
@@ -121,7 +139,7 @@ export function recommend(
       };
     })
     .sort((a, b) => (b.match ?? 0) - (a.match ?? 0))
-    .slice(0, 30);
+    .slice(0, 40);
 
   const dietSettings = loadDietSettings();
   const filtered = applyDietFilter(list, dietSettings);

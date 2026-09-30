@@ -6,7 +6,8 @@ export const QUESTIONS: Question[] = [
     a: [
       ["14–19세", { set: { ageGroup: "10s" } }],
       ["20–30대", { set: { ageGroup: "2030s" } }],
-      ["40–50대 이상", { set: { ageGroup: "4050s" } }],
+      ["40–50대", { set: { ageGroup: "4050s" } }],
+      ["60대 이상", { set: { ageGroup: "60s" } }],
       ["말 안 할래요", { set: { ageGroup: "unknown" } }],
     ],
   },
@@ -74,3 +75,19 @@ export const QUESTIONS: Question[] = [
     ],
   },
 ];
+
+/**
+ * 빠른 모드에서 묻는 문항의 인덱스입니다.
+ * 추천 가중치가 높은 축부터 남겼습니다 — 맵기(3.2) · 간편(3.0) · 포만(2.6).
+ * 나이대는 통계용이라 유지하되 문항 수에는 세지 않습니다.
+ *
+ * 묻지 않는 축 처리:
+ *  - 온기 : 월·시각으로 계산 (추측이 아니라 실제 정보)
+ *  - 위로 / 가벼움 : 점수 계산에서 제외 (모르는 값을 지어내지 않음)
+ */
+export const FAST_QUESTION_INDEXES = [0, 1, 4, 5] as const;
+
+export const FAST_QUESTIONS: Question[] = FAST_QUESTION_INDEXES.map((i) => QUESTIONS[i]);
+
+/** 빠른 모드에서 점수 계산에 쓰지 않는 축 */
+export const FAST_SKIP_AXES = ["comfort", "light"] as const;

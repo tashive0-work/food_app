@@ -4,8 +4,8 @@ import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AppState } from "@/types/food";
-import { QUESTIONS } from "@/data/questions";
-import { classify, recommend } from "@/lib/recommend";
+import { QUESTIONS, FAST_QUESTIONS, FAST_SKIP_AXES } from "@/data/questions";
+import { classify, recommend, estimateWarm } from "@/lib/recommend";
 import { Quiz } from "@/components/Quiz";
 import { BottomNav } from "@/components/BottomNav";
 import { Mascot } from "@/components/Mascot";
@@ -16,8 +16,12 @@ export default function QuizPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [picks, setPicks] = useState<number[]>([]);
-  const [seed, setSeed] = useState(1);
+  // 진단할 때마다 새로 뽑습니다. 이 값이 고정이면 같은 답을 한 사람은 늘 같은 결과를 받습니다.
+  const [seed] = useState(() => Math.floor(Math.random() * 1_000_000));
+  const [fastMode, setFastMode] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
+
+  const activeQuestions = fastMode ? FAST_QUESTIONS : QUESTIONS;
 
   useEffect(() => {
     try {
@@ -29,7 +33,7 @@ export default function QuizPage() {
   }, []);
 
   const state: AppState | null = useMemo(() => {
-    if (picks.length < QUESTIONS.length) return null;
+    if (picks.length < activeQuestions.length) return null;
     let st: AppState = {
       hunger: 2,
       energy: 2,
@@ -40,7 +44,7 @@ export default function QuizPage() {
       social: "미정",
     };
     picks.forEach((idx, qidx) => {
-      const q = QUESTIONS[qidx];
+      const q = activeQuestions[qidx];
       const eff = q?.a[idx]?.[1];
       if (!eff) return;
       if (eff.set) {
@@ -55,16 +59,18 @@ export default function QuizPage() {
         });
       }
     });
+    // 빠른 모드에서는 온기를 묻지 않으므로 계절·시각으로 계산합니다.
+    if (fastMode) st.warm = estimateWarm();
     return st;
-  }, [picks]);
+  }, [picks, activeQuestions, fastMode]);
 
   const verdict = useMemo(() => (state ? classify(state) : null), [state]);
-  const done = picks.length === QUESTIONS.length;
+  const done = picks.length === activeQuestions.length;
 
   useEffect(() => {
     if (!done || !state || !verdict) return;
 
-    const list = recommend(state, seed, {}, []);
+    const list = recommend(state, seed, {}, [], fastMode ? FAST_SKIP_AXES : []);
     const topFoodName = list[0]?.name ?? "";
 
     saveTodayResult({
@@ -72,6 +78,8 @@ export default function QuizPage() {
       state,
       verdict,
       topFoodName,
+      seed,
+      fast: fastMode,
     });
 
     (async () => {
@@ -85,11 +93,11 @@ export default function QuizPage() {
     })();
 
     router.push("/result");
-  }, [done, state, verdict, picks, seed, router]);
+  }, [done, state, verdict, picks, seed, fastMode, router]);
 
   const answer = (i: number) => {
     setPicks((p) => [...p, i]);
-    if (step < QUESTIONS.length - 1) setStep((s) => s + 1);
+    if (step < activeQuestions.length - 1) setStep((s) => s + 1);
   };
 
   return (
@@ -106,8 +114,10 @@ export default function QuizPage() {
 
         {!done && (
           <Quiz
-            questions={QUESTIONS}
+            questions={activeQuestions}
             step={step}
+            fastMode={fastMode}
+            onSwitchFast={step === 0 && picks.length === 0 ? () => setFastMode(true) : undefined}
             onAnswer={answer}
             onBack={() => {
               setPicks((p) => p.slice(0, -1));

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { AppState } from "@/types/food";
 import { classify, recommend } from "@/lib/recommend";
+import { FAST_SKIP_AXES } from "@/data/questions";
 import { FoodCard } from "@/components/FoodCard";
 import { HeroCard } from "@/components/HeroCard";
 import { Receipt } from "@/components/Receipt";
@@ -27,7 +28,6 @@ export default function ResultPage() {
   const [todayResult, setTodayResult] = useState<TodayResult | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [seed, setSeed] = useState(1);
   const [favorites, setFavorites] = useState<number[]>([]);
   const [aiDelta, setAiDelta] = useState<Record<string, number>>({});
   const [excludeFoods, setExcludeFoods] = useState<string[]>([]);
@@ -68,11 +68,14 @@ export default function ResultPage() {
   };
 
   const state: AppState | null = todayResult?.state ?? null;
+  // 진단할 때 저장된 seed 를 씁니다. 예전 저장분에는 없을 수 있어 1로 대체합니다.
+  const seed = todayResult?.seed ?? 1;
+  const skipAxes = todayResult?.fast ? FAST_SKIP_AXES : [];
   const verdict = todayResult?.verdict ?? (state ? classify(state) : null);
 
   const list = useMemo(
-    () => (state ? recommend(state, seed, aiDelta, excludeFoods) : []),
-    [state, seed, aiDelta, excludeFoods]
+    () => (state ? recommend(state, seed, aiDelta, excludeFoods, skipAxes) : []),
+    [state, seed, aiDelta, excludeFoods, skipAxes]
   );
 
   const now = new Date();
@@ -141,7 +144,7 @@ export default function ResultPage() {
 
             {list[0] && (
               <div className="verdictBanner">
-                <p className="verdictBannerLabel">오늘의 결론</p>
+                <p className="verdictBannerLabel">오늘 가장 잘 맞는 메뉴</p>
                 <p className="verdictBannerFood">{list[0].name}</p>
                 <p className="verdictBannerLine">{verdict.line}</p>
               </div>
@@ -158,8 +161,8 @@ export default function ResultPage() {
 
             <section>
               <div className="secHead">
-                <h2 className="secTitle">오늘은 이걸 추천해요</h2>
-                <p className="secSub">지금 상태에 가장 잘 맞는 메뉴예요.</p>
+                <h2 className="secTitle">오늘은 이 중에서 골라보세요</h2>
+                <p className="secSub">지금 상태에 잘 맞는 순서대로 다섯 개를 골랐어요.</p>
               </div>
 
               {/* 1위 — 큰 카드 */}
@@ -213,10 +216,11 @@ export default function ResultPage() {
               {list.length > 1 && (
                 <>
                   <div className="secHead secHeadSm">
-                    <h3 className="secTitleSm">다른 선택지</h3>
+                    <h3 className="secTitleSm">이런 것도 잘 맞아요</h3>
+                    <p className="secSub">1번이 안 당기면 여기서 고르셔도 좋아요.</p>
                   </div>
                   <div className="subGrid">
-                    {list.slice(1, 3).map((f, i) => (
+                    {list.slice(1, 5).map((f, i) => (
                       <FoodCard
                         key={f.id}
                         food={f}
@@ -234,7 +238,7 @@ export default function ResultPage() {
               {/* 나머지 — 접힘 */}
               {!expanded ? (
                 <button className="more" onClick={() => setExpanded(true)}>
-                  나머지 {Math.max(0, list.length - 3)}개 더 보기
+                  나머지 {Math.max(0, list.length - 5)}개 더 보기
                 </button>
               ) : (
                 <>
@@ -242,11 +246,11 @@ export default function ResultPage() {
                     <h3 className="secTitleSm">전체 목록</h3>
                   </div>
                   <div className="grid">
-                    {list.slice(3).map((f, i) => (
+                    {list.slice(5).map((f, i) => (
                       <FoodCard
                         key={f.id}
                         food={f}
-                        rank={i + 4}
+                        rank={i + 6}
                         state={state}
                         isFavorite={favorites.includes(f.id)}
                         onToggleFavorite={toggleFavorite}

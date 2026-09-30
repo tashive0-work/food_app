@@ -7,6 +7,10 @@ export interface TodayResult {
   verdict: Verdict;
   topFoodName: string;
   savedAt: number;
+  /** 진단마다 다른 값. 같은 답을 한 다른 사람에게 같은 결과가 나오지 않게 합니다. */
+  seed?: number;
+  /** 빠른 모드(3문항)로 진단했는지 */
+  fast?: boolean;
 }
 
 const KEY = "food_today_result";
