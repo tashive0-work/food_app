@@ -56,6 +56,22 @@ export function Quiz({ questions, step, fastMode, onSwitchFast, onAnswer, onBack
         </div>
       </div>
 
+      {onSwitchFast && (
+        <button
+          type="button"
+          className="fastBanner"
+          disabled={disabled}
+          onClick={onSwitchFast}
+        >
+          <span className="fastBannerIcon" aria-hidden="true">⚡</span>
+          <span className="fastBannerText">
+            <b>3문항으로 빠르게 받기</b>
+            <small>시간 없으시면 이걸로 — 30초면 끝나요</small>
+          </span>
+          <span className="fastBannerGo" aria-hidden="true">›</span>
+        </button>
+      )}
+
       {/* 질문 영역 위 오먹이 thinking 120px & 말풍선 */}
       <div style={{ display: "flex", justifyContent: "center", margin: "14px 0 16px" }}>
         <Mascot
@@ -86,12 +102,6 @@ export function Quiz({ questions, step, fastMode, onSwitchFast, onAnswer, onBack
           </button>
         ))}
       </div>
-      {onSwitchFast && (
-        <button type="button" className="fastSwitch" disabled={disabled} onClick={onSwitchFast}>
-          <span aria-hidden="true">⚡</span> 3문항으로 빠르게 받을래요
-        </button>
-      )}
-
       {step > 0 && (
         <button className="back" disabled={disabled} onClick={onBack}>
           이전 질문으로
