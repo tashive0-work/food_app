@@ -459,6 +459,7 @@ export default function Home() {
           오늘 당장 필요한 최적의 메뉴를 스마트하게 결정해 주는 라이프스타일 큐레이션 서비스입니다.
         </p>
         <div className="footLinks">
+          <Link href="/food">전체 메뉴</Link>
           <Link href="/terms">이용약관</Link>
           <Link href="/privacy">개인정보 처리방침</Link>
           <Link href="/feedback">고객의 소리함</Link>
