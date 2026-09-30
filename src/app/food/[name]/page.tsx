@@ -384,6 +384,27 @@ export default function FoodDetailPage({ params }: PageProps) {
             </div>
           </div>
 
+          {/* 이 메뉴의 구체적인 종류 */}
+          {food.variants && food.variants.length > 0 && (
+            <div className="variantBox">
+              <p className="variantHead">이런 종류가 있어요</p>
+              <div className="variantChips">
+                {food.variants.map((v) => (
+                  <a
+                    key={v}
+                    className="variantChip"
+                    href={recipeUrl(v)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {v}
+                  </a>
+                ))}
+              </div>
+              <p className="variantNote">눌러서 레시피를 찾아볼 수 있어요</p>
+            </div>
+          )}
+
           {/* 레시피 / 근처 식당 버튼 */}
           <div style={{ display: "flex", gap: "10px" }}>
             <a

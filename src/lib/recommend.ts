@@ -118,7 +118,7 @@ export function recommend(
 
   const excludedLower = excludeFoods.map((name) => name.trim().toLowerCase());
 
-  const list = FOODS.filter((f) => !excludedLower.some((ex) => f.name.toLowerCase().includes(ex)))
+  const scoredList = FOODS.filter((f) => !excludedLower.some((ex) => f.name.toLowerCase().includes(ex)))
     .map((f) => {
       let p = 0;
       p += 3.2 * Math.abs(f.spice - adjustedState.spice);
@@ -130,7 +130,6 @@ export function recommend(
       if (adjustedState.social === "모임" && f.themes.includes("모임")) p -= 5;
       if (adjustedState.social === "혼자" && f.themes.includes("혼자")) p -= 4;
       if (adjustedState.social === "혼자" && f.themes.includes("모임")) p += 3;
-      p += Math.abs(rnd(f.id)) * 4.0;
       return {
         ...f,
         image: FOOD_IMAGES[f.name]?.url,
@@ -138,8 +137,34 @@ export function recommend(
         match: Math.max(38, Math.min(99, Math.round(100 - p * 1.35))),
       };
     })
-    .sort((a, b) => (b.match ?? 0) - (a.match ?? 0))
-    .slice(0, 40);
+    .sort((a, b) => (b.match ?? 0) - (a.match ?? 0));
+
+  // ── 같은 답 → 같은 결과 문제를 푸는 구간 ──
+  // 메뉴 228개가 6축 공간 15,625칸 중 162칸만 차지하기 때문에,
+  // 넓은 영역에서 늘 같은 몇 개가 1위를 독식합니다.
+  // 점수가 사실상 같은(±3) 후보들을 seed 로 섞어 1위를 돌려 줍니다.
+  const TIE_BAND = 3;
+  const MAX_PER_KIND = 2;
+
+  const best = scoredList[0]?.match ?? 0;
+  const tied = scoredList.filter((f) => (f.match ?? 0) >= best - TIE_BAND);
+  const others = scoredList.filter((f) => (f.match ?? 0) < best - TIE_BAND);
+  tied.sort((a, b) => Math.abs(rnd(a.id)) - Math.abs(rnd(b.id)));
+
+  // 앞 5개는 한 카테고리에 몰리지 않게 — 한식만 다섯 개 나오는 일을 막습니다
+  const head: typeof scoredList = [];
+  const spill: typeof scoredList = [];
+  const kindCount: Record<string, number> = {};
+  for (const f of [...tied, ...others]) {
+    if (head.length < 5 && (kindCount[f.kind] ?? 0) < MAX_PER_KIND) {
+      head.push(f);
+      kindCount[f.kind] = (kindCount[f.kind] ?? 0) + 1;
+    } else {
+      spill.push(f);
+    }
+  }
+
+  const list = [...head, ...spill].slice(0, 40);
 
   const dietSettings = loadDietSettings();
   const filtered = applyDietFilter(list, dietSettings);

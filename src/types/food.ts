@@ -9,6 +9,8 @@ export interface Food {
   comfort: number;
   light: number;
   themes: string[];
+  /** 같은 메뉴의 구체적인 종류 (예: 매운탕 → 메기매운탕, 조기매운탕) */
+  variants?: string[];
   match?: number;
   image?: string;
   imageCredit?: string;

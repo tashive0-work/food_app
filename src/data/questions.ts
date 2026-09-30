@@ -39,12 +39,13 @@ export const QUESTIONS: Question[] = [
     ],
   },
   {
-    q: "입이 원하는 건 어느 쪽이에요?",
+    q: "매운 정도는 어느 쪽이 좋으세요?",
     a: [
       ["맵고 얼큰한 거", { set: { spice: 4 } }],
-      ["짭조름하고 기름진 거", { set: { spice: 3 } }],
-      ["담백하고 깔끔한 거", { set: { spice: 1 } }],
-      ["달콤한 거", { set: { spice: 2 }, add: { comfort: 1 } }],
+      ["적당히 매콤한 거", { set: { spice: 3 } }],
+      ["살짝만 매콤한 거", { set: { spice: 2 } }],
+      ["안 매운 담백한 거", { set: { spice: 0 } }],
+      ["달콤한 거", { set: { spice: 0 }, add: { comfort: 1 } }],
     ],
   },
   {
