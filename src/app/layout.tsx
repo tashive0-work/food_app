@@ -4,7 +4,10 @@ import { SplashScreen } from "@/components/SplashScreen";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://eatodayme.com"),
-  title: "오늘 뭐 먹지? 고민은 여기까지!",
+  title: {
+    default: "오늘 뭐 먹지? 점심·저녁 메뉴 추천 | 고민은 여기까지!",
+    template: "%s | 오늘 뭐 먹지",
+  },
   description: "점심·저녁 메뉴 고민될 때, 8문항만 답하면 지금 상태에 맞는 메뉴를 골라드려요. 무료.",
   manifest: "/manifest.json",
   appleWebApp: {
@@ -41,9 +44,7 @@ export const metadata: Metadata = {
       "naver-site-verification": "e2784fad6a60e9ca28e22376b274e06aace5ba31",
     },
   },
-  alternates: {
-    canonical: "https://eatodayme.com",
-  },
+  // canonical은 페이지마다 따로 지정합니다. (여기 두면 모든 페이지가 홈의 복사본으로 취급됩니다)
   keywords: [
     "메뉴 추천", "점심 메뉴 추천", "저녁 메뉴 추천", "메뉴 고르기",
     "오늘 뭐 먹지", "혼밥 메뉴", "메뉴 고민", "음식 추천 사이트",
