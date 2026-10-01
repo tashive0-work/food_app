@@ -1639,3 +1639,19 @@ a.rankItem{text-decoration:none;color:inherit;transition:background-color .15s;}
 @media (prefers-reduced-motion: reduce){
   .betaModal,.betaModalBack{animation:none;}
 }
+
+/* ========== 없는 메뉴 요청 (검색 결과 0건) ========== */
+.btnGhostLink{
+  display:inline-block;margin-top:12px;
+  background:transparent;border:0;padding:6px 4px;
+  font-size:13px;font-weight:600;color:var(--dim);
+  text-decoration:underline;text-underline-offset:3px;
+}
+@media (hover: hover) and (pointer: fine){
+  .btnGhostLink:hover{color:var(--primary);}
+}
+.reqDone{
+  margin:0;padding:13px 16px;border-radius:var(--r-md);
+  background:var(--primaryBg);color:var(--primary);
+  font-size:13.5px;font-weight:600;line-height:1.6;
+}

@@ -113,3 +113,28 @@ export async function logInteraction(
     console.warn("⚠️ [Supabase] Interaction log failed:", err);
   }
 }
+
+/**
+ * 사이트에 없는 메뉴를 기록합니다.
+ * 검색했는데 결과가 0건일 때, 또는 사용자가 "추가해 주세요" 를 눌렀을 때 부릅니다.
+ * 이미 등록된 메뉴면 DB 쪽에서 알아서 무시합니다.
+ */
+export async function logMenuRequest(
+  name: string,
+  source: "search" | "user" = "search"
+): Promise<void> {
+  if (!supabase) return;
+  const trimmed = name.trim();
+  if (trimmed.length < 2 || trimmed.length > 40) return;
+  try {
+    const { error } = await supabase.rpc("log_menu_request", {
+      p_name: trimmed,
+      p_source: source,
+    });
+    if (error) {
+      console.warn("⚠️ [Supabase] Menu request log failed:", error.message);
+    }
+  } catch (err) {
+    console.warn("⚠️ [Supabase] Menu request log failed:", err);
+  }
+}

@@ -1,94 +1,40 @@
-"use client";
-
-import React, { useState, useEffect, Suspense } from "react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { FOODS } from "@/data/foods";
+import type { Metadata } from "next";
 import { THEMES } from "@/data/themes";
-import { ThemeTab } from "@/components/ThemeTab";
-import { BottomNav } from "@/components/BottomNav";
+import ThemeClient from "./ThemeClient";
 
-import { loadDietSettings, applyDietFilter } from "@/lib/dietFilter";
-import { sortThemeFoods, SortKey } from "@/lib/themeSort";
-
-function ThemeContent() {
-  const searchParams = useSearchParams();
-  const initialKey = searchParams.get("k") || "혼자";
-
-  const [theme, setTheme] = useState(initialKey);
-  const [favorites, setFavorites] = useState<number[]>([]);
-  const [sort, setSort] = useState<SortKey>("relevant");
-
-  useEffect(() => {
-    const k = searchParams.get("k");
-    if (k) {
-      setTheme(k);
-      setSort("relevant");
-    }
-  }, [searchParams]);
-
-  useEffect(() => {
-    try {
-      const savedFavs = localStorage.getItem("food_favorites");
-      if (savedFavs) setFavorites(JSON.parse(savedFavs));
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
-
-  const toggleFavorite = (foodId: number) => {
-    setFavorites((prev) => {
-      const next = prev.includes(foodId) ? prev.filter((id) => id !== foodId) : [...prev, foodId];
-      try {
-        localStorage.setItem("food_favorites", JSON.stringify(next));
-      } catch (e) {
-        console.error(e);
-      }
-      return next;
-    });
-  };
-
-  const rawThemeFoods = FOODS.filter((f) => f.themes.includes(theme));
-  const themeFoods = sortThemeFoods(
-    applyDietFilter(rawThemeFoods, loadDietSettings()),
-    theme,
-    sort
-  );
-  const curTheme = THEMES.find((t) => t.key === theme);
-
-  return (
-    <div className="app hasNav">
-      <main className="wrap">
-        <header className="pageHead">
-          <Link href="/" className="pageBack" aria-label="홈으로">
-            ←
-          </Link>
-          <h1 className="pageTitle">
-            {curTheme ? `${curTheme.icon} ${curTheme.label}` : "테마별 추천"}
-          </h1>
-        </header>
-
-        <ThemeTab
-          themes={THEMES}
-          currentThemeKey={theme}
-          onSelectTheme={setTheme}
-          themeFoods={themeFoods}
-          sort={sort}
-          onSelectSort={setSort}
-          favorites={favorites}
-          onToggleFavorite={toggleFavorite}
-        />
-      </main>
-
-      <BottomNav favCount={favorites.length} />
-    </div>
-  );
+interface PageProps {
+  searchParams: { k?: string };
 }
 
-export default function ThemePage() {
-  return (
-    <Suspense fallback={<div className="app hasNav" />}>
-      <ThemeContent />
-    </Suspense>
-  );
+export function generateMetadata({ searchParams }: PageProps): Metadata {
+  const k = searchParams?.k || "혼자";
+  const curTheme = THEMES.find((t) => t.key === k || t.label === k) || THEMES[0];
+  const themeName = curTheme ? curTheme.label : k;
+  const themeDesc = curTheme ? curTheme.desc : "오늘 상태에 맞는 메뉴를 골라드려요.";
+  const encodedK = encodeURIComponent(k);
+  const canonical = `https://eatodayme.com/theme?k=${encodedK}`;
+  const title = `${themeName} 메뉴 추천 — ${themeDesc} | 오늘 뭐 먹지`;
+  const description = `${themeName}에 딱 맞는 메뉴 추천. ${themeDesc}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+    },
+    twitter: {
+      title,
+      description,
+    },
+  };
+}
+
+export default function ThemePage({ searchParams }: PageProps) {
+  const k = searchParams?.k || "혼자";
+  return <ThemeClient initialKey={k} />;
 }

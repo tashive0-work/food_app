@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { FOODS } from "@/data/foods";
 import { THEMES } from "@/data/themes";
-import { BetaBanner } from "@/components/BetaBanner";
 import { BetaModal } from "@/components/BetaModal";
 import { BottomNav } from "@/components/BottomNav";
 import { FoodImage } from "@/components/FoodImage";
@@ -107,7 +106,7 @@ export default function Home() {
               <span className="brandMarkImg" aria-hidden="true">
                 <img src="/mascot/omeok-default.png" alt="" width={34} height={34} />
               </span>
-              <span className="brandName" style={{ fontSize: "19px", fontWeight: 900, letterSpacing: "-0.03em" }}>오늘 뭐 먹지?</span>
+              <h1 className="brandName" style={{ fontSize: "19px", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>오늘 뭐 먹지? 점심·저녁 메뉴 추천</h1>
             </Link>
             <Link href="/settings" className="settingsEntry" aria-label="내 정보 및 설정">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -119,75 +118,11 @@ export default function Home() {
           </div>
           <p className="homeDate" style={{ margin: "0 0 4px", fontSize: "13px", color: "var(--dim)", fontWeight: 600 }}>{dateLabel}</p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
-            <h1 className="homeGreet" style={{ fontSize: "24px", fontWeight: 800, margin: 0, letterSpacing: "-0.03em" }}>{greeting}</h1>
+            <p className="homeGreet" style={{ fontSize: "24px", fontWeight: 800, margin: 0, letterSpacing: "-0.03em" }}>{greeting}</p>
           </div>
         </header>
 
         <BetaModal />
-
-        <BetaBanner />
-
-        {/* 고객의 소리함 배너 카드 */}
-        <section className="homeSec" style={{ marginTop: "12px", marginBottom: "18px" }}>
-          <Link
-            href="/feedback"
-            style={{
-              display: "block",
-              background: "linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)",
-              border: "1px solid #FED7AA",
-              borderRadius: "16px",
-              padding: "18px 20px",
-              textDecoration: "none",
-              boxShadow: "var(--sh1)",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
-                  <span style={{ fontSize: "16px" }}>💌</span>
-                  <span style={{ fontSize: "15px", fontWeight: 800, color: "#9A3412" }}>
-                    고객의 소리함
-                  </span>
-                  <span
-                    style={{
-                      fontSize: "11px",
-                      fontWeight: 700,
-                      background: "#E8663D",
-                      color: "#FFFFFF",
-                      padding: "2px 6px",
-                      borderRadius: "6px",
-                    }}
-                  >
-                    메뉴 제안
-                  </span>
-                </div>
-                <p style={{ margin: 0, fontSize: "13px", color: "#C2410C", lineHeight: 1.5, fontWeight: 500 }}>
-                  찾으시는 메뉴가 없거나 앱에 바라는 점이 있나요?
-                  <br />
-                  언제든 편하게 알려주시면 빠르게 반영할게요!
-                </p>
-              </div>
-              <div
-                style={{
-                  background: "#FFFFFF",
-                  color: "#E8663D",
-                  borderRadius: "50%",
-                  width: "36px",
-                  height: "36px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "18px",
-                  fontWeight: 700,
-                  boxShadow: "0 2px 6px rgba(232, 102, 61, 0.15)",
-                  flexShrink: 0,
-                }}
-              >
-                →
-              </div>
-            </div>
-          </Link>
-        </section>
 
         {/* 캡슐 검색 진입점 */}
         <Link href="/search" className="searchEntry" style={{
@@ -305,7 +240,8 @@ export default function Home() {
               margin: "0 0 6px",
               letterSpacing: "-0.03em",
               color: "var(--ink)",
-              lineHeight: 1.3
+              lineHeight: 1.3,
+              wordBreak: "keep-all"
             }}>
               {today ? `오늘의 결론: ${today.topFoodName}` : "지금 내 상태에 딱 맞는\n오늘의 메뉴 진단받기"}
             </h2>
@@ -446,6 +382,68 @@ export default function Home() {
               </Link>
             ))}
           </div>
+        </section>
+
+        {/* 고객의 소리함 배너 카드 */}
+        <section className="homeSec" style={{ marginTop: "24px", marginBottom: "18px" }}>
+          <Link
+            href="/feedback"
+            style={{
+              display: "block",
+              background: "linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)",
+              border: "1px solid #FED7AA",
+              borderRadius: "16px",
+              padding: "18px 20px",
+              textDecoration: "none",
+              boxShadow: "var(--sh1)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
+                  <span style={{ fontSize: "16px" }}>💌</span>
+                  <span style={{ fontSize: "15px", fontWeight: 800, color: "#9A3412" }}>
+                    고객의 소리함
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      background: "#E8663D",
+                      color: "#FFFFFF",
+                      padding: "2px 6px",
+                      borderRadius: "6px",
+                    }}
+                  >
+                    메뉴 제안
+                  </span>
+                </div>
+                <p style={{ margin: 0, fontSize: "13px", color: "#C2410C", lineHeight: 1.5, fontWeight: 500 }}>
+                  찾으시는 메뉴가 없거나 앱에 바라는 점이 있나요?
+                  <br />
+                  언제든 편하게 알려주시면 빠르게 반영할게요!
+                </p>
+              </div>
+              <div
+                style={{
+                  background: "#FFFFFF",
+                  color: "#E8663D",
+                  borderRadius: "50%",
+                  width: "36px",
+                  height: "36px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "18px",
+                  fontWeight: 700,
+                  boxShadow: "0 2px 6px rgba(232, 102, 61, 0.15)",
+                  flexShrink: 0,
+                }}
+              >
+                →
+              </div>
+            </div>
+          </Link>
         </section>
 
       </main>

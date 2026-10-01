@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { FOODS } from "@/data/foods";
 import { getFoodGuide } from "@/data/foodGuides";
+import { getRelatedFoods } from "@/lib/relatedFoods";
 import FoodDetailClient from "./FoodDetailClient";
 
 interface PageProps {
@@ -16,12 +17,10 @@ function findFoodServer(raw: string) {
   );
 }
 
-// 메뉴 상세 페이지를 빌드 때 미리 HTML로 만들어 둡니다 (검색엔진이 바로 읽을 수 있게).
 export function generateStaticParams() {
   return FOODS.map((f) => ({ name: f.name }));
 }
 
-// 메뉴마다 고유한 제목·설명·대표주소를 붙입니다.
 export function generateMetadata({ params }: PageProps): Metadata {
   const food = findFoodServer(params.name);
   if (!food) {
@@ -35,12 +34,15 @@ export function generateMetadata({ params }: PageProps): Metadata {
   return {
     title,
     description,
-    alternates: { canonical: path },
-    openGraph: { title: `${title} | 오늘 뭐 먹지`, description, url: path, type: "article" },
+    alternates: { canonical: `https://eatodayme.com${path}` },
+    openGraph: { title: `${title} | 오늘 뭐 먹지`, description, url: `https://eatodayme.com${path}`, type: "article" },
     twitter: { title: `${title} | 오늘 뭐 먹지`, description },
   };
 }
 
 export default function FoodDetailPage({ params }: PageProps) {
-  return <FoodDetailClient params={params} />;
+  const food = findFoodServer(params.name);
+  const initialRelated = food ? getRelatedFoods(food, { limit: 6 }) : [];
+
+  return <FoodDetailClient params={params} initialRelated={initialRelated} />;
 }

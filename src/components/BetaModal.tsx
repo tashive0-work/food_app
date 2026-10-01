@@ -14,11 +14,11 @@ const SEEN_KEY = "beta_modal_seen";
 export function BetaModal() {
   const [open, setOpen] = useState(false);
 
-  // 닫기 = 이번 방문 동안 다시 띄우지 않음
+  // 닫기 = 최초 방문 1회 이후 다시 띄우지 않음
   const dismiss = () => {
     setOpen(false);
     try {
-      sessionStorage.setItem(SEEN_KEY, "1");
+      localStorage.setItem(SEEN_KEY, "1");
     } catch {
       // 시크릿 모드 등에서 저장이 막히면 그냥 넘어갑니다
     }
@@ -27,7 +27,7 @@ export function BetaModal() {
   useEffect(() => {
     let seen = false;
     try {
-      seen = sessionStorage.getItem(SEEN_KEY) === "1";
+      seen = localStorage.getItem(SEEN_KEY) === "1";
     } catch {
       seen = false;
     }
