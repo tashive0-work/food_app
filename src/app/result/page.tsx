@@ -183,6 +183,33 @@ export default function ResultPage() {
               {/* 1위 — 큰 카드 */}
               {list[0] && (
                 <>
+                  {/* 국물 / 국물 없는 것 고르기 */}
+                  <div className="soupFilter" role="group" aria-label="국물 여부">
+                    <button
+                      type="button"
+                      className={`soupChip ${soupFilter === "all" ? "on" : ""}`}
+                      onClick={() => setSoupFilter("all")}
+                    >
+                      전체
+                    </button>
+                    <button
+                      type="button"
+                      className={`soupChip ${soupFilter === "soup" ? "on" : ""}`}
+                      onClick={() => setSoupFilter("soup")}
+                      disabled={soupCount < 3}
+                    >
+                      국물 있는 걸로
+                    </button>
+                    <button
+                      type="button"
+                      className={`soupChip ${soupFilter === "dry" ? "on" : ""}`}
+                      onClick={() => setSoupFilter("dry")}
+                      disabled={dryCount < 3}
+                    >
+                      국물 없는 걸로
+                    </button>
+                  </div>
+
                   <div style={{ position: "relative", marginTop: "48px" }}>
                     {/* 카드 우측 상단에 걸쳐 빼꼼 튀어나온 오먹이 happy (160px) + 말풍선 */}
                     <div
@@ -208,33 +235,6 @@ export default function ResultPage() {
                         }}
                       />
                     </div>
-                    {/* 국물 / 국물 없는 것 고르기 */}
-                    <div className="soupFilter" role="group" aria-label="국물 여부">
-                      <button
-                        type="button"
-                        className={`soupChip ${soupFilter === "all" ? "on" : ""}`}
-                        onClick={() => setSoupFilter("all")}
-                      >
-                        전체
-                      </button>
-                      <button
-                        type="button"
-                        className={`soupChip ${soupFilter === "soup" ? "on" : ""}`}
-                        onClick={() => setSoupFilter("soup")}
-                        disabled={soupCount < 3}
-                      >
-                        국물 있는 걸로
-                      </button>
-                      <button
-                        type="button"
-                        className={`soupChip ${soupFilter === "dry" ? "on" : ""}`}
-                        onClick={() => setSoupFilter("dry")}
-                        disabled={dryCount < 3}
-                      >
-                        국물 없는 걸로
-                      </button>
-                    </div>
-
                     <HeroCard
                       food={list[0]}
                       state={state}
