@@ -1655,3 +1655,93 @@ a.rankItem{text-decoration:none;color:inherit;transition:background-color .15s;}
   background:var(--primaryBg);color:var(--primary);
   font-size:13.5px;font-weight:600;line-height:1.6;
 }
+
+/* ========== 세부 메뉴 (매운탕 → 메기매운탕·조기매운탕) ========== */
+.variantRow{
+  margin:10px 0 0;padding:10px 12px;
+  background:var(--primaryBg);border-radius:8px;
+}
+.variantLabel{
+  display:block;font-size:11px;font-weight:700;
+  color:var(--primary);margin-bottom:6px;letter-spacing:-.01em;
+}
+.variantChips{display:flex;flex-wrap:wrap;gap:5px;}
+.variantChip{
+  display:inline-block;padding:4px 9px;border-radius:99px;
+  background:#fff;border:1px solid var(--border);
+  font-size:11.5px;font-weight:600;color:var(--ink);
+}
+.variantChip.more{background:transparent;border-style:dashed;color:var(--dim);}
+
+/* ========== 국물 / 국물 없는 것 고르기 ========== */
+.soupFilter{
+  display:flex;gap:7px;
+  margin:4px 0 10px;          /* 아래 1위 카드 오먹이와 겹치지 않도록 */
+  position:relative;z-index:1;
+}
+.soupChip{
+  flex:1;min-width:0;padding:10px 6px;border-radius:var(--r-md);
+  border:1.5px solid var(--border);background:#fff;
+  font-size:12.5px;font-weight:700;color:var(--dim);
+  letter-spacing:-.02em;white-space:nowrap;
+  transition:all .14s;
+}
+@media (max-width:360px){
+  .soupChip{font-size:11.5px;padding:9px 4px;}
+}
+.soupChip.on{
+  border-color:var(--primary);background:var(--primaryBg);color:var(--primary);
+}
+.soupChip:disabled{opacity:.35;}
+@media (hover: hover) and (pointer: fine){
+  .soupChip:hover:not(:disabled):not(.on){border-color:var(--primary);color:var(--primary);}
+}
+
+/* 1위 카드의 세부 메뉴 안내 */
+.heroVariants{
+  margin:6px 0 0;font-size:12.5px;line-height:1.6;
+  color:var(--primary);font-weight:600;
+}
+.heroVariantsHint{color:var(--dim);font-weight:500;}
+
+/* 검색 결과에서 "○○의 한 종류" */
+.parentMeta{color:var(--faint);font-weight:500;}
+
+/* ========== 1위 메뉴 근처 식당 찾기 ========== */
+.nearbyCard{
+  display:flex;align-items:center;gap:12px;
+  margin:16px 0 4px;padding:14px 16px;
+  border:1px solid var(--border);border-radius:var(--r-md);
+  background:#fff;box-shadow:var(--sh1);
+  text-decoration:none;color:inherit;
+  transition:border-color .14s, transform .14s;
+}
+.nearbyIcon{font-size:18px;flex:none;}
+.nearbyBody{flex:1;min-width:0;}
+.nearbyBody b{display:block;font-size:14px;font-weight:700;color:var(--ink);}
+.nearbyBody span{display:block;font-size:12px;color:var(--dim);margin-top:2px;}
+.nearbyGo{flex:none;font-size:16px;color:var(--primary);font-weight:700;}
+@media (hover: hover) and (pointer: fine){
+  .nearbyCard:hover{border-color:var(--primary);transform:translateY(-1px);}
+}
+
+/* ========== 홈 진단 카드 버튼 (결과 다시 보기 / 다시 진단) ========== */
+.diagBtns{display:flex;flex-wrap:wrap;gap:7px;}
+.diagBtn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 14px;border-radius:9999px;
+  font-size:12.5px;font-weight:800;text-decoration:none;
+  white-space:nowrap;transition:all .14s;
+}
+.diagBtn.primary{background:#191F28;color:#fff;}
+.diagBtn.ghost{
+  background:#fff;color:var(--dim);
+  border:1.5px solid var(--border);font-weight:700;
+}
+@media (hover: hover) and (pointer: fine){
+  .diagBtn.primary:hover{background:#000;}
+  .diagBtn.ghost:hover{border-color:var(--primary);color:var(--primary);}
+}
+@media (max-width:360px){
+  .diagBtn{font-size:11.5px;padding:8px 11px;}
+}

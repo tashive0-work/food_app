@@ -3,7 +3,7 @@ import { Food } from "@/types/food";
 // ⚠️ 이 파일은 자동 생성됩니다. 직접 고치지 마세요.
 //    원본은 Supabase 의 foods 테이블입니다. 빌드할 때 scripts/sync-foods.mjs 가 다시 씁니다.
 //    메뉴를 고치려면 어드민 콘솔이나 Supabase 에서 수정하세요.
-//    생성 시각: 2026-10-01T22:59:28.001Z
+//    생성 시각: 2026-10-01T23:05:51.386Z
 
 export const RAW: [string, string, number, number, number, number, number, number, string[], string[], number, boolean][] = [
   ["김치찌개", "한식", 3, 3, 4, 2, 4, 2, ["퇴근", "점심", "해장", "비", "추운 날"], ["돼지고기김치찌개", "참치김치찌개", "꽁치김치찌개", "스팸김치찌개"], 2, true],

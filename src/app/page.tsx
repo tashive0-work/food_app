@@ -211,7 +211,12 @@ export default function Home() {
         </Link>
 
         {/* 정갈한 프리미엄 화이트 히어로 카운터 카드 */}
-        <Link href="/quiz" style={{
+        {/* 진단 카드.
+            진단 기록이 있으면 카드 전체를 링크로 묶지 않습니다 —
+            전에는 어디를 눌러도 /quiz 로 가서, 결과를 다시 보려던 사람이
+            진단을 처음부터 다시 하게 됐습니다. */}
+        {(() => {
+          const diagCardStyle: React.CSSProperties = {
           display: "block",
           textDecoration: "none",
           background: "#FFFFFF",
@@ -223,7 +228,9 @@ export default function Home() {
           marginBottom: "24px",
           position: "relative",
           overflow: "hidden"
-        }}>
+        };
+          const inner = (
+            <>
           {/* 말풍선: 캐릭터 왼쪽 위 (상단 빈 영역에 배치) */}
           <div
             style={{
@@ -323,22 +330,40 @@ export default function Home() {
               {today ? today.verdict.title : "기분, 소화 상태, 식사 취향에 맞춘 스마트 추천"}
             </p>
 
-            <div style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              background: "#191F28",
-              color: "#FFFFFF",
-              padding: "9px 15px",
-              borderRadius: "9999px",
-              fontSize: "12.5px",
-              fontWeight: 800
-            }}>
-              <span>{today ? "다시 진단해 보기" : "추천 시작하기"}</span>
-              <span>→</span>
-            </div>
-          </div>
-        </Link>
+            {today ? (
+              /* 진단 기록이 있으면 — 결과를 다시 보는 것과 새로 진단하는 것을 나눕니다 */
+              <div className="diagBtns">
+                <Link href="/result" className="diagBtn primary">
+                  결과 다시 보기 <span aria-hidden="true">→</span>
+                </Link>
+                <Link href="/quiz" className="diagBtn ghost">
+                  다시 진단해 보기
+                </Link>
+              </div>
+            ) : (
+              <span style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "#191F28",
+                color: "#FFFFFF",
+                padding: "9px 15px",
+                borderRadius: "9999px",
+                fontSize: "12.5px",
+                fontWeight: 800
+              }}>
+                <span>추천 시작하기</span>
+                <span aria-hidden="true">→</span>
+              </span>
+            )}
+          </div>            </>
+          );
+          return today ? (
+            <div style={diagCardStyle}>{inner}</div>
+          ) : (
+            <Link href="/quiz" style={diagCardStyle}>{inner}</Link>
+          );
+        })()}
 
         {/* 2x2 정돈된 화이트 벤토 그리드 */}
         <section className="bentoGrid">
