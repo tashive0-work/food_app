@@ -81,15 +81,28 @@ const supabase = createClient(url, key, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 
-const { data, error } = await supabase
-  .from("foods")
-  .select("name, kind, spice, fill, warm, ease, comfort, light, themes, variants")
-  .eq("active", true)
-  .order("id", { ascending: true })
-  .limit(20000);
+/**
+ * Supabase 는 한 번에 최대 1000행만 돌려줍니다 (limit 을 크게 줘도 잘립니다).
+ * 그래서 range 로 1000개씩 끝까지 끌어옵니다.
+ */
+const PAGE = 1000;
+const data = [];
+for (let from = 0; ; from += PAGE) {
+  const { data: page, error } = await supabase
+    .from("foods")
+    .select("name, kind, spice, fill, warm, ease, comfort, light, themes, variants")
+    .eq("active", true)
+    .order("id", { ascending: true })
+    .range(from, from + PAGE - 1);
 
-if (error) keepExisting(`DB 조회 실패: ${error.message}`);
-if (!data || data.length === 0) keepExisting("조회 결과 0건");
+  if (error) keepExisting(`DB 조회 실패: ${error.message}`);
+  if (!page || page.length === 0) break;
+  data.push(...page);
+  if (page.length < PAGE) break;
+  if (from > 100000) keepExisting("조회가 끝나지 않습니다 (안전 중단)");
+}
+
+if (data.length === 0) keepExisting("조회 결과 0건");
 
 const before = countExisting();
 if (before > 0 && data.length < before * SHRINK_GUARD) {
