@@ -134,6 +134,15 @@ export function recommend(
       if (adjustedState.social === "혼자" && f.themes.includes("혼자")) p -= 4;
       if (adjustedState.social === "혼자" && f.themes.includes("모임")) p += 3;
 
+      // Q6 "뜨끈한 국물" (warm === 4) 선택 시 국물 요리(soup: true) 우대 & 국물 없는 요리 감점
+      if (adjustedState.warm === 4) {
+        if (f.soup) {
+          p -= 3.5;
+        } else {
+          p += 6.0;
+        }
+      }
+
       // 대중성 보정.
       // 메뉴가 1,600개가 되면서 6축 공간의 빈 칸을 희귀 메뉴가 혼자 차지하는 일이 생겼습니다.
       // 그 결과 김치찌개 대신 솜땀·임자수탕이 1위로 올라왔습니다.
