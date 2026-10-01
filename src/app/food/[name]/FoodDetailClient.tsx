@@ -26,15 +26,16 @@ interface PageProps {
   params: {
     name: string;
   };
+  initialRelated?: RelatedFoodItem[];
 }
 
-export default function FoodDetailClient({ params }: PageProps) {
+export default function FoodDetailClient({ params, initialRelated = [] }: PageProps) {
   const router = useRouter();
   const rawParam = params.name ? decodeURIComponent(params.name) : "";
 
   // 서버 렌더링 때부터 메뉴를 찾아 두어야 검색엔진이 "찾을 수 없습니다" 대신 실제 내용을 읽습니다.
   const [food, setFood] = useState<Food | null>(() => findFood(rawParam));
-  const [relatedList, setRelatedList] = useState<RelatedFoodItem[]>([]);
+  const [relatedList, setRelatedList] = useState<RelatedFoodItem[]>(initialRelated);
   const [favorites, setFavorites] = useState<number[]>([]);
 
   // 즐겨찾기 로드
@@ -55,7 +56,7 @@ export default function FoodDetailClient({ params }: PageProps) {
     if (target) {
       setFood(target);
       const dietSettings = loadDietSettings();
-      const related = getRelatedFoods(target, { limit: 10, dietSettings });
+      const related = getRelatedFoods(target, { limit: 6, dietSettings });
       setRelatedList(related);
 
       // 상호작용 로그 (메뉴 상세 조회)

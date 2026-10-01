@@ -13,7 +13,7 @@ export function generateMetadata({ searchParams }: PageProps): Metadata {
   const themeDesc = curTheme ? curTheme.desc : "오늘 상태에 맞는 메뉴를 골라드려요.";
   const encodedK = encodeURIComponent(k);
   const canonical = `https://eatodayme.com/theme?k=${encodedK}`;
-  const title = `${themeName} 메뉴 추천 — ${themeDesc} | 오늘 뭐 먹지`;
+  const title = `${themeName} 메뉴 추천 — ${themeDesc}`;
   const description = `${themeName}에 딱 맞는 메뉴 추천. ${themeDesc}`;
 
   return {
@@ -23,12 +23,12 @@ export function generateMetadata({ searchParams }: PageProps): Metadata {
       canonical,
     },
     openGraph: {
-      title,
+      title: `${title} | 오늘 뭐 먹지`,
       description,
       url: canonical,
     },
     twitter: {
-      title,
+      title: `${title} | 오늘 뭐 먹지`,
       description,
     },
   };
