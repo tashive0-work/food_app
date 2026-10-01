@@ -1700,3 +1700,21 @@ a.rankItem{text-decoration:none;color:inherit;transition:background-color .15s;}
 
 /* 검색 결과에서 "○○의 한 종류" */
 .parentMeta{color:var(--faint);font-weight:500;}
+
+/* ========== 1위 메뉴 근처 식당 찾기 ========== */
+.nearbyCard{
+  display:flex;align-items:center;gap:12px;
+  margin:16px 0 4px;padding:14px 16px;
+  border:1px solid var(--border);border-radius:var(--r-md);
+  background:#fff;box-shadow:var(--sh1);
+  text-decoration:none;color:inherit;
+  transition:border-color .14s, transform .14s;
+}
+.nearbyIcon{font-size:18px;flex:none;}
+.nearbyBody{flex:1;min-width:0;}
+.nearbyBody b{display:block;font-size:14px;font-weight:700;color:var(--ink);}
+.nearbyBody span{display:block;font-size:12px;color:var(--dim);margin-top:2px;}
+.nearbyGo{flex:none;font-size:16px;color:var(--primary);font-weight:700;}
+@media (hover: hover) and (pointer: fine){
+  .nearbyCard:hover{border-color:var(--primary);transform:translateY(-1px);}
+}

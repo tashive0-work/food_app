@@ -39,12 +39,12 @@ export async function logSession(): Promise<string | null> {
     });
 
     if (error) {
-      console.warn("⚠️ [Supabase] Session log failed:", error.message);
+      console.error("⚠️ [Supabase] Session log failed:", error.message);
       return null;
     }
     return (data as string) || null;
   } catch (err) {
-    console.warn("⚠️ [Supabase] Session log failed:", err);
+    console.error("⚠️ [Supabase] Session log failed:", err);
     return null;
   }
 }
@@ -61,8 +61,17 @@ export async function logDiagnosis(
     return null;
   }
   try {
+    let finalSessId = sessionId;
+    if (!finalSessId) {
+      finalSessId = await logSession();
+    }
+    if (!finalSessId) {
+      console.error("⚠️ [Supabase] Cannot log diagnosis without session ID.");
+      return null;
+    }
+
     const { data, error } = await supabase.rpc("log_diagnosis", {
-      p_session_id: sessionId ?? "",
+      p_session_id: finalSessId,
       p_answers: picks,
       p_scores: {
         hunger: state.hunger,
@@ -78,12 +87,12 @@ export async function logDiagnosis(
     });
 
     if (error) {
-      console.warn("⚠️ [Supabase] Diagnosis log failed:", error.message);
+      console.error("⚠️ [Supabase] Diagnosis log failed:", error.message);
       return null;
     }
     return (data as string) || null;
   } catch (err) {
-    console.warn("⚠️ [Supabase] Diagnosis log failed:", err);
+    console.error("⚠️ [Supabase] Diagnosis log failed:", err);
     return null;
   }
 }
@@ -100,17 +109,21 @@ export async function logInteraction(
     return;
   }
   try {
+    const finalDiagnosisId =
+      diagnosisId ||
+      (typeof window !== "undefined" ? localStorage.getItem("food_last_diagnosis_id") : null);
+
     const { error } = await supabase.rpc("log_interaction", {
-      p_diagnosis_id: diagnosisId ?? "",
+      p_diagnosis_id: finalDiagnosisId ?? "",
       p_food_name: foodName,
       p_rank: rank,
       p_action: action,
     });
     if (error) {
-      console.warn("⚠️ [Supabase] Interaction log failed:", error.message);
+      console.error("⚠️ [Supabase] Interaction log failed:", error.message);
     }
   } catch (err) {
-    console.warn("⚠️ [Supabase] Interaction log failed:", err);
+    console.error("⚠️ [Supabase] Interaction log failed:", err);
   }
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AppState } from "@/types/food";
@@ -9,7 +9,7 @@ import { classify, recommend, estimateWarm } from "@/lib/recommend";
 import { Quiz } from "@/components/Quiz";
 import { BottomNav } from "@/components/BottomNav";
 import { saveTodayResult } from "@/lib/todayResult";
-import { logSession, logDiagnosis } from "@/lib/supabase";
+import { logSession, logDiagnosis, logInteraction } from "@/lib/supabase";
 
 export default function QuizClient() {
   const router = useRouter();
@@ -18,6 +18,7 @@ export default function QuizClient() {
   const [seed] = useState(() => Math.floor(Math.random() * 1_000_000));
   const [fastMode, setFastMode] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
+  const hasLoggedRef = useRef(false);
 
   const activeQuestions = fastMode ? FAST_QUESTIONS : QUESTIONS;
 
@@ -65,7 +66,8 @@ export default function QuizClient() {
   const done = picks.length === activeQuestions.length;
 
   useEffect(() => {
-    if (!done || !state || !verdict) return;
+    if (!done || !state || !verdict || hasLoggedRef.current) return;
+    hasLoggedRef.current = true;
 
     const list = recommend(state, seed, {}, [], fastMode ? FAST_SKIP_AXES : []);
     const topFoodName = list[0]?.name ?? "";
@@ -81,15 +83,23 @@ export default function QuizClient() {
 
     (async () => {
       try {
-        const sessId = await logSession();
+        let sessId = await logSession();
+        if (!sessId) {
+          sessId = await logSession();
+        }
         const diagId = await logDiagnosis(sessId, picks, state, verdict.title);
-        if (diagId) localStorage.setItem("food_last_diagnosis_id", diagId);
+        if (diagId) {
+          localStorage.setItem("food_last_diagnosis_id", diagId);
+          if (topFoodName) {
+            await logInteraction(diagId, topFoodName, 1, "view");
+          }
+        }
       } catch (e) {
         console.error("Log error:", e);
+      } finally {
+        router.push("/result");
       }
     })();
-
-    router.push("/result");
   }, [done, state, verdict, picks, seed, fastMode, router]);
 
   const answer = (i: number) => {

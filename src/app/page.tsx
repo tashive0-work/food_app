@@ -107,7 +107,9 @@ export default function Home() {
               <span className="brandMarkImg" aria-hidden="true">
                 <img src="/mascot/omeok-default.png" alt="" width={34} height={34} />
               </span>
-              <h1 className="brandName" style={{ fontSize: "19px", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>오늘 뭐 먹지? 점심·저녁 메뉴 추천</h1>
+              <h1 className="brandName" style={{margin:0,lineHeight:0}}>
+                <img src="/brand/logo-wordmark.svg" alt="오늘 뭐 먹지? 점심·저녁 메뉴 추천" width={141} height={23} style={{height:23,width:"auto",display:"block"}} />
+              </h1>
             </Link>
             <Link href="/settings" className="settingsEntry" aria-label="내 정보 및 설정">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { AppState } from "@/types/food";
-import { classify, recommend } from "@/lib/recommend";
+import { classify, recommend, mapUrl } from "@/lib/recommend";
 import { FAST_SKIP_AXES } from "@/data/questions";
 import { FoodCard } from "@/components/FoodCard";
 import { HScroll } from "@/components/HScroll";
@@ -16,6 +16,7 @@ import { AiReRecommendInput } from "@/components/AiReRecommendInput";
 import { AdBanner } from "@/components/AdBanner";
 import { SponsoredCard } from "@/components/SponsoredCard";
 import { Mascot } from "@/components/Mascot";
+import { logInteraction } from "@/lib/supabase";
 import { loadTodayResult, clearTodayResult, TodayResult } from "@/lib/todayResult";
 import { loadDietSettings, DietSettings } from "@/lib/dietFilter";
 
@@ -242,14 +243,36 @@ export default function ResultPage() {
                       diagnosisId={diagnosisId}
                     />
                   </div>
+                  {/*
+                    제휴 매장 카드.
+                    예전에는 "원조 가마솥 김치찌개" 라는 지어낸 가게가 1위 메뉴와 상관없이
+                    고정으로 들어가 있었습니다. 제휴가 실제로 생기기 전까지는
+                    매장 정보를 비워 둡니다 — 비어 있으면 카드가 아예 그려지지 않습니다.
+                  */}
                   <SponsoredCard
-                    storeName="원조 가마솥 김치찌개"
+                    storeName=""
                     foodName={list[0].name}
-                    description="깊고 진한 3년 숙성지 찌개 전문점. 오늘 진단 상태에 맞춤 추천 매장입니다."
+                    description=""
                     locationLabel="내 위치 근처 식당"
-                    linkUrl={`https://map.naver.com/p/search/${encodeURIComponent("가마솥 김치찌개")}`}
-                    badgeText="파트너스 주변 식당 검색"
+                    linkUrl=""
+                    badgeText="제휴 매장"
                   />
+
+                  {/* 제휴와 무관하게, 1위 메뉴를 파는 곳을 바로 찾아볼 수 있게 */}
+                  <a
+                    className="nearbyCard"
+                    href={mapUrl(list[0].name)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => logInteraction(diagnosisId, list[0].name, 1, "map_click")}
+                  >
+                    <span className="nearbyIcon" aria-hidden="true">📍</span>
+                    <span className="nearbyBody">
+                      <b>{list[0].name} 파는 곳 찾아보기</b>
+                      <span>내 위치 주변을 네이버 지도에서 바로 검색합니다</span>
+                    </span>
+                    <span className="nearbyGo" aria-hidden="true">→</span>
+                  </a>
                 </>
               )}
 
@@ -307,7 +330,7 @@ export default function ResultPage() {
                 </>
               )}
 
-              <AiReRecommendInput currentScores={state} onApplyDelta={handleApplyAiDelta} />
+              <AiReRecommendInput currentScores={state} onApplyDelta={handleApplyAiDelta} diagnosisId={diagnosisId} />
 
               <AdBanner />
 

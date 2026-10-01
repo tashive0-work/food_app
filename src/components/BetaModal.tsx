@@ -5,33 +5,16 @@ import Link from "next/link";
 
 /**
  * 시범 운영 안내 팝업.
- * 한 번 닫으면 그 방문(탭) 동안은 다시 뜨지 않습니다. 새로고침해도 유지됩니다.
- * 탭을 닫았다가 새로 들어오면 다시 뜹니다. (sessionStorage 사용)
- * 0.6초 뒤에 떠서 첫 화면이 그려진 다음에 보이도록 했습니다.
+ * 화면을 열 때마다 0.6초 뒤 표시. 닫으면 그 화면에서만 닫힘.
  */
-const SEEN_KEY = "beta_modal_seen";
-
 export function BetaModal() {
   const [open, setOpen] = useState(false);
 
-  // 닫기 = 최초 방문 1회 이후 다시 띄우지 않음
   const dismiss = () => {
     setOpen(false);
-    try {
-      localStorage.setItem(SEEN_KEY, "1");
-    } catch {
-      // 시크릿 모드 등에서 저장이 막히면 그냥 넘어갑니다
-    }
   };
 
   useEffect(() => {
-    let seen = false;
-    try {
-      seen = localStorage.getItem(SEEN_KEY) === "1";
-    } catch {
-      seen = false;
-    }
-    if (seen) return;
     const t = setTimeout(() => setOpen(true), 600);
     return () => clearTimeout(t);
   }, []);

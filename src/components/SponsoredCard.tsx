@@ -13,6 +13,15 @@ interface SponsoredCardProps {
   badgeText?: string;
 }
 
+/**
+ * 제휴 매장 카드.
+ *
+ * 실제 제휴 계약이 있는 매장만 넣습니다.
+ * 지어낸 가게 이름이나 설명을 넣으면 안 됩니다 — 사용자에게는 진짜 광고로 보입니다.
+ * 그래서 아래 두 조건을 모두 만족해야만 화면에 나옵니다.
+ *   1) SHOW_SPONSORED 가 켜져 있을 것 (제휴가 실제로 시작됐을 때)
+ *   2) 매장 이름과 링크가 실제로 들어와 있을 것
+ */
 export function SponsoredCard({
   storeName,
   foodName,
@@ -22,6 +31,8 @@ export function SponsoredCard({
   badgeText = "주변 식당 검색",
 }: SponsoredCardProps) {
   if (!SHOW_SPONSORED) return null;
+  // 제휴 매장이 비어 있으면 아무것도 그리지 않습니다 (가짜 매장 노출 방지)
+  if (!storeName?.trim() || !linkUrl?.trim()) return null;
 
   const handleClick = () => {
     logInteraction(null, storeName, 0, "map_click");
