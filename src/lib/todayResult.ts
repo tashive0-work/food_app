@@ -11,6 +11,10 @@ export interface TodayResult {
   seed?: number;
   /** 빠른 모드(3문항)로 진단했는지 */
   fast?: boolean;
+  diagnosisId?: string | null;
+  aiDelta?: Record<string, number>;
+  excludeFoods?: string[];
+  aiReason?: string;
 }
 
 const KEY = "food_today_result";

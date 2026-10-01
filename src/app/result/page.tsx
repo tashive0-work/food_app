@@ -17,7 +17,7 @@ import { AdBanner } from "@/components/AdBanner";
 import { SponsoredCard } from "@/components/SponsoredCard";
 import { Mascot } from "@/components/Mascot";
 import { logInteraction } from "@/lib/supabase";
-import { loadTodayResult, clearTodayResult, TodayResult } from "@/lib/todayResult";
+import { loadTodayResult, saveTodayResult, clearTodayResult, TodayResult } from "@/lib/todayResult";
 import { loadDietSettings, DietSettings } from "@/lib/dietFilter";
 
 const StateRadarChart = dynamic(() => import("@/components/StateRadarChart"), {
@@ -54,6 +54,12 @@ export default function ResultPage() {
 
     const res = loadTodayResult();
     setTodayResult(res);
+    if (res) {
+      const diagId = res.diagnosisId || localStorage.getItem("food_last_diagnosis_id");
+      if (diagId) setDiagnosisId(diagId);
+      if (res.aiDelta) setAiDelta(res.aiDelta);
+      if (res.excludeFoods) setExcludeFoods(res.excludeFoods);
+    }
     setIsLoaded(true);
   }, []);
 
@@ -100,9 +106,19 @@ export default function ResultPage() {
     now.getMinutes()
   ).padStart(2, "0")}`;
 
-  const handleApplyAiDelta = (delta: Record<string, number>, excludes: string[]) => {
+  const handleApplyAiDelta = (delta: Record<string, number>, excludes: string[], reason: string) => {
     setAiDelta(delta);
     setExcludeFoods(excludes);
+    if (todayResult) {
+      const updated = {
+        ...todayResult,
+        aiDelta: delta,
+        excludeFoods: excludes,
+        aiReason: reason,
+      };
+      setTodayResult(updated);
+      saveTodayResult(updated);
+    }
   };
 
   const restart = () => {
@@ -330,7 +346,12 @@ export default function ResultPage() {
                 </>
               )}
 
-              <AiReRecommendInput currentScores={state} onApplyDelta={handleApplyAiDelta} diagnosisId={diagnosisId} />
+              <AiReRecommendInput
+                currentScores={state}
+                onApplyDelta={handleApplyAiDelta}
+                diagnosisId={diagnosisId}
+                initialReason={todayResult?.aiReason}
+              />
 
               <AdBanner />
 

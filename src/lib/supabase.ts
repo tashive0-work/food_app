@@ -109,12 +109,8 @@ export async function logInteraction(
     return;
   }
   try {
-    const finalDiagnosisId =
-      diagnosisId ||
-      (typeof window !== "undefined" ? localStorage.getItem("food_last_diagnosis_id") : null);
-
     const { error } = await supabase.rpc("log_interaction", {
-      p_diagnosis_id: finalDiagnosisId ?? "",
+      p_diagnosis_id: diagnosisId ?? "",
       p_food_name: foodName,
       p_rank: rank,
       p_action: action,

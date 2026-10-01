@@ -72,22 +72,14 @@ export default function QuizClient() {
     const list = recommend(state, seed, {}, [], fastMode ? FAST_SKIP_AXES : []);
     const topFoodName = list[0]?.name ?? "";
 
-    saveTodayResult({
-      picks,
-      state,
-      verdict,
-      topFoodName,
-      seed,
-      fast: fastMode,
-    });
-
     (async () => {
+      let diagId: string | null = null;
       try {
         let sessId = await logSession();
         if (!sessId) {
           sessId = await logSession();
         }
-        const diagId = await logDiagnosis(sessId, picks, state, verdict.title);
+        diagId = await logDiagnosis(sessId, picks, state, verdict.title);
         if (diagId) {
           localStorage.setItem("food_last_diagnosis_id", diagId);
           if (topFoodName) {
@@ -97,6 +89,15 @@ export default function QuizClient() {
       } catch (e) {
         console.error("Log error:", e);
       } finally {
+        saveTodayResult({
+          picks,
+          state,
+          verdict,
+          topFoodName,
+          seed,
+          fast: fastMode,
+          diagnosisId: diagId,
+        });
         router.push("/result");
       }
     })();

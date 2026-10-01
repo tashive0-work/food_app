@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AppState } from "@/types/food";
 import { logInteraction } from "@/lib/supabase";
 
@@ -8,18 +8,24 @@ interface AiReRecommendInputProps {
   currentScores: AppState;
   onApplyDelta: (delta: Record<string, number>, excludeFoods: string[], reason: string) => void;
   diagnosisId?: string | null;
+  initialReason?: string;
 }
 
 export function AiReRecommendInput({
   currentScores,
   onApplyDelta,
   diagnosisId,
+  initialReason = "",
 }: AiReRecommendInputProps) {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [aiReason, setAiReason] = useState("");
+  const [aiReason, setAiReason] = useState(initialReason);
   const [requestCount, setRequestCount] = useState(0);
+
+  useEffect(() => {
+    if (initialReason) setAiReason(initialReason);
+  }, [initialReason]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
