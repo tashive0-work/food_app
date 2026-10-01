@@ -5,10 +5,10 @@ import { SplashScreen } from "@/components/SplashScreen";
 export const metadata: Metadata = {
   metadataBase: new URL("https://eatodayme.com"),
   title: {
-    default: "오늘의 잇템 | 점심·저녁 메뉴 추천 | 고민은 여기까지!",
+    default: "오늘의 잇템 | 오늘 뭐 먹지 고민될 때 점심·저녁 메뉴 추천",
     template: "%s | 오늘의 잇템",
   },
-  description: "점심·저녁 메뉴 고민될 때, 8문항만 답하면 지금 상태에 맞는 메뉴를 골라드려요. 무료.",
+  description: "오늘 뭐 먹지 고민될 때, 8문항만 답하면 지금 상태에 맞는 메뉴를 골라드려요. 무료.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "오늘의 잇템 | 고민은 여기까지!",
-    description: "점심·저녁 메뉴 고민될 때, 8문항만 답하면 지금 상태에 맞는 메뉴를 골라드려요. 무료.",
+    description: "오늘 뭐 먹지 고민될 때, 8문항만 답하면 지금 상태에 맞는 메뉴를 골라드려요. 무료.",
     url: "https://eatodayme.com",
     siteName: "오늘의 잇템",
     images: [{
@@ -47,12 +47,12 @@ export const metadata: Metadata = {
   // canonical은 페이지마다 따로 지정합니다. (여기 두면 모든 페이지가 홈의 복사본으로 취급됩니다)
   keywords: [
     "메뉴 추천", "점심 메뉴 추천", "저녁 메뉴 추천", "메뉴 고르기",
-    "오늘의 잇템", "혼밥 메뉴", "메뉴 고민", "음식 추천 사이트",
+    "오늘의 잇템", "오늘 뭐 먹지", "혼밥 메뉴", "메뉴 고민", "음식 추천 사이트",
   ],
   twitter: {
     card: "summary_large_image",
     title: "오늘의 잇템 | 고민은 여기까지!",
-    description: "점심·저녁 메뉴 고민될 때, 8문항만 답하면 지금 상태에 맞는 메뉴를 골라드려요. 무료.",
+    description: "오늘 뭐 먹지 고민될 때, 8문항만 답하면 지금 상태에 맞는 메뉴를 골라드려요. 무료.",
     images: ["/og-image.png"],
   },
 };
@@ -90,7 +90,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "오늘의 잇템",
-              alternateName: ["오늘의잇템", "오먹이", "eatodayme"],
+              alternateName: ["eatodayme", "오먹이"],
               url: "https://eatodayme.com/",
             }),
           }}

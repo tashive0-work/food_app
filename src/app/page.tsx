@@ -108,7 +108,7 @@ export default function Home() {
                 <img src="/mascot/omeok-default.png" alt="" width={34} height={34} />
               </span>
               <h1 className="brandName" style={{margin:0,lineHeight:0}}>
-                <img src="/brand/logo-wordmark.svg" alt="오늘의 잇템 | 점심·저녁 메뉴 추천" width={141} height={23} style={{height:23,width:"auto",display:"block"}} />
+                <img src="/brand/logo-wordmark.svg" alt="오늘의 잇템 — 점심·저녁 메뉴 추천" width={124} height={23} style={{height:23,width:"auto",display:"block"}} />
               </h1>
             </Link>
             <Link href="/settings" className="settingsEntry" aria-label="내 정보 및 설정">
@@ -256,7 +256,7 @@ export default function Home() {
                 letterSpacing: "-0.02em",
               }}
             >
-              오먹 오먹~ 오늘의 잇템!
+              오먹 오먹~ 오늘 뭐 먹지?
               <span
                 style={{
                   position: "absolute",

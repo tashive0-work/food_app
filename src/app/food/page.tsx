@@ -13,7 +13,7 @@ const TOTAL = FOODS.length;
 
 export const metadata: Metadata = {
   title: `음식 추천 — 메뉴 ${TOTAL}가지 전체 보기`,
-  description: `오늘의 잇템에서 보는 음식 종류 전체 목록. 한식·분식·중식·일식·양식·아시안까지 메뉴 ${TOTAL}가지를 종류별로 모았어요. 점심 메뉴 추천, 저녁 메뉴 추천이 필요하면 8문항 진단으로 바로 골라드려요.`,
+  description: `오늘 뭐 먹지 고민될 때 보는 음식 종류 전체 목록. 한식·분식·중식·일식·양식·아시안까지 메뉴 ${TOTAL}가지를 종류별로 모았어요. 점심 메뉴 추천, 저녁 메뉴 추천이 필요하면 8문항 진단으로 바로 골라드려요.`,
   alternates: { canonical: "/food" },
   openGraph: {
     title: `음식 추천 — 메뉴 ${TOTAL}가지 전체 보기 | 오늘의 잇템`,
@@ -49,7 +49,7 @@ export default function FoodIndexPage() {
         </header>
 
         <p style={{ fontSize: "14px", lineHeight: 1.65, color: "var(--dim)", margin: "4px 0 16px" }}>
-          오늘의 잇템에서 음식 종류별로 한눈에 보세요. 메뉴를 누르면 이럴 때 먹기 좋은지,
+          오늘 뭐 먹지 고민될 때, 음식 종류별로 한눈에 보세요. 메뉴를 누르면 이럴 때 먹기 좋은지,
           어떤 꿀조합이 좋은지 알려드려요.
         </p>
 
