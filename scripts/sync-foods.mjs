@@ -90,7 +90,7 @@ const data = [];
 for (let from = 0; ; from += PAGE) {
   const { data: page, error } = await supabase
     .from("foods")
-    .select("name, kind, spice, fill, warm, ease, comfort, light, themes, variants, popularity")
+    .select("name, kind, spice, fill, warm, ease, comfort, light, themes, variants, popularity, soup")
     .eq("active", true)
     .order("id", { ascending: true })
     .range(from, from + PAGE - 1);
@@ -115,10 +115,11 @@ const arr = (a) => "[" + (a || []).map((x) => `"${esc(x)}"`).join(", ") + "]";
 // variants 를 항상 내보냅니다 (비어 있어도). popularity 자리를 고정하기 위해서입니다.
 const lines = data.map((f) => {
   const pop = typeof f.popularity === "number" ? f.popularity : 1;
+  const soup = f.soup === true;
   return (
     `  ["${esc(f.name)}", "${esc(f.kind)}", ` +
     `${f.spice}, ${f.fill}, ${f.warm}, ${f.ease}, ${f.comfort}, ${f.light}, ` +
-    `${arr(f.themes)}, ${arr(f.variants)}, ${pop}],`
+    `${arr(f.themes)}, ${arr(f.variants)}, ${pop}, ${soup}],`
   );
 });
 
@@ -129,12 +130,12 @@ const out = `import { Food } from "@/types/food";
 //    메뉴를 고치려면 어드민 콘솔이나 Supabase 에서 수정하세요.
 //    생성 시각: ${new Date().toISOString()}
 
-export const RAW: [string, string, number, number, number, number, number, number, string[], string[], number][] = [
+export const RAW: [string, string, number, number, number, number, number, number, string[], string[], number, boolean][] = [
 ${lines.join("\n")}
 ];
 
 export const FOODS: Food[] = RAW.map(
-  ([name, kind, spice, fill, warm, ease, comfort, light, themes, variants, popularity], i) => ({
+  ([name, kind, spice, fill, warm, ease, comfort, light, themes, variants, popularity, soup], i) => ({
     id: i,
     name,
     kind,
@@ -147,6 +148,7 @@ export const FOODS: Food[] = RAW.map(
     themes,
     variants,
     popularity,
+    soup,
   })
 );
 `;

@@ -47,6 +47,13 @@ export function HeroCard({
                 <> · <strong>{food.match}%</strong> 일치</>
               )}
             </p>
+            {(food.variants?.length ?? 0) > 0 && (
+              <p className="heroVariants">
+                {food.variants!.slice(0, 3).join(" · ")}
+                {food.variants!.length > 3 && ` 외 ${food.variants!.length - 3}개`}
+                <span className="heroVariantsHint"> 중에 고르셔도 좋아요</span>
+              </p>
+            )}
           </div>
           <button
             className={isFavorite ? "favBtn on" : "favBtn"}

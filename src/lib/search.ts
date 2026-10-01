@@ -16,59 +16,73 @@ function getChosung(str: string): string {
 /**
  * 메뉴 검색.
  *
- * 세부 메뉴(variants)까지 함께 찾습니다.
- *   · "참치김치찌개" → 김치찌개 카드가 나오고, 찾은 세부 메뉴를 표시합니다
- *   · "김치찌개"     → 김치찌개 카드 + 세부 메뉴 전부 표시
+ * 세부 메뉴(참치김치찌개 등)도 **독립된 카드**로 내보냅니다.
+ * 그래야 레시피·근처 식당·배달 버튼이 그 메뉴 이름으로 동작합니다.
+ * (추천 화면에서는 세부 메뉴를 카드로 쪼개지 않습니다. TOP5 가 김치찌개 종류로만
+ *  채워지면 안 되기 때문입니다.)
  *
- * 순서는 "얼마나 정확히 맞았는지" 로 매깁니다.
- * 이름이 정확히 같은 것 → 이름으로 시작 → 이름에 포함 → 세부 메뉴 → 분류·테마.
+ * 순서: 이름 정확히 일치 → 앞부분 일치 → 이름에 포함 → 세부 메뉴 → 분류·테마.
  */
 export function searchFoods(query: string): Food[] {
   const q = query.trim().toLowerCase();
   if (!q) return [];
 
   const isChosungQuery = /^[ㄱ-ㅎ]+$/.test(q);
-
   const hits: { food: Food; score: number }[] = [];
+  const seen = new Set<string>();
+
+  const push = (food: Food, score: number) => {
+    if (seen.has(food.name)) return;
+    seen.add(food.name);
+    hits.push({ food, score });
+  };
+
+  /** 세부 메뉴를 부모 메뉴의 성격을 물려받은 하나의 메뉴로 만듭니다 */
+  const asMenu = (parent: Food, variantName: string, index: number): Food => ({
+    ...parent,
+    // 찜하기·좋아요가 부모와 섞이지 않도록 별도 id 를 줍니다
+    id: parent.id * 1000 + 900 + index,
+    name: variantName,
+    parentName: parent.name,
+    variants: undefined,
+    matchedVariants: undefined,
+  });
 
   for (const f of FOODS) {
     const name = f.name.toLowerCase();
     const variants = f.variants || [];
-    const matched = variants.filter((v) => v.toLowerCase().includes(q));
 
     let score = -1;
-    if (name === q) score = 0;                       // 정확히 일치
-    else if (name.startsWith(q)) score = 1;          // 앞부분 일치
-    else if (name.includes(q)) score = 2;            // 이름에 포함
-    else if (matched.length > 0) score = 3;          // 세부 메뉴에 포함
+    if (name === q) score = 0;
+    else if (name.startsWith(q)) score = 1;
+    else if (name.includes(q)) score = 2;
     else if (f.kind.toLowerCase().includes(q)) score = 4;
     else if (f.themes.some((t) => t.includes(q))) score = 5;
-    else if (isChosungQuery) {
-      if (getChosung(f.name).includes(q)) score = 2;
-      else if (variants.some((v) => getChosung(v).includes(q))) score = 3;
-    }
-    if (score < 0) continue;
+    else if (isChosungQuery && getChosung(f.name).includes(q)) score = 2;
 
-    // 이름으로 찾았으면 세부 메뉴를 전부 보여 주고,
-    // 세부 메뉴로 찾았으면 걸린 것만 앞에 둡니다.
-    const show = score <= 2
-      ? variants
-      : [...matched, ...variants.filter((v) => !matched.includes(v))];
+    if (score >= 0) push(f, score);
 
-    hits.push({
-      food: { ...f, matchedVariants: show.slice(0, 6) },
-      score,
+    // 세부 메뉴 — 걸린 것만 독립 카드로
+    variants.forEach((v, i) => {
+      const lv = v.toLowerCase();
+      let vs = -1;
+      if (lv === q) vs = 0;
+      else if (lv.startsWith(q)) vs = 1;
+      else if (lv.includes(q)) vs = 3;
+      else if (isChosungQuery && getChosung(v).includes(q)) vs = 3;
+      // 부모 이름으로 찾았으면 그 세부 메뉴도 함께 보여 줍니다
+      else if (score >= 0 && score <= 2) vs = 3;
+      if (vs >= 0) push(asMenu(f, v, i), vs);
     });
   }
 
   hits.sort((a, b) => {
     if (a.score !== b.score) return a.score - b.score;
-    // 같은 점수면 대중적인 것 먼저
     const pa = a.food.popularity ?? 1;
     const pb = b.food.popularity ?? 1;
     if (pa !== pb) return pb - pa;
     return a.food.name.length - b.food.name.length;
   });
 
-  return hits.slice(0, 30).map((h) => h.food);
+  return hits.slice(0, 60).map((h) => h.food);
 }

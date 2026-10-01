@@ -29,6 +29,8 @@ export default function ResultPage() {
   const [todayResult, setTodayResult] = useState<TodayResult | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  /** 국물 필터 — 사용자 요청. 전체 / 국물 있는 것 / 국물 없는 것 */
+  const [soupFilter, setSoupFilter] = useState<"all" | "soup" | "dry">("all");
   const [favorites, setFavorites] = useState<number[]>([]);
   const [aiDelta, setAiDelta] = useState<Record<string, number>>({});
   const [excludeFoods, setExcludeFoods] = useState<string[]>([]);
@@ -74,10 +76,21 @@ export default function ResultPage() {
   const skipAxes = todayResult?.fast ? FAST_SKIP_AXES : [];
   const verdict = todayResult?.verdict ?? (state ? classify(state) : null);
 
-  const list = useMemo(
+  const rawList = useMemo(
     () => (state ? recommend(state, seed, aiDelta, excludeFoods, skipAxes) : []),
     [state, seed, aiDelta, excludeFoods, skipAxes]
   );
+
+  // 국물 필터. 걸러낸 결과가 3개 미만이면 거르지 않습니다 (빈 화면 방지)
+  const list = useMemo(() => {
+    if (soupFilter === "all") return rawList;
+    const want = soupFilter === "soup";
+    const filtered = rawList.filter((f) => (f.soup ?? false) === want);
+    return filtered.length >= 3 ? filtered : rawList;
+  }, [rawList, soupFilter]);
+
+  const soupCount = useMemo(() => rawList.filter((f) => f.soup).length, [rawList]);
+  const dryCount = rawList.length - soupCount;
 
   const now = new Date();
   const stamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, "0")}.${String(
@@ -194,6 +207,33 @@ export default function ResultPage() {
                         }}
                       />
                     </div>
+                    {/* 국물 / 국물 없는 것 고르기 */}
+                    <div className="soupFilter" role="group" aria-label="국물 여부">
+                      <button
+                        type="button"
+                        className={`soupChip ${soupFilter === "all" ? "on" : ""}`}
+                        onClick={() => setSoupFilter("all")}
+                      >
+                        전체
+                      </button>
+                      <button
+                        type="button"
+                        className={`soupChip ${soupFilter === "soup" ? "on" : ""}`}
+                        onClick={() => setSoupFilter("soup")}
+                        disabled={soupCount < 3}
+                      >
+                        국물 있는 걸로
+                      </button>
+                      <button
+                        type="button"
+                        className={`soupChip ${soupFilter === "dry" ? "on" : ""}`}
+                        onClick={() => setSoupFilter("dry")}
+                        disabled={dryCount < 3}
+                      >
+                        국물 없는 걸로
+                      </button>
+                    </div>
+
                     <HeroCard
                       food={list[0]}
                       state={state}
@@ -223,6 +263,7 @@ export default function ResultPage() {
                   <HScroll className="subGrid">
                     {list.slice(1, 5).map((f, i) => (
                       <FoodCard
+                        showVariants
                         key={f.id}
                         food={f}
                         rank={i + 2}
@@ -249,6 +290,7 @@ export default function ResultPage() {
                   <div className="grid">
                     {list.slice(5).map((f, i) => (
                       <FoodCard
+                        showVariants
                         key={f.id}
                         food={f}
                         rank={i + 6}

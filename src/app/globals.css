@@ -1672,3 +1672,31 @@ a.rankItem{text-decoration:none;color:inherit;transition:background-color .15s;}
   font-size:11.5px;font-weight:600;color:var(--ink);
 }
 .variantChip.more{background:transparent;border-style:dashed;color:var(--dim);}
+
+/* ========== 국물 / 국물 없는 것 고르기 ========== */
+.soupFilter{
+  display:flex;gap:7px;margin:0 0 14px;
+}
+.soupChip{
+  flex:1;padding:10px 12px;border-radius:var(--r-md);
+  border:1.5px solid var(--border);background:#fff;
+  font-size:13px;font-weight:700;color:var(--dim);
+  transition:all .14s;
+}
+.soupChip.on{
+  border-color:var(--primary);background:var(--primaryBg);color:var(--primary);
+}
+.soupChip:disabled{opacity:.35;}
+@media (hover: hover) and (pointer: fine){
+  .soupChip:hover:not(:disabled):not(.on){border-color:var(--primary);color:var(--primary);}
+}
+
+/* 1위 카드의 세부 메뉴 안내 */
+.heroVariants{
+  margin:6px 0 0;font-size:12.5px;line-height:1.6;
+  color:var(--primary);font-weight:600;
+}
+.heroVariantsHint{color:var(--dim);font-weight:500;}
+
+/* 검색 결과에서 "○○의 한 종류" */
+.parentMeta{color:var(--faint);font-weight:500;}

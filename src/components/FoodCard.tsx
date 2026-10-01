@@ -10,6 +10,8 @@ import { getFoodGuide } from "@/data/foodGuides";
 interface FoodCardProps {
   food: Food;
   rank: number;
+  /** 세부 메뉴를 칩으로 보여줄지 (추천 화면 true / 검색 false) */
+  showVariants?: boolean;
   state?: AppState;
   isFavorite?: boolean;
   onToggleFavorite?: (foodId: number) => void;
@@ -19,6 +21,7 @@ interface FoodCardProps {
 export function FoodCard({
   food,
   rank,
+  showVariants = false,
   state,
   isFavorite,
   onToggleFavorite,
@@ -65,10 +68,11 @@ export function FoodCard({
     }
   };
 
-  // 검색에서 걸린 세부 메뉴가 있으면 그것을, 없으면 등록된 세부 메뉴를 보여 줍니다.
-  const allVariants = food.matchedVariants ?? food.variants ?? [];
+  // 세부 메뉴 칩은 추천 화면에서만 보여 줍니다.
+  // 검색에서는 세부 메뉴가 각각 독립된 카드로 나오므로 칩이 중복이 됩니다.
+  const allVariants = showVariants ? (food.matchedVariants ?? food.variants ?? []) : [];
   const variantList = allVariants.slice(0, 4);
-  const hiddenVariantCount = Math.max(0, (food.variants?.length ?? 0) - variantList.length);
+  const hiddenVariantCount = Math.max(0, allVariants.length - variantList.length);
 
   return (
     <article className="card">
@@ -88,7 +92,12 @@ export function FoodCard({
             )}
           </div>
           <p className="kind">
-            <span className="kindMeta">{food.kind}</span>
+            <span className="kindMeta">
+              {food.kind}
+              {food.parentName && (
+                <span className="parentMeta"> · {food.parentName}의 한 종류</span>
+              )}
+            </span>
             {food.ease >= 4 && <span className="kindMeta">· 10분 안팎</span>}
             {food.ease === 3 && <span className="kindMeta">· 20분 안팎</span>}
             {food.match != null && (
