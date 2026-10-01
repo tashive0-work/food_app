@@ -1655,3 +1655,20 @@ a.rankItem{text-decoration:none;color:inherit;transition:background-color .15s;}
   background:var(--primaryBg);color:var(--primary);
   font-size:13.5px;font-weight:600;line-height:1.6;
 }
+
+/* ========== 세부 메뉴 (매운탕 → 메기매운탕·조기매운탕) ========== */
+.variantRow{
+  margin:10px 0 0;padding:10px 12px;
+  background:var(--primaryBg);border-radius:8px;
+}
+.variantLabel{
+  display:block;font-size:11px;font-weight:700;
+  color:var(--primary);margin-bottom:6px;letter-spacing:-.01em;
+}
+.variantChips{display:flex;flex-wrap:wrap;gap:5px;}
+.variantChip{
+  display:inline-block;padding:4px 9px;border-radius:99px;
+  background:#fff;border:1px solid var(--border);
+  font-size:11.5px;font-weight:600;color:var(--ink);
+}
+.variantChip.more{background:transparent;border-style:dashed;color:var(--dim);}

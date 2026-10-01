@@ -65,6 +65,11 @@ export function FoodCard({
     }
   };
 
+  // 검색에서 걸린 세부 메뉴가 있으면 그것을, 없으면 등록된 세부 메뉴를 보여 줍니다.
+  const allVariants = food.matchedVariants ?? food.variants ?? [];
+  const variantList = allVariants.slice(0, 4);
+  const hiddenVariantCount = Math.max(0, (food.variants?.length ?? 0) - variantList.length);
+
   return (
     <article className="card">
       <div className="cardTop">
@@ -99,6 +104,21 @@ export function FoodCard({
           )}
         </div>
       </div>
+
+      {/* 세부 메뉴 — 매운탕 → 메기매운탕·조기매운탕 처럼 구체적으로 보여 줍니다 */}
+      {variantList.length > 0 && (
+        <div className="variantRow">
+          <span className="variantLabel">이런 종류가 있어요</span>
+          <div className="variantChips">
+            {variantList.map((v) => (
+              <span key={v} className="variantChip">{v}</span>
+            ))}
+            {hiddenVariantCount > 0 && (
+              <span className="variantChip more">외 {hiddenVariantCount}개</span>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* 1초 결정 가이드 (추천 상황 & 베스트 꿀조합) */}
       <div
