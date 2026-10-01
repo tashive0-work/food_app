@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     canonical: "https://eatodayme.com/search",
   },
   openGraph: {
-    title: "메뉴 검색 | 오늘 뭐 먹지",
+    title: "메뉴 검색 | 오늘의 잇템",
     description: "먹고 싶은 음식을 이름, 종류, 상황별 키워드로 빠르게 검색해보세요.",
     url: "https://eatodayme.com/search",
   },

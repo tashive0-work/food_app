@@ -3,9 +3,9 @@
   <rect x="0" y="0" width="1200" height="8" fill="#1F6F4A"/>
   <rect x="90" y="140" width="72" height="72" rx="20" fill="#1F6F4A"/>
   <text x="126" y="188" font-family="Pretendard, sans-serif" font-size="26"
-        font-weight="800" fill="#FFFFFF" text-anchor="middle">오늘</text>
+        font-weight="800" fill="#FFFFFF" text-anchor="middle">잇템</text>
   <text x="90" y="310" font-family="Pretendard, sans-serif" font-size="88"
-        font-weight="800" fill="#16211C" letter-spacing="-3">오늘 뭐 먹지?</text>
+        font-weight="800" fill="#16211C" letter-spacing="-3">오늘의 잇템</text>
   <text x="90" y="378" font-family="Pretendard, sans-serif" font-size="30"
         font-weight="500" fill="#7C8A83">여덟 번만 답하면 지금 상태에 맞는 메뉴를 골라 드려요</text>
   <rect x="90" y="440" width="150" height="46" rx="23" fill="#EFF7F2"/>

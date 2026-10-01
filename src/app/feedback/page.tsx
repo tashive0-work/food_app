@@ -191,7 +191,7 @@ function FeedbackContent() {
           }}
         >
           <p style={{ margin: 0, fontSize: "14px", fontWeight: 700, color: "#9A3412" }}>
-            &ldquo;오늘 뭐 먹지?&rdquo;는 여러분과 함께 만들어갑니다
+            &ldquo;오늘의 잇템&rdquo;은 여러분과 함께 만들어갑니다
           </p>
           <p style={{ margin: "6px 0 0", fontSize: "12.5px", color: "#C2410C", lineHeight: 1.6 }}>
             원하는 메뉴가 없었거나, 꿀조합을 알려주고 싶거나, 조금이라도 불편했던 점이 있었다면 한 줄이라도 편하게 적어주세요!

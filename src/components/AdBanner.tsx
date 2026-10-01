@@ -49,7 +49,7 @@ export function AdBanner({ unitId, format = "banner", className }: AdBannerProps
         />
       ) : (
         <div style={{ padding: "12px", fontSize: "13px", color: "var(--dim)" }}>
-          <p style={{ margin: "0 0 4px", fontWeight: 600, color: "var(--ink)" }}>오늘 뭐 먹지 제휴 파트너 영역</p>
+          <p style={{ margin: "0 0 4px", fontWeight: 600, color: "var(--ink)" }}>오늘의 잇템 제휴 파트너 영역</p>
           <p style={{ margin: 0, fontSize: "11.5px" }}>맞춤 식단 정보 및 파트너 혜택이 제공됩니다.</p>
         </div>
       )}

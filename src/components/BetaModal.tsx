@@ -78,7 +78,7 @@ export function BetaModal() {
         </h2>
 
         <p className="betaModalBody">
-          &lsquo;오늘 뭐 먹지?&rsquo;는 아직 만들어 가는 중입니다.
+          &lsquo;오늘의 잇템&rsquo;은 아직 만들어 가는 중입니다.
           메뉴를 계속 늘리고 추천도 매일 다듬고 있어요.
         </p>
 

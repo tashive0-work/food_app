@@ -28,7 +28,7 @@ Next.js 14 (App Router) + TypeScript 프로젝트입니다.
 
 ```css
 /* ========================================
-   오늘 뭐 먹지 — Design System v2
+   오늘의 잇템 — Design System v2
    Base: Neutral / Primary: Deep Green / Accent: Orange
    ======================================== */
 

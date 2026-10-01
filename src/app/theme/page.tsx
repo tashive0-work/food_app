@@ -23,12 +23,12 @@ export function generateMetadata({ searchParams }: PageProps): Metadata {
       canonical,
     },
     openGraph: {
-      title: `${title} | 오늘 뭐 먹지`,
+      title: `${title} | 오늘의 잇템`,
       description,
       url: canonical,
     },
     twitter: {
-      title: `${title} | 오늘 뭐 먹지`,
+      title: `${title} | 오늘의 잇템`,
       description,
     },
   };

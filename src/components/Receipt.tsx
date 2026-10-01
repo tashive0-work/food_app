@@ -35,7 +35,7 @@ export function Receipt({ state, verdict, stamp }: ReceiptProps) {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "오늘 뭐 먹지 - 나의 상태 영수증",
+          title: "오늘의 잇템 - 나의 상태 영수증",
           text: `오늘 나의 상태: [${verdict.title}] ${verdict.line}`,
           url: window.location.href,
         });
@@ -51,7 +51,7 @@ export function Receipt({ state, verdict, stamp }: ReceiptProps) {
     <div>
       <section ref={receiptRef} className="receipt" aria-label="오늘의 상태 영수증">
         <div className="rTop">
-          <p className="rShop">오늘 뭐 먹지</p>
+          <p className="rShop">오늘의 잇템</p>
           <p className="rMeta">상태 진단 결과서</p>
           <p className="rMeta">{stamp}</p>
         </div>

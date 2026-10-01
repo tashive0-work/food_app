@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "이용약관 - 오늘 뭐 먹지",
-  description: "오늘 뭐 먹지 서비스의 이용약관입니다.",
+  title: "이용약관 - 오늘의 잇템",
+  description: "오늘의 잇템 서비스의 이용약관입니다.",
 };
 
 export default function TermsPage() {
@@ -19,7 +19,7 @@ export default function TermsPage() {
         <section className="legalSec">
           <h2>제1조 (목적)</h2>
           <p>
-            이 약관은 <strong>NTD (Need of The Day)</strong>가 운영하는 <strong>오늘 뭐 먹지</strong>(이하 "서비스")가 제공하는 음식 추천 서비스의 이용과 관련하여 서비스와 이용자 간의 권리·의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
+            이 약관은 <strong>NTD (Need of The Day)</strong>가 운영하는 <strong>오늘의 잇템</strong>(이하 "서비스")가 제공하는 음식 추천 서비스의 이용과 관련하여 서비스와 이용자 간의 권리·의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
           </p>
         </section>
 

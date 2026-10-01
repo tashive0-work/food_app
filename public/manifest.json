@@ -1,6 +1,6 @@
 {
-  "name": "오늘 뭐 먹지?",
-  "short_name": "오늘뭐먹지",
+  "name": "오늘의 잇템",
+  "short_name": "오늘의잇템",
   "description": "상태 기반 음식 추천 서비스",
   "start_url": "/",
   "display": "standalone",

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "개인정보 처리방침 - 오늘 뭐 먹지",
-  description: "오늘 뭐 먹지 서비스의 개인정보 처리방침입니다.",
+  title: "개인정보 처리방침 - 오늘의 잇템",
+  description: "오늘의 잇템 서비스의 개인정보 처리방침입니다.",
 };
 
 export default function PrivacyPage() {
@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
         <section className="legalSec">
           <p>
-            <strong>NTD (Need of The Day)</strong>가 운영하는 <strong>오늘 뭐 먹지</strong>(이하 "서비스")는 「개인정보 보호법」 등 관련 법령을 준수하며, 이용자의 개인정보를 보호하기 위해 다음과 같이 개인정보 처리방침을 수립·공개합니다.
+            <strong>NTD (Need of The Day)</strong>가 운영하는 <strong>오늘의 잇템</strong>(이하 "서비스")는 「개인정보 보호법」 등 관련 법령을 준수하며, 이용자의 개인정보를 보호하기 위해 다음과 같이 개인정보 처리방침을 수립·공개합니다.
           </p>
         </section>
 

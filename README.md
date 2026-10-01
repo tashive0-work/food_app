@@ -1,4 +1,4 @@
-# 오늘 뭐 먹지 (Food Mood App)
+# 오늘의 잇템 (Food Mood App)
 
 사용자의 현재 상태(허기, 기력, 자극, 위로, 여유, 온기) 진단을 기반으로 딱 맞는 메뉴를 추천해 주는 Next.js + TypeScript PWA 웹 애플리케이션입니다.
 

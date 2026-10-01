@@ -35,8 +35,8 @@ export function generateMetadata({ params }: PageProps): Metadata {
     title,
     description,
     alternates: { canonical: `https://eatodayme.com${path}` },
-    openGraph: { title: `${title} | 오늘 뭐 먹지`, description, url: `https://eatodayme.com${path}`, type: "article" },
-    twitter: { title: `${title} | 오늘 뭐 먹지`, description },
+    openGraph: { title: `${title} | 오늘의 잇템`, description, url: `https://eatodayme.com${path}`, type: "article" },
+    twitter: { title: `${title} | 오늘의 잇템`, description },
   };
 }
 
