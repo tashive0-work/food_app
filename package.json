@@ -8,7 +8,8 @@
     "start": "next start",
     "sync:foods": "node scripts/sync-foods.mjs",
     "prebuild": "node scripts/sync-foods.mjs",
-    "import:menus": "node scripts/import-menus.mjs"
+    "import:menus": "node scripts/import-menus.mjs",
+    "set:popularity": "node scripts/set-popularity.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.111.0",

@@ -90,7 +90,7 @@ const data = [];
 for (let from = 0; ; from += PAGE) {
   const { data: page, error } = await supabase
     .from("foods")
-    .select("name, kind, spice, fill, warm, ease, comfort, light, themes, variants")
+    .select("name, kind, spice, fill, warm, ease, comfort, light, themes, variants, popularity")
     .eq("active", true)
     .order("id", { ascending: true })
     .range(from, from + PAGE - 1);
@@ -112,13 +112,14 @@ if (before > 0 && data.length < before * SHRINK_GUARD) {
 const esc = (s) => String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 const arr = (a) => "[" + (a || []).map((x) => `"${esc(x)}"`).join(", ") + "]";
 
+// variants 를 항상 내보냅니다 (비어 있어도). popularity 자리를 고정하기 위해서입니다.
 const lines = data.map((f) => {
-  const base =
+  const pop = typeof f.popularity === "number" ? f.popularity : 1;
+  return (
     `  ["${esc(f.name)}", "${esc(f.kind)}", ` +
     `${f.spice}, ${f.fill}, ${f.warm}, ${f.ease}, ${f.comfort}, ${f.light}, ` +
-    arr(f.themes);
-  const v = f.variants && f.variants.length > 0 ? `, ${arr(f.variants)}` : "";
-  return `${base}${v}],`;
+    `${arr(f.themes)}, ${arr(f.variants)}, ${pop}],`
+  );
 });
 
 const out = `import { Food } from "@/types/food";
@@ -128,12 +129,12 @@ const out = `import { Food } from "@/types/food";
 //    메뉴를 고치려면 어드민 콘솔이나 Supabase 에서 수정하세요.
 //    생성 시각: ${new Date().toISOString()}
 
-export const RAW: [string, string, number, number, number, number, number, number, string[], string[]?][] = [
+export const RAW: [string, string, number, number, number, number, number, number, string[], string[], number][] = [
 ${lines.join("\n")}
 ];
 
 export const FOODS: Food[] = RAW.map(
-  ([name, kind, spice, fill, warm, ease, comfort, light, themes, variants], i) => ({
+  ([name, kind, spice, fill, warm, ease, comfort, light, themes, variants, popularity], i) => ({
     id: i,
     name,
     kind,
@@ -145,6 +146,7 @@ export const FOODS: Food[] = RAW.map(
     light,
     themes,
     variants,
+    popularity,
   })
 );
 `;
