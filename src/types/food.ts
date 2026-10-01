@@ -11,6 +11,10 @@ export interface Food {
   themes: string[];
   /** 같은 메뉴의 구체적인 종류 (예: 매운탕 → 메기매운탕, 조기매운탕) */
   variants?: string[];
+  /** 대중성 0~2 — 2:대중적, 1:보통, 0:희귀. 추천 순위 보정에 쓰입니다. */
+  popularity?: number;
+  /** 검색 결과에서 보여줄 세부 메뉴 (검색어에 걸린 것이 앞에 옵니다) */
+  matchedVariants?: string[];
   match?: number;
   image?: string;
   imageCredit?: string;
