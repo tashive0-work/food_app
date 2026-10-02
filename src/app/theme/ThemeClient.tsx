@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { FOODS } from "@/data/foods";
 import { THEMES } from "@/data/themes";
+import { THEME_INTROS } from "@/data/themeIntros";
 import { ThemeTab } from "@/components/ThemeTab";
 import { BottomNav } from "@/components/BottomNav";
 import { loadDietSettings, applyDietFilter } from "@/lib/dietFilter";
@@ -69,6 +70,19 @@ function ThemeContent({ initialKey }: ThemeClientProps) {
           <h1 className="pageTitle">
             {curTheme ? `${curTheme.icon} ${curTheme.label} 메뉴 추천` : `${theme} 메뉴 추천`}
           </h1>
+          {(() => {
+            const intro = THEME_INTROS[theme];
+            if (!intro || !intro.paragraphs || intro.paragraphs.length === 0) return null;
+            return (
+              <div style={{ marginTop: "12px", marginBottom: "16px", color: "var(--ink)", fontSize: "14.5px", lineHeight: "1.6" }}>
+                {intro.paragraphs.map((p, idx) => (
+                  <p key={idx} style={{ margin: "0 0 6px" }}>
+                    {p}
+                  </p>
+                ))}
+              </div>
+            );
+          })()}
         </header>
 
         <ThemeTab

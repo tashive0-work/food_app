@@ -80,7 +80,11 @@ export function FoodCard({
         {rank > 0 && <span className="rank">{rank}</span>}
         <div className="cardName">
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <h3>{food.name}</h3>
+            <h3>
+              <Link href={`/food/${encodeURIComponent(food.name)}`} style={{ color: "inherit", textDecoration: "none" }}>
+                {food.name}
+              </Link>
+            </h3>
             {onToggleFavorite && (
               <button
                 className={isFavorite ? "favBtn on" : "favBtn"}

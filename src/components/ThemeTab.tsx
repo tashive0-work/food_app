@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Food, ThemeItem } from "@/types/food";
 import { SORT_OPTIONS, SortKey } from "@/lib/themeSort";
 import { FoodCard } from "./FoodCard";
+import { THEME_INTROS } from "@/data/themeIntros";
 
 interface ThemeTabProps {
   themes: ThemeItem[];
@@ -81,6 +82,39 @@ export function ThemeTab({
           더 보기 <span className="moreCount">({themeFoods.length - limit}개 남음)</span>
         </button>
       )}
+
+      {(() => {
+        const intro = THEME_INTROS[currentThemeKey];
+        if (!intro || !intro.faq || intro.faq.length === 0) return null;
+        return (
+          <section style={{ marginTop: "36px", paddingTop: "24px", borderTop: "1px solid var(--border)" }}>
+            <h3 style={{ fontSize: "17px", fontWeight: 800, margin: "0 0 14px", color: "var(--ink)" }}>
+              자주 묻는 질문
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {intro.faq.map((item, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    background: "#FFFFFF",
+                    padding: "14px 16px",
+                    borderRadius: "var(--r-md, 12px)",
+                    border: "1px solid var(--border)",
+                    boxShadow: "var(--sh1)",
+                  }}
+                >
+                  <p style={{ margin: "0 0 6px", fontWeight: 700, fontSize: "14px", color: "var(--ink)" }}>
+                    Q. {item.q}
+                  </p>
+                  <p style={{ margin: 0, fontSize: "13px", color: "var(--dim)", lineHeight: "1.55" }}>
+                    {item.a}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+      })()}
     </main>
   );
 }
