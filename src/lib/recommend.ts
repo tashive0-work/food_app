@@ -2,7 +2,7 @@ import { AppState, Verdict, Food } from "@/types/food";
 import { FOODS } from "@/data/foods";
 import { FOOD_IMAGES } from "@/data/foodImages";
 import { loadDietSettings, applyDietFilter } from "./dietFilter";
-import { getNaverMapUrl } from "./location";
+import { nearbyUrl } from "./location";
 
 export function classify(s: AppState): Verdict {
   const { hunger, energy, spice, comfort, time, warm } = s;
@@ -134,15 +134,6 @@ export function recommend(
       if (adjustedState.social === "혼자" && f.themes.includes("혼자")) p -= 4;
       if (adjustedState.social === "혼자" && f.themes.includes("모임")) p += 3;
 
-      // Q6 "뜨끈한 국물" (warm === 4) 선택 시 국물 요리(soup: true) 우대 & 국물 없는 요리 감점
-      if (adjustedState.warm === 4) {
-        if (f.soup) {
-          p -= 3.5;
-        } else {
-          p += 6.0;
-        }
-      }
-
       // 대중성 보정.
       // 메뉴가 1,600개가 되면서 6축 공간의 빈 칸을 희귀 메뉴가 혼자 차지하는 일이 생겼습니다.
       // 그 결과 김치찌개 대신 솜땀·임자수탕이 1위로 올라왔습니다.
@@ -201,7 +192,8 @@ export function recommend(
 export const recipeUrl = (n: string) =>
   `https://www.10000recipe.com/recipe/list.html?q=${encodeURIComponent(n)}`;
 
-export const mapUrl = (n: string) => getNaverMapUrl(n);
+/** 이 음식을 파는 곳 찾기. 위치를 허용했으면 내 주변으로 검색됩니다. */
+export const mapUrl = (n: string) => nearbyUrl(n);
 
 /**
  * 음식이 왜 추천되었는지를 설명하는 태그를 생성합니다.

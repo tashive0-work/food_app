@@ -7,8 +7,37 @@ import { FoodCard } from "@/components/FoodCard";
 import { BottomNav } from "@/components/BottomNav";
 import { loadDietSettings, applyDietFilter } from "@/lib/dietFilter";
 import { logInteraction, logMenuRequest } from "@/lib/supabase";
+import { nearbyUrl, getCachedLocation, getCurrentLocation } from "@/lib/location";
 
 const SUGGESTED = ["김치찌개","라면","비빔밥","떡볶이","마라탕","전복죽"];
+
+/**
+ * 「파는 곳 찾기」 줄의 스타일.
+ * globals.css 가 아니라 이 파일 안에 둡니다 —
+ * globals.css 는 다른 도구가 덮어쓰는 일이 잦아서, 여기 두면 같이 안 날아갑니다.
+ */
+const S: Record<string, React.CSSProperties> = {
+  row: { margin: "12px 0 4px", display: "flex", flexDirection: "column", gap: 7 },
+  btn: {
+    display: "flex", alignItems: "center", gap: 11,
+    padding: "13px 15px", borderRadius: 14,
+    border: "1px solid #E5E8EB", background: "#fff",
+    boxShadow: "0 1px 3px rgba(0,0,0,.05)",
+    textDecoration: "none", color: "inherit",
+  },
+  icon: { fontSize: 18, flex: "none" },
+  body: { flex: 1, minWidth: 0 },
+  title: { display: "block", fontSize: 14, fontWeight: 700, color: "#191F28" },
+  sub: { display: "block", fontSize: 12, color: "#8B95A1", marginTop: 2 },
+  arrow: { flex: "none", fontSize: 15, fontWeight: 700, color: "#FF6B35" },
+  loc: {
+    alignSelf: "flex-start",
+    padding: "7px 12px", borderRadius: 9999,
+    border: "1.5px solid #E5E8EB", background: "#fff",
+    fontSize: 12, fontWeight: 700, color: "#8B95A1",
+    cursor: "pointer",
+  },
+};
 
 export default function SearchClient() {
   const [q, setQ] = useState("");
@@ -35,6 +64,23 @@ export default function SearchClient() {
   }, [q, rawResults.length]);
 
   const [requested, setRequested] = useState<string[]>([]);
+
+  /**
+   * 위치를 한 번 허용해 두면 주변 검색이 내 위치 기준으로 나갑니다.
+   * 페이지를 열 때 권한을 묻지 않고, 사용자가 버튼을 눌렀을 때만 묻습니다.
+   */
+  const [hasLocation, setHasLocation] = useState(false);
+  const [locBusy, setLocBusy] = useState(false);
+  React.useEffect(() => {
+    setHasLocation(!!getCachedLocation());
+  }, []);
+  const useMyLocation = async () => {
+    setLocBusy(true);
+    const c = await getCurrentLocation();
+    setHasLocation(!!c);
+    setLocBusy(false);
+  };
+
   const requestMenu = () => {
     const trimmed = q.trim();
     if (!trimmed || requested.includes(trimmed)) return;
@@ -49,6 +95,8 @@ export default function SearchClient() {
       return next;
     });
   };
+
+  const typed = q.trim();
 
   return (
     <div className="app hasNav">
@@ -76,6 +124,38 @@ export default function SearchClient() {
             <button className="searchClear" onClick={() => setQ("")} aria-label="검색어 지우기">×</button>
           )}
         </div>
+
+        {/* 메뉴 이름만 넣어도 바로 주변 식당을 찾을 수 있게. 검색 결과가 없어도 보입니다. */}
+        {typed.length >= 2 && (
+          <div style={S.row}>
+            <a
+              style={S.btn}
+              href={nearbyUrl(typed)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => logInteraction(null, typed, 0, "map_click")}
+            >
+              <span style={S.icon} aria-hidden="true">📍</span>
+              <span style={S.body}>
+                <b style={S.title}>「{typed}」 파는 곳 찾기</b>
+                <small style={S.sub}>
+                  {hasLocation ? "내 위치 주변에서 찾아봅니다" : "네이버 지도에서 바로 찾아봅니다"}
+                </small>
+              </span>
+              <span style={S.arrow} aria-hidden="true">→</span>
+            </a>
+            {!hasLocation && (
+              <button
+                type="button"
+                style={{ ...S.loc, opacity: locBusy ? 0.6 : 1 }}
+                onClick={useMyLocation}
+                disabled={locBusy}
+              >
+                {locBusy ? "위치 확인 중…" : "📍 내 위치 기준으로 보기"}
+              </button>
+            )}
+          </div>
+        )}
 
         {!q && (
           <div className="searchSuggest">

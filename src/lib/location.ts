@@ -54,3 +54,28 @@ export function getNaverMapUrl(foodName: string, coords?: UserCoordinates | null
 export function getKakaoMapUrl(foodName: string): string {
   return `https://map.kakao.com/?q=${encodeURIComponent(foodName)}`;
 }
+
+/**
+ * 저장해 둔 위치를 읽습니다 (권한을 물어보지 않습니다).
+ * 사용자가 한 번 「내 위치 기준으로 보기」를 눌러 허용했을 때만 값이 있습니다.
+ */
+export function getCachedLocation(): UserCoordinates | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(LOCATION_CACHE_KEY);
+    if (!raw) return null;
+    const c = JSON.parse(raw);
+    return typeof c?.lat === "number" && typeof c?.lng === "number" ? c : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * "이 음식 파는 곳" 지도 검색 주소.
+ * 위치를 허용한 적이 있으면 그 주변으로, 아니면 그냥 이름으로 검색합니다.
+ * 권한을 새로 물어보지 않으므로 어디서든 바로 쓸 수 있습니다.
+ */
+export function nearbyUrl(foodName: string): string {
+  return getNaverMapUrl(foodName, getCachedLocation());
+}
