@@ -59,10 +59,16 @@ function ThemeContent({ initialKey }: ThemeClientProps) {
     sort
   );
   const curTheme = THEMES.find((t) => t.key === theme);
+  const intro = THEME_INTROS[theme];
 
   return (
     <div className="app hasNav">
       <main className="wrap">
+        {/*
+          pageHead 는 display:flex 가로 배치입니다.
+          소개 글을 이 안에 넣으면 제목과 한 줄에 나란히 놓여서 제목이 눌립니다.
+          그래서 소개 글은 반드시 header 바깥에 둡니다.
+        */}
         <header className="pageHead">
           <Link href="/" className="pageBack" aria-label="홈으로">
             ←
@@ -70,20 +76,24 @@ function ThemeContent({ initialKey }: ThemeClientProps) {
           <h1 className="pageTitle">
             {curTheme ? `${curTheme.icon} ${curTheme.label} 메뉴 추천` : `${theme} 메뉴 추천`}
           </h1>
-          {(() => {
-            const intro = THEME_INTROS[theme];
-            if (!intro || !intro.paragraphs || intro.paragraphs.length === 0) return null;
-            return (
-              <div style={{ marginTop: "12px", marginBottom: "16px", color: "var(--ink)", fontSize: "14.5px", lineHeight: "1.6" }}>
-                {intro.paragraphs.map((p, idx) => (
-                  <p key={idx} style={{ margin: "0 0 6px" }}>
-                    {p}
-                  </p>
-                ))}
-              </div>
-            );
-          })()}
         </header>
+
+        {intro?.paragraphs?.length ? (
+          <div
+            style={{
+              margin: "0 0 20px",
+              color: "var(--dim)",
+              fontSize: "14px",
+              lineHeight: 1.7,
+            }}
+          >
+            {intro.paragraphs.map((p, idx) => (
+              <p key={idx} style={{ margin: idx === 0 ? "0 0 8px" : 0 }}>
+                {p}
+              </p>
+            ))}
+          </div>
+        ) : null}
 
         <ThemeTab
           themes={THEMES}
