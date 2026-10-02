@@ -108,7 +108,7 @@ export default function Home() {
                 <img src="/mascot/omeok-default.png" alt="" width={34} height={34} />
               </span>
               <h1 className="brandName" style={{margin:0,lineHeight:0}}>
-                <img src="/brand/logo-wordmark.svg" alt="오늘의 잇템 — 점심·저녁 메뉴 추천" width={124} height={23} style={{height:23,width:"auto",display:"block"}} />
+                <img src="/brand/logo-wordmark.svg" alt="오늘 뭐 먹지? 점심·저녁 메뉴 추천" width={141} height={23} style={{height:23,width:"auto",display:"block"}} />
               </h1>
             </Link>
             <Link href="/settings" className="settingsEntry" aria-label="내 정보 및 설정">
@@ -211,12 +211,7 @@ export default function Home() {
         </Link>
 
         {/* 정갈한 프리미엄 화이트 히어로 카운터 카드 */}
-        {/* 진단 카드.
-            진단 기록이 있으면 카드 전체를 링크로 묶지 않습니다 —
-            전에는 어디를 눌러도 /quiz 로 가서, 결과를 다시 보려던 사람이
-            진단을 처음부터 다시 하게 됐습니다. */}
-        {(() => {
-          const diagCardStyle: React.CSSProperties = {
+        <Link href="/quiz" style={{
           display: "block",
           textDecoration: "none",
           background: "#FFFFFF",
@@ -228,9 +223,7 @@ export default function Home() {
           marginBottom: "24px",
           position: "relative",
           overflow: "hidden"
-        };
-          const inner = (
-            <>
+        }}>
           {/* 말풍선: 캐릭터 왼쪽 위 (상단 빈 영역에 배치) */}
           <div
             style={{
@@ -330,40 +323,22 @@ export default function Home() {
               {today ? today.verdict.title : "기분, 소화 상태, 식사 취향에 맞춘 스마트 추천"}
             </p>
 
-            {today ? (
-              /* 진단 기록이 있으면 — 결과를 다시 보는 것과 새로 진단하는 것을 나눕니다 */
-              <div className="diagBtns">
-                <Link href="/result" className="diagBtn primary">
-                  결과 다시 보기 <span aria-hidden="true">→</span>
-                </Link>
-                <Link href="/quiz" className="diagBtn ghost">
-                  다시 진단해 보기
-                </Link>
-              </div>
-            ) : (
-              <span style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                background: "#191F28",
-                color: "#FFFFFF",
-                padding: "9px 15px",
-                borderRadius: "9999px",
-                fontSize: "12.5px",
-                fontWeight: 800
-              }}>
-                <span>추천 시작하기</span>
-                <span aria-hidden="true">→</span>
-              </span>
-            )}
-          </div>            </>
-          );
-          return today ? (
-            <div style={diagCardStyle}>{inner}</div>
-          ) : (
-            <Link href="/quiz" style={diagCardStyle}>{inner}</Link>
-          );
-        })()}
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              background: "#191F28",
+              color: "#FFFFFF",
+              padding: "9px 15px",
+              borderRadius: "9999px",
+              fontSize: "12.5px",
+              fontWeight: 800
+            }}>
+              <span>{today ? "다시 진단해 보기" : "추천 시작하기"}</span>
+              <span>→</span>
+            </div>
+          </div>
+        </Link>
 
         {/* 2x2 정돈된 화이트 벤토 그리드 */}
         <section className="bentoGrid">
@@ -399,6 +374,30 @@ export default function Home() {
             </div>
           </Link>
         </section>
+
+        {/* 여행 중일 때 들어오는 입구 — 진단 문항은 늘리지 않고 별도 카드로 둡니다 */}
+        <Link href="/region" style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "13px",
+          textDecoration: "none",
+          background: "#FFFFFF",
+          border: "1px solid var(--border)",
+          borderRadius: "var(--r-lg, 16px)",
+          boxShadow: "var(--sh1)",
+          padding: "16px 18px",
+          margin: "0 0 24px",
+          color: "var(--ink)"
+        }}>
+          <span aria-hidden="true" style={{ fontSize: "22px", flex: "none" }}>🧭</span>
+          <span style={{ flex: 1, minWidth: 0 }}>
+            <b style={{ display: "block", fontSize: "15px", fontWeight: 700 }}>여행 중이신가요?</b>
+            <span style={{ display: "block", fontSize: "12.5px", color: "var(--dim)", marginTop: "3px" }}>
+              그 지역 대표 음식과 파는 곳을 찾아드립니다
+            </span>
+          </span>
+          <span aria-hidden="true" style={{ flex: "none", fontSize: "17px", color: "var(--primary)", fontWeight: 700 }}>→</span>
+        </Link>
 
         {/* 시간대별 로테이션 메뉴 카드 섹션 */}
         <section className="homeSec" style={{ marginBottom: "28px" }}>
