@@ -85,14 +85,16 @@ export function ThemeTab({
 
       {(() => {
         const intro = THEME_INTROS[currentThemeKey];
-        if (!intro || !intro.faq || intro.faq.length === 0) return null;
+        if (!intro || !intro.faq) return null;
+        const faqs = Array.isArray(intro.faq) ? intro.faq : [intro.faq];
+        if (faqs.length === 0) return null;
         return (
           <section style={{ marginTop: "36px", paddingTop: "24px", borderTop: "1px solid var(--border)" }}>
             <h3 style={{ fontSize: "17px", fontWeight: 800, margin: "0 0 14px", color: "var(--ink)" }}>
               자주 묻는 질문
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {intro.faq.map((item, idx) => (
+              {faqs.map((item, idx) => (
                 <div
                   key={idx}
                   style={{
