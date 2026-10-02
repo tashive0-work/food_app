@@ -30,13 +30,26 @@ export function generateMetadata({ params }: PageProps): Metadata {
   const variants = food.variants?.length ? ` 종류: ${food.variants.slice(0, 4).join(", ")}.` : "";
   const title = `${food.name} 추천 — 이럴 때 먹어요`;
   const description = `${food.name}, ${guide.bestWhen.replace(/[.!]$/, "")}. 꿀조합: ${guide.pairing}.${variants}`.slice(0, 155);
-  const path = `/food/${encodeURIComponent(food.name)}`;
+  const encodedName = encodeURIComponent(food.name);
+  const path = `/food/${encodedName}`;
+  const ogImageUrl = `https://eatodayme.com/og/food/${encodedName}`;
   return {
     title,
     description,
     alternates: { canonical: `https://eatodayme.com${path}` },
-    openGraph: { title: `${title} | 오늘의 잇템`, description, url: `https://eatodayme.com${path}`, type: "article" },
-    twitter: { title: `${title} | 오늘의 잇템`, description },
+    openGraph: {
+      title: `${title} | 오늘의 잇템`,
+      description,
+      url: `https://eatodayme.com${path}`,
+      type: "article",
+      images: [{ url: ogImageUrl, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | 오늘의 잇템`,
+      description,
+      images: [ogImageUrl],
+    },
   };
 }
 
@@ -44,5 +57,42 @@ export default function FoodDetailPage({ params }: PageProps) {
   const food = findFoodServer(params.name);
   const initialRelated = food ? getRelatedFoods(food, { limit: 6 }) : [];
 
-  return <FoodDetailClient params={params} initialRelated={initialRelated} />;
+  const breadcrumbJsonLd = food
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "홈",
+            item: "https://eatodayme.com/",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "메뉴 전체",
+            item: "https://eatodayme.com/food",
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: food.name,
+            item: `https://eatodayme.com/food/${encodeURIComponent(food.name)}`,
+          },
+        ],
+      }
+    : null;
+
+  return (
+    <>
+      {breadcrumbJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
+      )}
+      <FoodDetailClient params={params} initialRelated={initialRelated} />
+    </>
+  );
 }

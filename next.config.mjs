@@ -4,6 +4,11 @@ const nextConfig = {
   env: {
     APP_VERSION: process.env.npm_package_version || "1.0.0",
   },
+  experimental: {
+    outputFileTracingIncludes: {
+      "/og/food/[name]": ["./assets/fonts/**"],
+    },
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },

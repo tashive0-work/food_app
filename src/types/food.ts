@@ -23,6 +23,7 @@ export interface Food {
   image?: string;
   imageCredit?: string;
   filterWarning?: string;
+  updatedAt?: string;
 }
 
 export interface AnswerEffect {
