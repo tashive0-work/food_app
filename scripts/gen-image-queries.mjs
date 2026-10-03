@@ -382,7 +382,6 @@ async function main() {
   // 4. DB 검증 쿼리 실행
   console.log(`\n4. DB 최종 현황:`);
   const allFoods = [];
-  const PAGE = 1000;
   for (let from = 0; ; from += PAGE) {
     const { data: pageData, error: pageErr } = await supabase
       .from('foods')
