@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     if (!expectedSecret || expectedSecret.trim() === "") {
       console.error("[RevalidateAPI] Server misconfigured: REVALIDATE_SECRET is missing.");
       return NextResponse.json(
-        { error: "Server misconfigured: REVALIDATE_SECRET environment variable is missing" },
+        { error: "Server misconfigured" },
         { status: 500 }
       );
     }
