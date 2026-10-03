@@ -99,7 +99,8 @@ export function recommend(
   seed: number,
   delta?: Record<string, number>,
   excludeFoods: string[] = [],
-  skipAxes: readonly SkipAxis[] = []
+  skipAxes: readonly SkipAxis[] = [],
+  customFoods?: Food[]
 ): Food[] {
   const skip = new Set<string>(skipAxes);
   const adjustedState: AppState = {
@@ -121,7 +122,9 @@ export function recommend(
   /** 대중성 1단계 차이가 벌점 2.0 점. 올리면 흔한 메뉴만, 내리면 희귀 메뉴도 올라옵니다. */
   const POPULARITY_WEIGHT = 2.0;
 
-  const scoredList = FOODS.filter((f) => {
+  const targetFoods = customFoods && customFoods.length > 0 ? customFoods : FOODS;
+
+  const scoredList = targetFoods.filter((f) => {
     // 디저트·카페 카테고리는 메인 식사 추천에서 제외
     if (f.kind === '디저트·카페' || f.kind === '디저트' || f.kind === '카페') return false;
     return !excludedLower.some((ex) => f.name.toLowerCase().includes(ex));
@@ -186,8 +189,10 @@ export function recommend(
  * 진단 결과 하단 후식(디저트·카페) 전용 추천 함수.
  * 기분과 온도 축 반영 및 트렌드 메뉴 우선 선택.
  */
-export function recommendDesserts(s: AppState, count: number = 3): Food[] {
-  const desserts = FOODS.filter(
+export function recommendDesserts(s: AppState, count: number = 3, customFoods?: Food[]): Food[] {
+  const targetFoods = customFoods && customFoods.length > 0 ? customFoods : FOODS;
+
+  const desserts = targetFoods.filter(
     (f) =>
       f.kind === '디저트·카페' ||
       f.kind === '디저트' ||

@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { AppState } from "@/types/food";
+import { AppState, Food } from "@/types/food";
 import { classify, recommend, recommendDesserts, mapUrl } from "@/lib/recommend";
 import { FAST_SKIP_AXES } from "@/data/questions";
 import { FoodCard } from "@/components/FoodCard";
@@ -40,6 +40,8 @@ export default function ResultPage() {
 
   const resultRef = useRef<HTMLDivElement>(null);
 
+  const [liveFoods, setLiveFoods] = useState<Food[] | undefined>(undefined);
+
   useEffect(() => {
     setDietSettings(loadDietSettings());
     try {
@@ -61,6 +63,15 @@ export default function ResultPage() {
       if (res.excludeFoods) setExcludeFoods(res.excludeFoods);
     }
     setIsLoaded(true);
+
+    fetch("/api/foods")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && Array.isArray(data.foods) && data.foods.length > 0) {
+          setLiveFoods(data.foods);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const activeCount = dietSettings.allergens.length + dietSettings.diets.length;
@@ -83,13 +94,13 @@ export default function ResultPage() {
   const verdict = todayResult?.verdict ?? (state ? classify(state) : null);
 
   const rawList = useMemo(
-    () => (state ? recommend(state, seed, aiDelta, excludeFoods, skipAxes) : []),
-    [state, seed, aiDelta, excludeFoods, skipAxes]
+    () => (state ? recommend(state, seed, aiDelta, excludeFoods, skipAxes, liveFoods) : []),
+    [state, seed, aiDelta, excludeFoods, skipAxes, liveFoods]
   );
 
   const dessertList = useMemo(
-    () => (state ? recommendDesserts(state, 3) : []),
-    [state]
+    () => (state ? recommendDesserts(state, 3, liveFoods) : []),
+    [state, liveFoods]
   );
 
   // 국물 필터. 걸러낸 결과가 3개 미만이면 거르지 않습니다 (빈 화면 방지)
