@@ -24,6 +24,7 @@ export interface Food {
   imageCredit?: string;
   filterWarning?: string;
   updatedAt?: string;
+  source?: string;
 }
 
 export interface AnswerEffect {

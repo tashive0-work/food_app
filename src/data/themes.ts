@@ -17,4 +17,5 @@ export const THEMES: ThemeItem[] = [
   { key: "혼술 안주", label: "혼술 안주", icon: "🍶", desc: "한 잔 옆에 두고 집어 먹기 좋은 것" },
   { key: "야식", label: "늦은 밤", icon: "🌙", desc: "이 시간에 이걸 먹어도 되나 싶지만, 됩니다" },
   { key: "주말", label: "주말의 여유", icon: "🥘", desc: "시간을 들여도 아깝지 않은 날" },
+  { key: "카페·디저트", label: "카페·디저트", icon: "🍰", desc: "달콤하거나 시원하게 입가심하기 좋은 메뉴" },
 ];

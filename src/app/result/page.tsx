@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { AppState } from "@/types/food";
-import { classify, recommend, mapUrl } from "@/lib/recommend";
+import { classify, recommend, recommendDesserts, mapUrl } from "@/lib/recommend";
 import { FAST_SKIP_AXES } from "@/data/questions";
 import { FoodCard } from "@/components/FoodCard";
 import { HScroll } from "@/components/HScroll";
@@ -78,7 +78,6 @@ export default function ResultPage() {
   };
 
   const state: AppState | null = todayResult?.state ?? null;
-  // 진단할 때 저장된 seed 를 씁니다. 예전 저장분에는 없을 수 있어 1로 대체합니다.
   const seed = todayResult?.seed ?? 1;
   const skipAxes = todayResult?.fast ? FAST_SKIP_AXES : [];
   const verdict = todayResult?.verdict ?? (state ? classify(state) : null);
@@ -86,6 +85,11 @@ export default function ResultPage() {
   const rawList = useMemo(
     () => (state ? recommend(state, seed, aiDelta, excludeFoods, skipAxes) : []),
     [state, seed, aiDelta, excludeFoods, skipAxes]
+  );
+
+  const dessertList = useMemo(
+    () => (state ? recommendDesserts(state, 3) : []),
+    [state]
   );
 
   // 국물 필터. 걸러낸 결과가 3개 미만이면 거르지 않습니다 (빈 화면 방지)
@@ -199,7 +203,6 @@ export default function ResultPage() {
               {/* 1위 — 큰 카드 */}
               {list[0] && (
                 <>
-                  {/* 국물 / 국물 없는 것 고르기 */}
                   <div className="soupFilter" role="group" aria-label="국물 여부">
                     <button
                       type="button"
@@ -227,7 +230,6 @@ export default function ResultPage() {
                   </div>
 
                   <div style={{ position: "relative", marginTop: "48px" }}>
-                    {/* 카드 우측 상단에 걸쳐 빼꼼 튀어나온 오먹이 happy (160px) + 말풍선 */}
                     <div
                       style={{
                         position: "absolute",
@@ -259,12 +261,6 @@ export default function ResultPage() {
                       diagnosisId={diagnosisId}
                     />
                   </div>
-                  {/*
-                    제휴 매장 카드.
-                    예전에는 "원조 가마솥 김치찌개" 라는 지어낸 가게가 1위 메뉴와 상관없이
-                    고정으로 들어가 있었습니다. 제휴가 실제로 생기기 전까지는
-                    매장 정보를 비워 둡니다 — 비어 있으면 카드가 아예 그려지지 않습니다.
-                  */}
                   <SponsoredCard
                     storeName=""
                     foodName={list[0].name}
@@ -274,7 +270,6 @@ export default function ResultPage() {
                     badgeText="제휴 매장"
                   />
 
-                  {/* 제휴와 무관하게, 1위 메뉴를 파는 곳을 바로 찾아볼 수 있게 */}
                   <a
                     className="nearbyCard"
                     href={mapUrl(list[0].name)}
@@ -316,7 +311,6 @@ export default function ResultPage() {
                 </>
               )}
 
-              {/* 나머지 — 접힘 */}
               {!expanded ? (
                 <button className="more" onClick={() => setExpanded(true)}>
                   나머지 {Math.max(0, list.length - 5)}개 더 보기
@@ -344,6 +338,30 @@ export default function ResultPage() {
                     접기
                   </button>
                 </>
+              )}
+
+              {/* 후식으로 이건 어때요? (디저트·카페 전용 노출 섹션) */}
+              {dessertList.length > 0 && (
+                <div style={{ marginTop: "36px", paddingTop: "24px", borderTop: "1px dashed var(--border, #e0e0e0)" }}>
+                  <div className="secHead">
+                    <h2 className="secTitle">🧁 후식으로 이건 어때요?</h2>
+                    <p className="secSub">지금 상태와 온기에 딱 맞는 카페·디저트 메뉴를 추천해 드려요.</p>
+                  </div>
+                  <HScroll className="subGrid">
+                    {dessertList.map((f, i) => (
+                      <FoodCard
+                        showVariants
+                        key={f.id}
+                        food={f}
+                        rank={i + 1}
+                        state={state}
+                        isFavorite={favorites.includes(f.id)}
+                        onToggleFavorite={toggleFavorite}
+                        diagnosisId={diagnosisId}
+                      />
+                    ))}
+                  </HScroll>
+                </div>
               )}
 
               <AiReRecommendInput

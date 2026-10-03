@@ -121,7 +121,11 @@ export function recommend(
   /** 대중성 1단계 차이가 벌점 2.0 점. 올리면 흔한 메뉴만, 내리면 희귀 메뉴도 올라옵니다. */
   const POPULARITY_WEIGHT = 2.0;
 
-  const scoredList = FOODS.filter((f) => !excludedLower.some((ex) => f.name.toLowerCase().includes(ex)))
+  const scoredList = FOODS.filter((f) => {
+    // 디저트·카페 카테고리는 메인 식사 추천에서 제외
+    if (f.kind === '디저트·카페' || f.kind === '디저트' || f.kind === '카페') return false;
+    return !excludedLower.some((ex) => f.name.toLowerCase().includes(ex));
+  })
     .map((f) => {
       let p = 0;
       p += 3.2 * Math.abs(f.spice - adjustedState.spice);
@@ -134,12 +138,6 @@ export function recommend(
       if (adjustedState.social === "혼자" && f.themes.includes("혼자")) p -= 4;
       if (adjustedState.social === "혼자" && f.themes.includes("모임")) p += 3;
 
-      // 대중성 보정.
-      // 메뉴가 1,600개가 되면서 6축 공간의 빈 칸을 희귀 메뉴가 혼자 차지하는 일이 생겼습니다.
-      // 그 결과 김치찌개 대신 솜땀·임자수탕이 1위로 올라왔습니다.
-      // 같은 조건이면 흔한 메뉴가 이기고, 희귀 메뉴는 조건이 확실히 더 맞을 때만 올라옵니다.
-      // 가중치 2.0 은 1,500명 시뮬레이션으로 정했습니다
-      // (1위가 대중적 메뉴인 비율 35% → 67%, 희귀 22% → 6%, 메뉴 노출 폭은 유지).
       p += POPULARITY_WEIGHT * (2 - (f.popularity ?? 1));
       return {
         ...f,
@@ -150,10 +148,6 @@ export function recommend(
     })
     .sort((a, b) => (b.match ?? 0) - (a.match ?? 0));
 
-  // ── 같은 답 → 같은 결과 문제를 푸는 구간 ──
-  // 6축 공간은 15,625칸인데 메뉴가 그보다 적어 빈 칸이 많습니다.
-  // 그래서 넓은 영역에서 늘 같은 몇 개가 1위를 독식합니다.
-  // 점수가 사실상 같은(±3) 후보들을 seed 로 섞어 1위를 돌려 줍니다.
   const TIE_BAND = 3;
   const MAX_PER_KIND = 2;
 
@@ -162,7 +156,6 @@ export function recommend(
   const others = scoredList.filter((f) => (f.match ?? 0) < best - TIE_BAND);
   tied.sort((a, b) => Math.abs(rnd(a.id)) - Math.abs(rnd(b.id)));
 
-  // 앞 5개는 한 카테고리에 몰리지 않게 — 한식만 다섯 개 나오는 일을 막습니다
   const head: typeof scoredList = [];
   const spill: typeof scoredList = [];
   const kindCount: Record<string, number> = {};
@@ -187,6 +180,39 @@ export function recommend(
   }
 
   return filtered;
+}
+
+/**
+ * 진단 결과 하단 후식(디저트·카페) 전용 추천 함수.
+ * 기분과 온도 축 반영 및 트렌드 메뉴 우선 선택.
+ */
+export function recommendDesserts(s: AppState, count: number = 3): Food[] {
+  const desserts = FOODS.filter(
+    (f) =>
+      f.kind === '디저트·카페' ||
+      f.kind === '디저트' ||
+      f.kind === '카페' ||
+      (f.themes && (f.themes.includes('디저트') || f.themes.includes('카페·디저트')))
+  );
+
+  if (desserts.length === 0) return [];
+
+  const scored = desserts.map((f) => {
+    let penalty = 0;
+    penalty += 2.0 * Math.abs(f.warm - s.warm);
+    penalty += 1.5 * Math.abs(f.comfort - s.comfort);
+    // 트렌드 메뉴 우선 (-4점)
+    if (f.source === 'trend') penalty -= 4;
+
+    return {
+      ...f,
+      image: FOOD_IMAGES[f.name]?.url,
+      imageCredit: FOOD_IMAGES[f.name]?.credit,
+      penalty,
+    };
+  }).sort((a, b) => a.penalty - b.penalty);
+
+  return scored.slice(0, count);
 }
 
 export const recipeUrl = (n: string) =>
