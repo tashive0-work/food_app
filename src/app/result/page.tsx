@@ -11,6 +11,8 @@ import { FoodCard } from "@/components/FoodCard";
 import { HScroll } from "@/components/HScroll";
 import { HeroCard } from "@/components/HeroCard";
 import { Receipt } from "@/components/Receipt";
+import { ShareButtons } from "@/components/ShareButtons";
+import { shareTypeOf } from "@/lib/shareType";
 import { BottomNav } from "@/components/BottomNav";
 import { AiReRecommendInput } from "@/components/AiReRecommendInput";
 import { AdBanner } from "@/components/AdBanner";
@@ -197,6 +199,11 @@ export default function ResultPage() {
             )}
 
             <Receipt state={state} verdict={verdict} stamp={stamp} />
+
+            {/* 진단 결과 공유 — 유형 이름은 공유용 문구를 씁니다 (shareType.ts) */}
+            {list[0] && (
+              <ShareButtons type={shareTypeOf(verdict.title)} foodName={list[0].name} />
+            )}
 
             <section className="chartBox">
               <h2 className="secTitle">상태 그래프</h2>
