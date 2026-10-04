@@ -66,17 +66,38 @@ export function ThemeTab({
         ))}
         <span className="sortCount">{themeFoods.length}개</span>
       </div>
-      <div className="grid">
-        {themeFoods.slice(0, limit).map((f) => (
-          <FoodCard
-            key={f.id}
-            food={f}
-            rank={0}
-            isFavorite={favorites.includes(f.id)}
-            onToggleFavorite={onToggleFavorite}
-          />
-        ))}
-      </div>
+      {/* 테마에 메뉴가 하나도 없으면 빈 화면 대신 안내를 보여줍니다 */}
+      {themeFoods.length === 0 ? (
+        <p
+          style={{
+            margin: "24px 0",
+            padding: "28px 20px",
+            textAlign: "center",
+            borderRadius: "var(--r-md, 12px)",
+            background: "#FAFBFC",
+            border: "1px solid var(--border)",
+            color: "var(--dim)",
+            fontSize: "13.5px",
+            lineHeight: 1.7,
+          }}
+        >
+          이 테마에 담긴 메뉴가 아직 없습니다.
+          <br />
+          곧 채워 넣겠습니다.
+        </p>
+      ) : (
+        <div className="grid">
+          {themeFoods.slice(0, limit).map((f) => (
+            <FoodCard
+              key={f.id}
+              food={f}
+              rank={0}
+              isFavorite={favorites.includes(f.id)}
+              onToggleFavorite={onToggleFavorite}
+            />
+          ))}
+        </div>
+      )}
       {themeFoods.length > limit && (
         <button className="more" onClick={() => setLimit((prev) => prev + 12)}>
           더 보기 <span className="moreCount">({themeFoods.length - limit}개 남음)</span>
