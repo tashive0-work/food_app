@@ -508,6 +508,12 @@ async function main() {
   }
 
   await generateContactSheet();
+  try {
+    const { generateDocxReport } = await import('./gen-food-docx.mjs');
+    await generateDocxReport();
+  } catch (docxErr) {
+    log(`[docx 생성 오류] ${docxErr.message}`);
+  }
 }
 
 main().catch((err) => {
