@@ -283,6 +283,82 @@ export async function generateDocxReport() {
     rows: [detailHeaderRow, ...detailRows],
   });
 
+  // 4. 실서비스 반영 내역 테이블
+  const deployColWidths = [2400, 6960];
+  const deployRowsData = [
+    ['서비스 명칭', '오늘의 잇템 (Food App)'],
+    ['반영 일시', new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }) + ' (KST)'],
+    ['반영 대상 메뉴 수', `${completedCount.toLocaleString()}개 (전체 메뉴의 ${completionRate}%)`],
+    [
+      'DB / 데이터 연동',
+      'scripts/sync-foods.mjs 수정 → Supabase foods 테이블의 image_url, image_thumb 컬럼을 동기화하여 src/data/foods.ts 데이터 파일에 자동 주입',
+    ],
+    [
+      '전역 이미지 매퍼',
+      'src/lib/foodImage.ts (getFoodImageUrl) 업데이트 → FOODS 데이터셋의 AI 생성 이미지 URL을 실시간 매핑하여 수동 등록이 없는 메뉴도 Supabase 스토리지 이미지로 자동 연동',
+    ],
+    [
+      '보안 및 스토리지 도메인',
+      'next.config.mjs 내 remotePatterns에 Supabase Storage 도메인(*.supabase.co) 등록 완료',
+    ],
+    [
+      '적용 컴포넌트 및 페이지',
+      '홈 추천 카드(HeroCard), 카테고리별 메뉴 큐레이션(page.tsx), 실시간 트렌드(TrendClient), 메뉴 상세 정보(FoodDetailClient) 등 사이트 전반의 FoodImage 컴포넌트 연동',
+    ],
+    [
+      '빌드 및 배포 검증',
+      'Next.js 14 Production SSG 빌드(전체 1,699개 정적 페이지 생성) 및 TypeScript 정적 타입 검사 100% 정상 통과',
+    ],
+  ];
+
+  const deployHeaderRow = new TableRow({
+    tableHeader: true,
+    children: [
+      new TableCell({
+        borders: cellBorders,
+        width: { size: deployColWidths[0], type: WidthType.DXA },
+        shading: { fill: '0284C7', type: ShadingType.CLEAR },
+        margins: cellMargins,
+        children: [new Paragraph({ children: [new TextRun({ text: '구분 항목', bold: true, color: 'FFFFFF', size: 18, font: 'Malgun Gothic' })] })],
+      }),
+      new TableCell({
+        borders: cellBorders,
+        width: { size: deployColWidths[1], type: WidthType.DXA },
+        shading: { fill: '0284C7', type: ShadingType.CLEAR },
+        margins: cellMargins,
+        children: [new Paragraph({ children: [new TextRun({ text: '반영 및 검증 상세 내용', bold: true, color: 'FFFFFF', size: 18, font: 'Malgun Gothic' })] })],
+      }),
+    ],
+  });
+
+  const deployRows = deployRowsData.map(([item, desc], idx) => {
+    const isEven = idx % 2 === 1;
+    return new TableRow({
+      children: [
+        new TableCell({
+          borders: cellBorders,
+          width: { size: deployColWidths[0], type: WidthType.DXA },
+          shading: { fill: isEven ? 'F8FAFC' : 'FFFFFF', type: ShadingType.CLEAR },
+          margins: cellMargins,
+          children: [new Paragraph({ children: [new TextRun({ text: item, bold: true, size: 17, color: '1E293B', font: 'Malgun Gothic' })] })],
+        }),
+        new TableCell({
+          borders: cellBorders,
+          width: { size: deployColWidths[1], type: WidthType.DXA },
+          shading: { fill: isEven ? 'F8FAFC' : 'FFFFFF', type: ShadingType.CLEAR },
+          margins: cellMargins,
+          children: [new Paragraph({ children: [new TextRun({ text: desc, size: 17, color: '334155', font: 'Malgun Gothic' })] })],
+        }),
+      ],
+    });
+  });
+
+  const deployTable = new Table({
+    width: { size: CONTENT_WIDTH, type: WidthType.DXA },
+    columnWidths: deployColWidths,
+    rows: [deployHeaderRow, ...deployRows],
+  });
+
   const doc = new Document({
     sections: [
       {
@@ -321,13 +397,13 @@ export async function generateDocxReport() {
           new Paragraph({
             heading: HeadingLevel.HEADING_1,
             spacing: { before: 200, after: 300 },
-            children: [new TextRun({ text: '🍽️ AI 메뉴 사진 생성 결과 종합 보고서', bold: true, size: 36, color: '0F172A', font: 'Malgun Gothic' })],
+            children: [new TextRun({ text: '🍽️ AI 메뉴 사진 생성 및 실서비스 반영 보고서', bold: true, size: 36, color: '0F172A', font: 'Malgun Gothic' })],
           }),
           new Paragraph({
             spacing: { after: 300 },
             children: [
               new TextRun({
-                text: '본 문서는 Google Cloud Vertex AI(gemini-3.1-flash-image) 모델을 활용하여 생성된 메뉴 사진 및 Supabase 스토리지 적재 현황을 종합 정리한 공식 보고서입니다.',
+                text: '본 문서는 Google Cloud Vertex AI(gemini-3.1-flash-image) 모델을 활용하여 생성된 메뉴 사진 및 Supabase 스토리지 적재 현황과, 이를 "오늘의 잇템" 실 서비스에 공식 반영한 작업 내역을 종합 정리한 공식 보고서입니다.',
                 size: 21,
                 color: '334155',
                 font: 'Malgun Gothic',
@@ -345,14 +421,21 @@ export async function generateDocxReport() {
           new Paragraph({
             heading: HeadingLevel.HEADING_2,
             spacing: { before: 500, after: 180 },
-            children: [new TextRun({ text: '2. 카테고리별 세부 진척 및 완료 현황', bold: true, size: 28, color: '0284C7', font: 'Malgun Gothic' })],
+            children: [new TextRun({ text: '2. 실서비스 반영 결과 및 시스템 배포 내역', bold: true, size: 28, color: '0284C7', font: 'Malgun Gothic' })],
+          }),
+          deployTable,
+
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 500, after: 180 },
+            children: [new TextRun({ text: '3. 카테고리별 세부 진척 및 완료 현황', bold: true, size: 28, color: '0284C7', font: 'Malgun Gothic' })],
           }),
           categoryTable,
 
           new Paragraph({
             heading: HeadingLevel.HEADING_2,
             spacing: { before: 500, after: 180 },
-            children: [new TextRun({ text: '3. 생성 메뉴 상세 목록 (스토리지 URL)', bold: true, size: 28, color: '0284C7', font: 'Malgun Gothic' })],
+            children: [new TextRun({ text: '4. 생성 메뉴 상세 목록 (스토리지 URL)', bold: true, size: 28, color: '0284C7', font: 'Malgun Gothic' })],
           }),
           detailTable,
         ],

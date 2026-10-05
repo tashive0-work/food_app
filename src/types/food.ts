@@ -21,6 +21,7 @@ export interface Food {
   parentName?: string;
   match?: number;
   image?: string;
+  imageThumb?: string;
   imageCredit?: string;
   filterWarning?: string;
   updatedAt?: string;
