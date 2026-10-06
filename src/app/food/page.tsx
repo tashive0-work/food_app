@@ -4,9 +4,9 @@ import { FOODS } from "@/data/foods";
 import { BottomNav } from "@/components/BottomNav";
 
 // 종류 표시 순서 (여기 없는 종류는 뒤에 자동으로 붙습니다)
-const KIND_ORDER = ["한식", "분식", "중식", "일식", "양식", "아시안", "간편", "야식"];
+const KIND_ORDER = ["한식", "분식", "중식", "일식", "양식", "아시안", "간편", "야식", "디저트·카페"];
 const KIND_ICON: Record<string, string> = {
-  한식: "🍚", 분식: "🍢", 중식: "🥟", 일식: "🍣", 양식: "🍝", 아시안: "🍜", 간편: "🥪", 야식: "🍗",
+  한식: "🍚", 분식: "🍢", 중식: "🥟", 일식: "🍣", 양식: "🍝", 아시안: "🍜", 간편: "🥪", 야식: "🍗", "디저트·카페": "🍰",
 };
 
 const TOTAL = FOODS.length;

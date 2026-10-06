@@ -18,6 +18,7 @@ import { AiReRecommendInput } from "@/components/AiReRecommendInput";
 import { AdBanner } from "@/components/AdBanner";
 import { SponsoredCard } from "@/components/SponsoredCard";
 import { Mascot } from "@/components/Mascot";
+import { detectMeal, mealLine, MEAL_SLOTS, type MealSlot } from "@/lib/mealTime";
 import { logInteraction } from "@/lib/supabase";
 import { loadTodayResult, saveTodayResult, clearTodayResult, TodayResult } from "@/lib/todayResult";
 import { loadDietSettings, DietSettings } from "@/lib/dietFilter";
@@ -33,6 +34,8 @@ export default function ResultPage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [expanded, setExpanded] = useState(false);
   /** 국물 필터 — 사용자 요청. 전체 / 국물 있는 것 / 국물 없는 것 */
+  /** 끼니 — 시각으로 자동 판정합니다. 문항을 늘리지 않으려고 묻지 않습니다. */
+  const [meal, setMeal] = useState<MealSlot>(() => detectMeal());
   const [soupFilter, setSoupFilter] = useState<"all" | "soup" | "dry">("all");
   const [favorites, setFavorites] = useState<number[]>([]);
   const [aiDelta, setAiDelta] = useState<Record<string, number>>({});
@@ -96,8 +99,8 @@ export default function ResultPage() {
   const verdict = todayResult?.verdict ?? (state ? classify(state) : null);
 
   const rawList = useMemo(
-    () => (state ? recommend(state, seed, aiDelta, excludeFoods, skipAxes, liveFoods) : []),
-    [state, seed, aiDelta, excludeFoods, skipAxes, liveFoods]
+    () => (state ? recommend(state, seed, aiDelta, excludeFoods, skipAxes, liveFoods, meal) : []),
+    [state, seed, aiDelta, excludeFoods, skipAxes, liveFoods, meal]
   );
 
   const dessertList = useMemo(
@@ -221,6 +224,39 @@ export default function ResultPage() {
               {/* 1위 — 큰 카드 */}
               {list[0] && (
                 <>
+                  {/* 끼니 — 지금 시각으로 골라 두고, 다르면 눌러서 바꿉니다 */}
+                  <div style={{ margin: "0 0 10px" }}>
+                    <div style={{ display: "flex", gap: "6px" }} role="group" aria-label="끼니">
+                      {MEAL_SLOTS.map((m) => {
+                        const on = meal === m.key;
+                        return (
+                          <button
+                            key={m.key}
+                            type="button"
+                            aria-pressed={on}
+                            onClick={() => setMeal(m.key)}
+                            style={{
+                              flex: 1,
+                              padding: "9px 4px",
+                              borderRadius: "11px",
+                              border: on ? "1.5px solid #191F28" : "1.5px solid #E5E8EB",
+                              background: on ? "#191F28" : "#fff",
+                              color: on ? "#fff" : "#8B95A1",
+                              fontSize: "12.5px",
+                              fontWeight: on ? 800 : 700,
+                              cursor: "pointer",
+                            }}
+                          >
+                            {m.icon} {m.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <p style={{ margin: "7px 2px 0", fontSize: "11.5px", color: "var(--faint)" }}>
+                      지금 시각으로 {meal}을 골라 뒀어요 — {mealLine(meal)}
+                    </p>
+                  </div>
+
                   <div className="soupFilter" role="group" aria-label="국물 여부">
                     <button
                       type="button"
@@ -247,19 +283,20 @@ export default function ResultPage() {
                     </button>
                   </div>
 
-                  <div style={{ position: "relative", marginTop: "48px" }}>
+                  <div style={{ marginTop: "8px" }}>
+                    {/* 메뉴 사진이 들어오면서 오먹이가 사진을 가렸습니다.
+                        겹치지 않게 카드 위쪽에 따로 둡니다. */}
                     <div
                       style={{
-                        position: "absolute",
-                        top: "-52px",
-                        right: "2px",
-                        zIndex: 10,
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginBottom: "-6px",
                         pointerEvents: "none",
                       }}
                     >
                       <Mascot
                         expression="happy"
-                        size={160}
+                        size={120}
                         priority
                         bubble="오늘은 이거다! 오먹 오먹~"
                         bubblePosition="left"

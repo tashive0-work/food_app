@@ -400,29 +400,44 @@ export default function Home() {
           </Link>
         </section>
 
-        {/* 여행 중일 때 들어오는 입구 — 진단 문항은 늘리지 않고 별도 카드로 둡니다 */}
-        <Link href="/region" style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "13px",
-          textDecoration: "none",
-          background: "#FFFFFF",
-          border: "1px solid var(--border)",
-          borderRadius: "var(--r-lg, 16px)",
-          boxShadow: "var(--sh1)",
-          padding: "16px 18px",
-          margin: "0 0 24px",
-          color: "var(--ink)"
-        }}>
-          <span aria-hidden="true" style={{ fontSize: "22px", flex: "none" }}>🧭</span>
-          <span style={{ flex: 1, minWidth: 0 }}>
-            <b style={{ display: "block", fontSize: "15px", fontWeight: 700 }}>여행 중이신가요?</b>
-            <span style={{ display: "block", fontSize: "12.5px", color: "var(--dim)", marginTop: "3px" }}>
-              그 지역 대표 음식과 파는 곳을 찾아드립니다
-            </span>
-          </span>
-          <span aria-hidden="true" style={{ flex: "none", fontSize: "17px", color: "var(--primary)", fontWeight: 700 }}>→</span>
-        </Link>
+        {/* 둘러보는 입구 두 개를 한 줄에. 홈이 길어지지 않게 반반으로 나눕니다 */}
+        {(() => {
+          const card: React.CSSProperties = {
+            flex: 1,
+            minWidth: 0,
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+            textDecoration: "none",
+            background: "#FFFFFF",
+            border: "1px solid var(--border)",
+            borderRadius: "var(--r-lg, 16px)",
+            boxShadow: "var(--sh1)",
+            padding: "16px 15px",
+            color: "var(--ink)",
+          };
+          const title: React.CSSProperties = { fontSize: "14.5px", fontWeight: 700, lineHeight: 1.3 };
+          const desc: React.CSSProperties = {
+            fontSize: "12px",
+            color: "var(--dim)",
+            lineHeight: 1.45,
+            wordBreak: "keep-all",
+          };
+          return (
+            <div style={{ display: "flex", gap: "10px", margin: "0 0 24px" }}>
+              <Link href="/food" style={card}>
+                <span aria-hidden="true" style={{ fontSize: "22px" }}>🍚</span>
+                <span style={title}>종류별로 보기</span>
+                <span style={desc}>한식·일식·중식·디저트까지 {FOODS.length.toLocaleString()}가지</span>
+              </Link>
+              <Link href="/region" style={card}>
+                <span aria-hidden="true" style={{ fontSize: "22px" }}>🧭</span>
+                <span style={title}>여행 중이신가요?</span>
+                <span style={desc}>그 지역 대표 음식과 파는 곳</span>
+              </Link>
+            </div>
+          );
+        })()}
 
         {/* 시간대별 로테이션 메뉴 카드 섹션 */}
         <section className="homeSec" style={{ marginBottom: "28px" }}>

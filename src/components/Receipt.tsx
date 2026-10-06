@@ -17,7 +17,13 @@ export function Receipt({ state, verdict, stamp }: ReceiptProps) {
     if (!receiptRef.current || isCapturing) return;
     setIsCapturing(true);
     try {
-      const canvas = await html2canvas(receiptRef.current, { scale: 2 });
+      // 저장한 영수증이 흐리다는 피드백 — 화면 배율이 아니라 고정 배율 3배로 올립니다.
+      // (휴대폰에서 캡처하면 폭이 360px 안팎이라 2배로는 1080도 안 나옵니다)
+      const canvas = await html2canvas(receiptRef.current, {
+        scale: 3,
+        backgroundColor: "#ffffff",
+        useCORS: true,
+      });
       const image = canvas.toDataURL("image/png");
       const link = document.createElement("a");
       link.href = image;

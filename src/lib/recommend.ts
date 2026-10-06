@@ -3,6 +3,7 @@ import { FOODS } from "@/data/foods";
 import { FOOD_IMAGES } from "@/data/foodImages";
 import { loadDietSettings, applyDietFilter } from "./dietFilter";
 import { nearbyUrl } from "./location";
+import { mealPenalty, type MealSlot } from "./mealTime";
 
 export function classify(s: AppState): Verdict {
   const { hunger, energy, spice, comfort, time, warm } = s;
@@ -100,7 +101,9 @@ export function recommend(
   delta?: Record<string, number>,
   excludeFoods: string[] = [],
   skipAxes: readonly SkipAxis[] = [],
-  customFoods?: Food[]
+  customFoods?: Food[],
+  /** 아침·점심·저녁·야식. 시각으로 자동 판정하고 결과 화면에서 바꿀 수 있습니다. */
+  meal?: MealSlot
 ): Food[] {
   const skip = new Set<string>(skipAxes);
   const adjustedState: AppState = {
@@ -142,6 +145,11 @@ export function recommend(
       if (adjustedState.social === "혼자" && f.themes.includes("모임")) p += 3;
 
       p += POPULARITY_WEIGHT * (2 - (f.popularity ?? 1));
+
+      // 끼니 보정.
+      // 진단이 끼니를 묻지 않아서 점심에 두부김치·안주가 1위로 나왔습니다 (사용자 피드백).
+      // 메뉴에 이미 붙어 있는 점심·야식·혼술 안주 테마를 시각과 맞춰 씁니다.
+      p += mealPenalty(f.themes, meal);
       return {
         ...f,
         image: FOOD_IMAGES[f.name]?.url,
