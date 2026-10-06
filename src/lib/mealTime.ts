@@ -65,6 +65,19 @@ const BONUS: Record<MealSlot, Record<string, number>> = {
   },
 };
 
+/**
+ * 끼니 보정 세기. 아래 표 전체에 곱해집니다.
+ *
+ * 왜 0.3 인가 — 메뉴 2,016개로 답변 조합 2,400가지를 돌려 재봤습니다 (점심 기준).
+ *   1.0 : 1위가 170종으로 좁아짐 · 안주 섞임 6.6%
+ *   0.5 : 211종 · 29.6%
+ *   0.3 : 240종 · 44.2%   ← 보정을 안 걸 때(231종 · 63.8%)보다 다양성도 높고 안주도 적음
+ *   0   : 231종 · 63.8%
+ * 세게 걸면 「점심에 안주」는 사라지지만 사람마다 달라야 할 1위가 같이 좁아집니다.
+ * 추천의 주인은 사용자의 8문항 답변이고, 끼니는 거드는 역할만 합니다.
+ */
+const STRENGTH = 0.3;
+
 /** 메뉴 테마에 대한 끼니 보정값. recommend() 의 벌점에 더해 씁니다. */
 export function mealPenalty(themes: string[] | undefined, meal: MealSlot | undefined): number {
   if (!meal || !themes || themes.length === 0) return 0;
@@ -74,7 +87,7 @@ export function mealPenalty(themes: string[] | undefined, meal: MealSlot | undef
     const v = table[t];
     if (v) p += v;
   }
-  return p;
+  return p * STRENGTH;
 }
 
 /** 화면에 쓰는 한 줄 설명 */
