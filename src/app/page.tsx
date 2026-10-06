@@ -400,40 +400,66 @@ export default function Home() {
           </Link>
         </section>
 
-        {/* 둘러보는 입구 두 개를 한 줄에. 홈이 길어지지 않게 반반으로 나눕니다 */}
+        {/* 둘러보는 입구 두 개를 한 줄에.
+            흰 카드로 두니 흰 배경에 묻혀서 색을 넣었습니다. 홈이 길어지지는 않습니다. */}
         {(() => {
-          const card: React.CSSProperties = {
+          const card = (bg: string, line: string): React.CSSProperties => ({
             flex: 1,
             minWidth: 0,
+            position: "relative",
             display: "flex",
             flexDirection: "column",
-            gap: "8px",
+            gap: "9px",
             textDecoration: "none",
-            background: "#FFFFFF",
-            border: "1px solid var(--border)",
+            background: bg,
+            border: `1px solid ${line}`,
             borderRadius: "var(--r-lg, 16px)",
-            boxShadow: "var(--sh1)",
-            padding: "16px 15px",
+            padding: "16px 14px 15px",
             color: "var(--ink)",
+          });
+          const badge = (bg: string): React.CSSProperties => ({
+            width: "38px",
+            height: "38px",
+            borderRadius: "11px",
+            background: bg,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "20px",
+          });
+          const title: React.CSSProperties = {
+            fontSize: "15px",
+            fontWeight: 800,
+            lineHeight: 1.3,
+            letterSpacing: "-0.01em",
           };
-          const title: React.CSSProperties = { fontSize: "14.5px", fontWeight: 700, lineHeight: 1.3 };
           const desc: React.CSSProperties = {
             fontSize: "12px",
             color: "var(--dim)",
             lineHeight: 1.45,
             wordBreak: "keep-all",
           };
+          const arrow = (c: string): React.CSSProperties => ({
+            position: "absolute",
+            top: "16px",
+            right: "14px",
+            fontSize: "15px",
+            fontWeight: 700,
+            color: c,
+          });
           return (
             <div style={{ display: "flex", gap: "10px", margin: "0 0 24px" }}>
-              <Link href="/food" style={card}>
-                <span aria-hidden="true" style={{ fontSize: "22px" }}>🍚</span>
+              <Link href="/food" style={card("#FFF3ED", "#FFD9C6")}>
+                <span aria-hidden="true" style={badge("#FFE2D3")}>🍚</span>
                 <span style={title}>종류별로 보기</span>
                 <span style={desc}>한식·일식·중식·디저트까지 {FOODS.length.toLocaleString()}가지</span>
+                <span aria-hidden="true" style={arrow("#E8663D")}>→</span>
               </Link>
-              <Link href="/region" style={card}>
-                <span aria-hidden="true" style={{ fontSize: "22px" }}>🧭</span>
+              <Link href="/region" style={card("#EEF3FF", "#D6E2FB")}>
+                <span aria-hidden="true" style={badge("#DEE8FF")}>🧭</span>
                 <span style={title}>여행 중이신가요?</span>
                 <span style={desc}>그 지역 대표 음식과 파는 곳</span>
+                <span aria-hidden="true" style={arrow("#4C7DF0")}>→</span>
               </Link>
             </div>
           );
