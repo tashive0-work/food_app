@@ -81,6 +81,10 @@ for (let i = 0; i < args.length; i++) {
     targetIds = arg.slice(6).split(',').map((x) => Number(x.trim())).filter((x) => !isNaN(x));
   } else if (arg === '--ids' && args[i + 1]) {
     targetIds = args[++i].split(',').map((x) => Number(x.trim())).filter((x) => !isNaN(x));
+  } else if (arg.startsWith('--delay=')) {
+    paceMs = Math.max(1, parseInt(arg.slice(8), 10)) * 1000;
+  } else if (arg.startsWith('--max-delay=')) {
+    maxPaceMs = Math.max(1, parseInt(arg.slice(12), 10)) * 1000;
   } else if (arg.startsWith('--limit=')) {
     limit = parseInt(arg.slice(8), 10);
   } else if (arg === '--limit' && args[i + 1]) {
@@ -99,6 +103,43 @@ const ai = new GoogleGenAI({
 });
 
 const MODEL_NAME = 'gemini-3.1-flash-image';
+
+/**
+ * 분당 쿼터에 맞춰 스스로 속도를 조절합니다.
+ *
+ * 무료 체험판 프로젝트는 이 모델의 분당 호출 한도가 낮아서, 12초 간격으로는
+ * 처음 몇 장만 통과하고 그 뒤로는 계속 429(RESOURCE_EXHAUSTED)가 납니다.
+ * 고정 간격을 사람이 맞추기 어려우니, 429가 나면 간격을 늘리고
+ * 연속으로 성공하면 다시 줄입니다.
+ *
+ *   --delay=30   시작 간격(초). 기본 20초
+ *   --max-delay=180  최대 간격(초). 기본 180초
+ */
+let paceMs = 20000;
+let maxPaceMs = 180000;
+let okStreak = 0;
+
+/** 429 를 만났을 때 — 간격을 1.6배로 늘립니다 */
+function slowDown() {
+  okStreak = 0;
+  const next = Math.min(Math.round(paceMs * 1.6), maxPaceMs);
+  if (next !== paceMs) {
+    paceMs = next;
+    log(`[속도 조절] 쿼터 한도에 걸려 호출 간격을 ${Math.round(paceMs / 1000)}초로 늘립니다.`);
+  }
+}
+
+/** 연속 성공 — 조심스럽게 간격을 줄입니다 */
+function speedUp(baseMs) {
+  okStreak += 1;
+  if (okStreak < 4) return;
+  okStreak = 0;
+  const next = Math.max(Math.round(paceMs * 0.8), baseMs);
+  if (next !== paceMs) {
+    paceMs = next;
+    log(`[속도 조절] 연속 성공 — 호출 간격을 ${Math.round(paceMs / 1000)}초로 줄입니다.`);
+  }
+}
 
 /** Supabase 1000개 제한을 극복하는 전체 대상 메뉴 조회 */
 async function fetchTargetFoods() {
@@ -137,7 +178,7 @@ async function fetchTargetFoods() {
 }
 
 /** Gemini 이미지 생성 (3회 시도 및 429 지수 백오프) */
-async function generateFoodImage(food, maxRetries = 3) {
+async function generateFoodImage(food, maxRetries = 6) {
   const queryStr = food.image_query ? food.image_query : food.name;
   const prompt = `A realistic food photo of ${food.name} (${queryStr}), served as it is typically served in Korea, in one dish or bowl, 45-degree angle, on a plain light warm-gray table, soft natural daylight, appetizing, nothing else in frame. No text, no letters, no logos, no hands, no people, no chopsticks touching food.`;
 
@@ -161,7 +202,8 @@ async function generateFoodImage(food, maxRetries = 3) {
     } catch (err) {
       const is429 = err.message?.includes('429') || err.message?.includes('RESOURCE_EXHAUSTED');
       if (attempt < maxRetries) {
-        const waitSec = is429 ? 25 * attempt : 5 * attempt;
+        if (is429) slowDown();
+        const waitSec = is429 ? 30 * attempt : 5 * attempt;
         log(`[재시도 대기] ${food.name}(ID:${food.id}) 에러 발생 (${is429 ? '429 쿼터 한도' : err.message}). ${waitSec}초 후 재시도...`);
         await new Promise((r) => setTimeout(r, waitSec * 1000));
         continue;
@@ -178,7 +220,7 @@ async function processFood(food) {
       return { success: true, id: food.id, name: food.name, dryRun: true };
     }
 
-    const rawBuffer = await generateFoodImage(food, 3);
+    const rawBuffer = await generateFoodImage(food, 6);
 
     // sharp: 800x800 webp (품질 80)
     const mainWebp = await sharp(rawBuffer)
@@ -475,6 +517,8 @@ async function main() {
   }
 
   const results = [];
+  const BASE_PACE_MS = paceMs;
+  log(`호출 간격: 시작 ${Math.round(paceMs / 1000)}초 · 최대 ${Math.round(maxPaceMs / 1000)}초 (429 가 나면 자동으로 늘립니다)`);
   const failedList = [];
 
   for (let i = 0; i < foods.length; i++) {
@@ -490,9 +534,10 @@ async function main() {
       } catch {}
     }
 
-    // API 호출 간 12초 기본 대기 (분당 쿼터 보호)
+    // 호출 간 대기 — 429 가 나면 자동으로 길어지고, 잘 되면 다시 짧아집니다
+    if (res.success && !res.dryRun) speedUp(BASE_PACE_MS);
     if (i < foods.length - 1 && !isDryRun) {
-      await new Promise((r) => setTimeout(r, 12000));
+      await new Promise((r) => setTimeout(r, paceMs));
     }
   }
 

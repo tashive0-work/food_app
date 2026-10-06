@@ -31,7 +31,7 @@ export function HeroCard({
       <div style={{ position: "relative" }}>
         <FoodImage
           name={food.name}
-          src={food.image}
+          src={food.imageThumb || food.image}
           className="heroCardImg"
         />
         <span className="heroCardBadge">오늘의 추천</span>

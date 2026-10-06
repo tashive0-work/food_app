@@ -192,6 +192,7 @@ export default function FoodDetailClient({ params, initialRelated = [] }: PagePr
             <FoodImage
               name={food.name}
               src={food.image}
+              variant="main"
               className="detailHeroImg"
               showLabel={false}
             />
@@ -582,7 +583,7 @@ export default function FoodDetailClient({ params, initialRelated = [] }: PagePr
                   >
                     <FoodImage
                       name={item.food.name}
-                      src={item.food.image}
+                      src={item.food.imageThumb || item.food.image}
                       showLabel={false}
                       className="relatedItemThumb"
                     />

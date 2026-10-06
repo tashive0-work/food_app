@@ -150,7 +150,7 @@ export default function TrendClient() {
                 return (
                   <div key={t.id} className="trendCard">
                     <FoodImage
-                      src={t.image_url ?? undefined}
+                      src={(matchedFood?.imageThumb || matchedFood?.image || t.image_url) ?? undefined}
                       name={t.name}
                       className="trendCardImg"
                       showLabel={false}

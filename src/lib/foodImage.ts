@@ -3,6 +3,7 @@ import { FOOD_KEYWORDS, DEFAULT_KEYWORD } from "@/data/foodKeywords";
 import { FOODS } from "@/data/foods";
 
 let foodImageMap: Map<string, string> | null = null;
+let foodImageThumbMap: Map<string, string> | null = null;
 
 function getFoodImageMap(): Map<string, string> {
   if (!foodImageMap) {
@@ -16,11 +17,22 @@ function getFoodImageMap(): Map<string, string> {
   return foodImageMap;
 }
 
+function getFoodImageThumbMap(): Map<string, string> {
+  if (!foodImageThumbMap) {
+    foodImageThumbMap = new Map();
+    for (const f of FOODS) {
+      if (f.imageThumb) {
+        foodImageThumbMap.set(f.name, f.imageThumb);
+      } else if (f.image) {
+        foodImageThumbMap.set(f.name, f.image);
+      }
+    }
+  }
+  return foodImageThumbMap;
+}
+
 /**
- * 메뉴명으로 이미지 URL 을 결정합니다.
- * 1) 수동 등록 URL 이 있으면 사용
- * 2) Supabase DB (AI 생성 이미지 포함) 동기화된 이미지가 있으면 사용
- * 3) 없으면 빈 문자열을 반환합니다.
+ * 메뉴명으로 메인 이미지 URL(800px) 을 결정합니다.
  */
 export function getFoodImageUrl(name: string): string {
   const manual = FOOD_IMAGES[name]?.url;
@@ -30,6 +42,19 @@ export function getFoodImageUrl(name: string): string {
   if (dbImage && dbImage.trim() !== "") return dbImage;
 
   return "";
+}
+
+/**
+ * 메뉴명으로 썸네일 이미지 URL(400px) 을 결정합니다.
+ */
+export function getFoodImageThumbUrl(name: string): string {
+  const manual = FOOD_IMAGES[name]?.url;
+  if (manual && manual.trim() !== "") return manual;
+
+  const dbThumb = getFoodImageThumbMap().get(name);
+  if (dbThumb && dbThumb.trim() !== "") return dbThumb;
+
+  return getFoodImageUrl(name);
 }
 
 /** 메뉴명에 해당하는 폴백 이모지 */

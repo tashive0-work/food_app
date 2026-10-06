@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { getFoodImageUrl, getFoodEmoji } from "@/lib/foodImage";
+import { getFoodImageUrl, getFoodImageThumbUrl, getFoodEmoji } from "@/lib/foodImage";
 
 interface FoodImageProps {
   /** 메뉴명 (필수) */
@@ -11,6 +11,8 @@ interface FoodImageProps {
   className?: string;
   /** 이모지 아래 텍스트 라벨 표시 여부 (기본값: true) */
   showLabel?: boolean;
+  /** 이미지 종류: main (800px 큰 이미지), thumb (400px 썸네일). 기본값: thumb */
+  variant?: "main" | "thumb";
 }
 
 /**
@@ -23,9 +25,11 @@ export function FoodImage({
   src,
   className,
   showLabel = true,
+  variant = "thumb",
 }: FoodImageProps) {
   const [failed, setFailed] = useState(false);
-  const url = src && src.trim() !== "" ? src : getFoodImageUrl(name);
+  const defaultUrl = variant === "main" ? getFoodImageUrl(name) : getFoodImageThumbUrl(name);
+  const url = src && src.trim() !== "" ? src : defaultUrl;
   const showImage = url !== "" && !failed;
 
   return (
