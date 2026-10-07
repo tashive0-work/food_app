@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     url: "https://eatodayme.com",
     siteName: "오늘의 잇템",
     images: [{
-      url: "/og-image.png?v=2",
+      url: "/og/home",
       width: 1200,
       height: 630,
       alt: "오늘의 잇템 | 고민은 여기까지!",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "오늘의 잇템 | 고민은 여기까지!",
     description: "오늘 뭐 먹지 고민될 때, 8문항만 답하면 지금 상태에 맞는 메뉴를 골라드려요. 무료.",
-    images: ["/og-image.png?v=2"],
+    images: ["/og/home"],
   },
 };
 
