@@ -104,56 +104,34 @@ const ai = new GoogleGenAI({
 
 const MODEL_NAME = 'gemini-3.1-flash-image';
 
-const CUSTOM_PROMPTS = {
-  226: 'A realistic food photo of a Korean convenience-store meal: one cup of instant ramen with the lid peeled open and one triangle kimbap in its wrapper, side by side, 45-degree angle, on a plain light warm-gray table, soft natural daylight. No readable text, no logos, no hands, no people.',
-};
-
-export function isDrinkFood(food) {
-  const name = food.name || '';
-  const kind = food.kind || '';
-
-  const EXCLUDE_KEYWORDS = [
-    '죽', '수프', '스프', '국밥', '해장국', '육개장', '삼계탕', '설렁탕', '갈비탕', '매운탕',
-    '어묵탕', '순대국', '돼지국', '소머리국', '감자탕', '추어탕', '알탕', '연포탕', '내장탕',
-    '파전', '김치전', '부침개', '전복', '전어', '볶음', '비빔밥', '덮밥', '초밥', '김밥',
-    '라면', '국수', '수제비', '냉면', '찌개', '찜', '구이', '튀김', '조림', '떡볶이',
-    '떡국', '떡', '빵', '쿠키', '케이크', '파이', '타르트', '아이스크림', '빙수', '빙과'
-  ];
-
-  if (EXCLUDE_KEYWORDS.some((k) => name.includes(k))) return false;
-
-  const DRINK_KINDS = ['음료', '차', '커피', '디저트/음료', '음료/디저트', '주류', '주류/음료', '음료/차'];
-  if (DRINK_KINDS.some((k) => kind.includes(k))) return true;
-
-  const DRINK_KEYWORDS = [
-    '커피', '차', '라떼', '에이드', '주스', '스무디', '쉐이크', '밀크티', '우유', '탄산',
-    '요구르트', '요거트', '드링크', '콜라', '사이다', '즙', '에스프레소', '아메리카노',
-    '카푸치노', '마키아토', '아인슈페너', '식혜', '수정과', '음료', '콜드브루', '프라푸치노',
-    '블렌디드', '샤케라토', '히비스커스', '모히토', '크림소다', '노니', '포도봉봉', '미과수',
-    '실론티', '암바사', '꿀물', '리스트레토', '카페오레', '롱블랙', '맥주', '소주', '막걸리',
-    '청주', '와인', '하이볼', '칵테일', '교쿠로', '아삼', '짜이', '카모마일', '캐모마일',
-    '루이보스', '페퍼민트', '얼그레이', '다즐링', '보리수', '둥굴레', '쌍화', '십전대보',
-    '모과', '매화', '오과', '결명자', '솔잎', '우엉', '도라지', '연근', '헛개', '산수유', '옥수수수염'
-  ];
-
-  if (DRINK_KEYWORDS.some((k) => name.includes(k) || kind.includes(k))) return true;
-
-  return false;
-}
-
-let paceMs = 20000;
-let maxPaceMs = 180000;
+/**
+ * 분당 쿼터에 맞춰 스스로 속도를 조절합니다.
+ *
+ * 무료 체험판 프로젝트는 이 모델의 호출 한도가 낮아 429(RESOURCE_EXHAUSTED)가 자주 납니다.
+ *
+ * 실제 로그를 보면 간격을 51초로 벌린 뒤에도 429가 나고, 반대로 429 직후
+ * 재시도에서는 바로 통과합니다. 즉 **간격을 벌리는 것은 효과가 거의 없고,
+ * 재시도가 효과가 있습니다.** 그래서 429가 날 때마다 전체 속도를 늦추지 않고,
+ * 재시도를 다 쓰고도 실패한 경우에만 늦춥니다.
+ *
+ *   --delay=30   시작 간격(초). 기본 20초
+ *   --max-delay=180  최대 간격(초). 기본 180초
+ */
+let paceMs = 15000;
+let maxPaceMs = 60000;
 let okStreak = 0;
 
+/** 재시도를 다 쓰고도 실패했을 때만 — 간격을 1.5배로 늘립니다 */
 function slowDown() {
   okStreak = 0;
-  const next = Math.min(Math.round(paceMs * 1.6), maxPaceMs);
+  const next = Math.min(Math.round(paceMs * 1.5), maxPaceMs);
   if (next !== paceMs) {
     paceMs = next;
     log(`[속도 조절] 쿼터 한도에 걸려 호출 간격을 ${Math.round(paceMs / 1000)}초로 늘립니다.`);
   }
 }
 
+/** 연속 성공 — 조심스럽게 간격을 줄입니다 */
 function speedUp(baseMs) {
   okStreak += 1;
   if (okStreak < 4) return;
@@ -165,40 +143,8 @@ function speedUp(baseMs) {
   }
 }
 
-let drinkResetDone = false;
-async function resetDrinkStatusToNone() {
-  if (drinkResetDone || isDryRun || targetIds) return;
-  drinkResetDone = true;
-  log('음료 메뉴 전체 image_status 를 "none" 으로 리셋 중...');
-  const PAGE = 1000;
-  const allFoods = [];
-  for (let from = 0; ; from += PAGE) {
-    const { data: page, error } = await supabase
-      .from('foods')
-      .select('id, name, kind, image_status')
-      .eq('active', true)
-      .range(from, from + PAGE - 1);
-    if (error) break;
-    if (!page || page.length === 0) break;
-    allFoods.push(...page);
-    if (page.length < PAGE) break;
-  }
-  const drinks = allFoods.filter(isDrinkFood);
-  const drinkIds = drinks.map((d) => d.id);
-
-  if (drinkIds.length > 0) {
-    for (let i = 0; i < drinkIds.length; i += 200) {
-      const chunk = drinkIds.slice(i, i + 200);
-      await supabase.from('foods').update({ image_status: 'none' }).in('id', chunk);
-    }
-    log(`[리셋 완료] 음료 메뉴 총 ${drinkIds.length}개 항목의 image_status 를 'none' 으로 변경했습니다.`);
-  }
-}
-
 /** Supabase 1000개 제한을 극복하는 전체 대상 메뉴 조회 */
 async function fetchTargetFoods() {
-  await resetDrinkStatusToNone();
-
   if (targetIds && targetIds.length > 0) {
     const { data, error } = await supabase
       .from('foods')
@@ -233,17 +179,48 @@ async function fetchTargetFoods() {
   return allFoods;
 }
 
-/** Gemini 이미지 생성 (3회 시도 및 429 지수 백오프) */
+/**
+ * 메뉴가 「마시는 것」인지 판단합니다.
+ *
+ * 왜 필요한가: 생성 프롬프트가 음식 기준("한국에서 내는 방식대로, 접시나 그릇 하나에")이라
+ * 모델이 모르는 음료 이름(루이보스·교쿠로·랍상소우총 등)을 만나면 그냥 한식을 그려 버렸습니다.
+ * 실제로 다즐링 자리에 찌개, 루이보스 자리에 보쌈 사진이 들어갔습니다.
+ */
+const DRINK_WORDS = [
+  '차', '커피', '라떼', '에이드', '주스', '스무디', '티', '음료', '쉐이크', '셰이크', '드링크',
+  '소다', '콜라', '사이다', '우유', '요거트', '요구르트', '아메리카노', '에스프레소', '모카',
+  '카푸치노', '마키아토', '프라푸치노', '프라페', '아포가토', '밀크', '워터', '즙', '원액',
+  '식혜', '수정과', '숭늉', '미숫가루', '토닉', '펀치', '콤부차', '에일', '탄산', '생수',
+  '콜드브루', '아인슈페너', '블랙', '브루',
+];
+/** 위 단어로 안 걸리는 음료 고유명사 */
+const DRINK_NAMES = new Set([
+  '캐모마일', '비체린', '얼그레이', '아이스초코', '히비스커스', '룽고', '암바사', '다즐링',
+  '미과수', '랍상소우총', '페퍼민트', '플랫화이트', '생맥산', '포도봉봉', '레몬그라스',
+  '리스트레토', '카페오레', '레모네이드', '샤케라토', '제호탕', '코르타도', '배숙', '교쿠로',
+  '아삼', '루이보스', '마살라짜이', '솔의눈', '밀키스', '잉글리시 브렉퍼스트', '환타',
+  '무알콜 모히토', '보리수단', '베리티', '마시는 식초',
+]);
+
+function isDrink(food) {
+  if (food.kind !== '디저트·카페') return false;
+  if (DRINK_NAMES.has(food.name)) return true;
+  return DRINK_WORDS.some((w) => food.name.includes(w));
+}
+
+/** Gemini 이미지 생성 (429 지수 백오프) */
 async function generateFoodImage(food, maxRetries = 6) {
   const queryStr = food.image_query ? food.image_query : food.name;
-  let prompt = '';
-
-  if (CUSTOM_PROMPTS[food.id]) {
-    prompt = CUSTOM_PROMPTS[food.id];
-  } else if (isDrinkFood(food)) {
-    prompt = `A realistic photo of ${food.name} (${queryStr}), served in an appropriate cup, mug or glass as typically served at a Korean cafe or home, 45-degree angle, on a plain light warm-gray table, soft natural daylight, appetizing, nothing else in frame. If it is a packaged or bottled drink, show it poured into a plain clear glass, with no can, bottle or package. No text, no letters, no logos, no brand marks, no hands, no people.`;
+  const common = 'soft natural daylight, appetizing, nothing else in frame. No text, no letters, no logos, no watermarks, no hands, no people.';
+  let prompt;
+  if (isDrink(food)) {
+    // 마시는 것 — 잔이나 컵에. 그릇에 담긴 음식이 나오면 안 됩니다.
+    prompt = `A realistic drink photo of ${food.name} (${queryStr}), a beverage served in a clear glass or a cup as it is served in a Korean cafe, on a plain light warm-gray table, slightly above eye level, ${common} It must be a drink in a glass or cup — never a bowl of soup, stew, rice or any savory dish.`;
+  } else if (food.kind === '디저트·카페') {
+    // 디저트 — 접시에 한 조각
+    prompt = `A realistic dessert photo of ${food.name} (${queryStr}), one serving plated on a small dessert plate as it is served in a Korean cafe, 45-degree angle, on a plain light warm-gray table, ${common}`;
   } else {
-    prompt = `A realistic food photo of ${food.name} (${queryStr}), served as it is typically served in Korea, in one dish or bowl, 45-degree angle, on a plain light warm-gray table, soft natural daylight, appetizing, nothing else in frame. No text, no letters, no logos, no hands, no people, no chopsticks touching food.`;
+    prompt = `A realistic food photo of ${food.name} (${queryStr}), served as it is typically served in Korea, in one dish or bowl, 45-degree angle, on a plain light warm-gray table, ${common} No chopsticks touching food.`;
   }
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -266,12 +243,12 @@ async function generateFoodImage(food, maxRetries = 6) {
     } catch (err) {
       const is429 = err.message?.includes('429') || err.message?.includes('RESOURCE_EXHAUSTED');
       if (attempt < maxRetries) {
-        if (is429) slowDown();
-        const waitSec = is429 ? 30 * attempt : 5 * attempt;
+        const waitSec = is429 ? 15 * attempt : 5 * attempt;
         log(`[재시도 대기] ${food.name}(ID:${food.id}) 에러 발생 (${is429 ? '429 쿼터 한도' : err.message}). ${waitSec}초 후 재시도...`);
         await new Promise((r) => setTimeout(r, waitSec * 1000));
         continue;
       }
+      if (is429) slowDown();   // 재시도를 다 쓰고도 안 된 경우에만
       throw err;
     }
   }
@@ -622,21 +599,6 @@ async function main() {
     await generateDocxReport();
   } catch (docxErr) {
     log(`[docx 생성 오류] ${docxErr.message}`);
-  }
-
-  // 아직 image_status='none' 인 항목이 남아있다면 'none'이 0개가 될 때까지 계속 재시도
-  if (!isDryRun && !targetIds && !contactSheetOnly) {
-    const { count } = await supabase
-      .from('foods')
-      .select('id', { count: 'exact', head: true })
-      .eq('image_status', 'none');
-    if (count > 0) {
-      log(`\n[안내] 아직 image_status='none'인 메뉴가 ${count}개 남아있습니다. 30초 대기 후 다음 라운드를 시작합니다...`);
-      await new Promise((r) => setTimeout(r, 30000));
-      await main();
-    } else {
-      log('\n🎉 모든 대상 메뉴의 image_status="none" 항목 처리가 완료되었습니다!');
-    }
   }
 }
 
