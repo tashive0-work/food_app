@@ -212,6 +212,8 @@ function isDrink(food) {
 async function generateFoodImage(food, maxRetries = 6) {
   const queryStr = food.image_query ? food.image_query : food.name;
   const common = 'soft natural daylight, appetizing, nothing else in frame. No text, no letters, no logos, no watermarks, no hands, no people.';
+  // image_query 가 있을 때 쓰는 짧은 문구 — 구도는 설명에 맡기고 글자·사람만 막습니다
+  const clean = 'soft natural daylight, appetizing. No text, no letters, no logos, no watermarks, no hands, no people.';
   let prompt;
   if (isDrink(food)) {
     // 마시는 것 — 잔이나 컵에. 그릇에 담긴 음식이 나오면 안 됩니다.
@@ -220,7 +222,17 @@ async function generateFoodImage(food, maxRetries = 6) {
     // 디저트 — 접시에 한 조각
     prompt = `A realistic dessert photo of ${food.name} (${queryStr}), one serving plated on a small dessert plate as it is served in a Korean cafe, 45-degree angle, on a plain light warm-gray table, ${common}`;
   } else {
-    prompt = `A realistic food photo of ${food.name} (${queryStr}), served as it is typically served in Korea, in one dish or bowl, 45-degree angle, on a plain light warm-gray table, ${common} No chopsticks touching food.`;
+    // image_query 가 적혀 있으면 그 설명만 믿습니다.
+    //
+    // 기본 문구에는 「한국에서 내는 방식대로」·「그릇 하나에」·「화면에 다른 건 없게」가
+    // 들어 있는데, 이 셋이 츠케멘(면과 국물을 그릇 두 개에 따로 냄)과 정면으로 부딪혔습니다.
+    // 세 번 다시 만들어도 계속 평범한 라멘이 나왔습니다.
+    // 설명을 일부러 적어 둔 메뉴는 그 설명이 기본 규칙보다 정확합니다.
+    if (food.image_query) {
+      prompt = `A realistic food photo of ${queryStr}. 45-degree angle, on a plain light warm-gray table, ${clean}`;
+    } else {
+      prompt = `A realistic food photo of ${food.name}, served as it is typically served in Korea, in one dish or bowl, 45-degree angle, on a plain light warm-gray table, ${common} No chopsticks touching food.`;
+    }
   }
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
