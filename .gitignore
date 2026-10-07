@@ -28,3 +28,9 @@ yarn-error.log*
 .env.local
 .env*.local
 .env
+
+# 작업 중 생기는 결과물 — 저장소에 올리지 않습니다
+# (다른 세션이 git add -A 를 쓰기 때문에 여기서 막아둡니다)
+instagram/
+logs/
+scripts/out/

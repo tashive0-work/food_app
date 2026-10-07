@@ -104,22 +104,47 @@ const ai = new GoogleGenAI({
 
 const MODEL_NAME = 'gemini-3.1-flash-image';
 
-/**
- * 분당 쿼터에 맞춰 스스로 속도를 조절합니다.
- *
- * 무료 체험판 프로젝트는 이 모델의 분당 호출 한도가 낮아서, 12초 간격으로는
- * 처음 몇 장만 통과하고 그 뒤로는 계속 429(RESOURCE_EXHAUSTED)가 납니다.
- * 고정 간격을 사람이 맞추기 어려우니, 429가 나면 간격을 늘리고
- * 연속으로 성공하면 다시 줄입니다.
- *
- *   --delay=30   시작 간격(초). 기본 20초
- *   --max-delay=180  최대 간격(초). 기본 180초
- */
+const CUSTOM_PROMPTS = {
+  226: 'A realistic food photo of a Korean convenience-store meal: one cup of instant ramen with the lid peeled open and one triangle kimbap in its wrapper, side by side, 45-degree angle, on a plain light warm-gray table, soft natural daylight. No readable text, no logos, no hands, no people.',
+};
+
+export function isDrinkFood(food) {
+  const name = food.name || '';
+  const kind = food.kind || '';
+
+  const EXCLUDE_KEYWORDS = [
+    '죽', '수프', '스프', '국밥', '해장국', '육개장', '삼계탕', '설렁탕', '갈비탕', '매운탕',
+    '어묵탕', '순대국', '돼지국', '소머리국', '감자탕', '추어탕', '알탕', '연포탕', '내장탕',
+    '파전', '김치전', '부침개', '전복', '전어', '볶음', '비빔밥', '덮밥', '초밥', '김밥',
+    '라면', '국수', '수제비', '냉면', '찌개', '찜', '구이', '튀김', '조림', '떡볶이',
+    '떡국', '떡', '빵', '쿠키', '케이크', '파이', '타르트', '아이스크림', '빙수', '빙과'
+  ];
+
+  if (EXCLUDE_KEYWORDS.some((k) => name.includes(k))) return false;
+
+  const DRINK_KINDS = ['음료', '차', '커피', '디저트/음료', '음료/디저트', '주류', '주류/음료', '음료/차'];
+  if (DRINK_KINDS.some((k) => kind.includes(k))) return true;
+
+  const DRINK_KEYWORDS = [
+    '커피', '차', '라떼', '에이드', '주스', '스무디', '쉐이크', '밀크티', '우유', '탄산',
+    '요구르트', '요거트', '드링크', '콜라', '사이다', '즙', '에스프레소', '아메리카노',
+    '카푸치노', '마키아토', '아인슈페너', '식혜', '수정과', '음료', '콜드브루', '프라푸치노',
+    '블렌디드', '샤케라토', '히비스커스', '모히토', '크림소다', '노니', '포도봉봉', '미과수',
+    '실론티', '암바사', '꿀물', '리스트레토', '카페오레', '롱블랙', '맥주', '소주', '막걸리',
+    '청주', '와인', '하이볼', '칵테일', '교쿠로', '아삼', '짜이', '카모마일', '캐모마일',
+    '루이보스', '페퍼민트', '얼그레이', '다즐링', '보리수', '둥굴레', '쌍화', '십전대보',
+    '모과', '매화', '오과', '결명자', '솔잎', '우엉', '도라지', '연근', '헛개', '산수유', '옥수수수염'
+  ];
+
+  if (DRINK_KEYWORDS.some((k) => name.includes(k) || kind.includes(k))) return true;
+
+  return false;
+}
+
 let paceMs = 20000;
 let maxPaceMs = 180000;
 let okStreak = 0;
 
-/** 429 를 만났을 때 — 간격을 1.6배로 늘립니다 */
 function slowDown() {
   okStreak = 0;
   const next = Math.min(Math.round(paceMs * 1.6), maxPaceMs);
@@ -129,7 +154,6 @@ function slowDown() {
   }
 }
 
-/** 연속 성공 — 조심스럽게 간격을 줄입니다 */
 function speedUp(baseMs) {
   okStreak += 1;
   if (okStreak < 4) return;
@@ -141,8 +165,40 @@ function speedUp(baseMs) {
   }
 }
 
+let drinkResetDone = false;
+async function resetDrinkStatusToNone() {
+  if (drinkResetDone || isDryRun || targetIds) return;
+  drinkResetDone = true;
+  log('음료 메뉴 전체 image_status 를 "none" 으로 리셋 중...');
+  const PAGE = 1000;
+  const allFoods = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data: page, error } = await supabase
+      .from('foods')
+      .select('id, name, kind, image_status')
+      .eq('active', true)
+      .range(from, from + PAGE - 1);
+    if (error) break;
+    if (!page || page.length === 0) break;
+    allFoods.push(...page);
+    if (page.length < PAGE) break;
+  }
+  const drinks = allFoods.filter(isDrinkFood);
+  const drinkIds = drinks.map((d) => d.id);
+
+  if (drinkIds.length > 0) {
+    for (let i = 0; i < drinkIds.length; i += 200) {
+      const chunk = drinkIds.slice(i, i + 200);
+      await supabase.from('foods').update({ image_status: 'none' }).in('id', chunk);
+    }
+    log(`[리셋 완료] 음료 메뉴 총 ${drinkIds.length}개 항목의 image_status 를 'none' 으로 변경했습니다.`);
+  }
+}
+
 /** Supabase 1000개 제한을 극복하는 전체 대상 메뉴 조회 */
 async function fetchTargetFoods() {
+  await resetDrinkStatusToNone();
+
   if (targetIds && targetIds.length > 0) {
     const { data, error } = await supabase
       .from('foods')
@@ -180,7 +236,15 @@ async function fetchTargetFoods() {
 /** Gemini 이미지 생성 (3회 시도 및 429 지수 백오프) */
 async function generateFoodImage(food, maxRetries = 6) {
   const queryStr = food.image_query ? food.image_query : food.name;
-  const prompt = `A realistic food photo of ${food.name} (${queryStr}), served as it is typically served in Korea, in one dish or bowl, 45-degree angle, on a plain light warm-gray table, soft natural daylight, appetizing, nothing else in frame. No text, no letters, no logos, no hands, no people, no chopsticks touching food.`;
+  let prompt = '';
+
+  if (CUSTOM_PROMPTS[food.id]) {
+    prompt = CUSTOM_PROMPTS[food.id];
+  } else if (isDrinkFood(food)) {
+    prompt = `A realistic photo of ${food.name} (${queryStr}), served in an appropriate cup, mug or glass as typically served at a Korean cafe or home, 45-degree angle, on a plain light warm-gray table, soft natural daylight, appetizing, nothing else in frame. If it is a packaged or bottled drink, show it poured into a plain clear glass, with no can, bottle or package. No text, no letters, no logos, no brand marks, no hands, no people.`;
+  } else {
+    prompt = `A realistic food photo of ${food.name} (${queryStr}), served as it is typically served in Korea, in one dish or bowl, 45-degree angle, on a plain light warm-gray table, soft natural daylight, appetizing, nothing else in frame. No text, no letters, no logos, no hands, no people, no chopsticks touching food.`;
+  }
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -558,6 +622,21 @@ async function main() {
     await generateDocxReport();
   } catch (docxErr) {
     log(`[docx 생성 오류] ${docxErr.message}`);
+  }
+
+  // 아직 image_status='none' 인 항목이 남아있다면 'none'이 0개가 될 때까지 계속 재시도
+  if (!isDryRun && !targetIds && !contactSheetOnly) {
+    const { count } = await supabase
+      .from('foods')
+      .select('id', { count: 'exact', head: true })
+      .eq('image_status', 'none');
+    if (count > 0) {
+      log(`\n[안내] 아직 image_status='none'인 메뉴가 ${count}개 남아있습니다. 30초 대기 후 다음 라운드를 시작합니다...`);
+      await new Promise((r) => setTimeout(r, 30000));
+      await main();
+    } else {
+      log('\n🎉 모든 대상 메뉴의 image_status="none" 항목 처리가 완료되었습니다!');
+    }
   }
 }
 

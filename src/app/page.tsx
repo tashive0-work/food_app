@@ -365,43 +365,8 @@ export default function Home() {
           );
         })()}
 
-        {/* 2x2 정돈된 화이트 벤토 그리드 */}
-        <section className="bentoGrid">
-          <Link href="/trend" className="bentoCard">
-            <span className="bentoIcon">🔥</span>
-            <div>
-              <h3 className="bentoTitle">요즘 뜨는 메뉴</h3>
-              <p className="bentoDesc">요즘 많이 찾는 메뉴</p>
-            </div>
-          </Link>
-
-          <Link href="/theme" className="bentoCard">
-            <span className="bentoIcon">🎯</span>
-            <div>
-              <h3 className="bentoTitle">이럴 땐 이 메뉴</h3>
-              <p className="bentoDesc">야식, 해장, 다이어트 특화</p>
-            </div>
-          </Link>
-
-          <Link href="/quiz" className="bentoCard">
-            <span className="bentoIcon">🤖</span>
-            <div>
-              <h3 className="bentoTitle">AI 재추천</h3>
-              <p className="bentoDesc">원하는 조건 직접 입력</p>
-            </div>
-          </Link>
-
-          <Link href="/favorites" className="bentoCard">
-            <span className="bentoIcon">❤️</span>
-            <div>
-              <h3 className="bentoTitle">내 찜한 메뉴</h3>
-              <p className="bentoDesc">{favorites.length}개 메뉴 보관 중</p>
-            </div>
-          </Link>
-        </section>
-
-        {/* 둘러보는 입구 두 개를 한 줄에.
-            흰 카드로 두니 흰 배경에 묻혀서 색을 넣었습니다. 홈이 길어지지는 않습니다. */}
+        {/* 둘러보는 입구 두 개를 한 줄에. 처음 온 사람은 고르기보다 둘러볼 곳을 먼저 찾아서
+            벤토 그리드보다 위에 둡니다. 흰 배경에 묻히지 않도록 색을 넣었습니다. */}
         {(() => {
           const card = (bg: string, line: string): React.CSSProperties => ({
             flex: 1,
@@ -448,7 +413,7 @@ export default function Home() {
             color: c,
           });
           return (
-            <div style={{ display: "flex", gap: "10px", margin: "0 0 24px" }}>
+            <div style={{ display: "flex", gap: "10px", margin: "0 0 12px" }}>
               <Link href="/food" style={card("#FFF3ED", "#FFD9C6")}>
                 <span aria-hidden="true" style={badge("#FFE2D3")}>🍚</span>
                 <span style={title}>종류별로 보기</span>
@@ -464,6 +429,41 @@ export default function Home() {
             </div>
           );
         })()}
+
+        {/* 2x2 정돈된 화이트 벤토 그리드 */}
+        <section className="bentoGrid">
+          <Link href="/trend" className="bentoCard">
+            <span className="bentoIcon">🔥</span>
+            <div>
+              <h3 className="bentoTitle">요즘 뜨는 메뉴</h3>
+              <p className="bentoDesc">요즘 많이 찾는 메뉴</p>
+            </div>
+          </Link>
+
+          <Link href="/theme" className="bentoCard">
+            <span className="bentoIcon">🎯</span>
+            <div>
+              <h3 className="bentoTitle">이럴 땐 이 메뉴</h3>
+              <p className="bentoDesc">야식, 해장, 다이어트 특화</p>
+            </div>
+          </Link>
+
+          <Link href="/quiz" className="bentoCard">
+            <span className="bentoIcon">🤖</span>
+            <div>
+              <h3 className="bentoTitle">AI 재추천</h3>
+              <p className="bentoDesc">원하는 조건 직접 입력</p>
+            </div>
+          </Link>
+
+          <Link href="/favorites" className="bentoCard">
+            <span className="bentoIcon">❤️</span>
+            <div>
+              <h3 className="bentoTitle">내 찜한 메뉴</h3>
+              <p className="bentoDesc">{favorites.length}개 메뉴 보관 중</p>
+            </div>
+          </Link>
+        </section>
 
         {/* 시간대별 로테이션 메뉴 카드 섹션 */}
         <section className="homeSec" style={{ marginBottom: "28px" }}>
