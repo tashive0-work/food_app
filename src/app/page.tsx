@@ -430,6 +430,72 @@ export default function Home() {
           );
         })()}
 
+        {/* 룰렛 — 생각하기도 싫은 사람용 입구. 한 줄로 길게 둬서 눈에 걸리게 합니다. */}
+        <Link
+          href="/roulette"
+          style={{
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            textDecoration: "none",
+            background: "#F0FAF3",
+            border: "1px solid #CCE9D6",
+            borderRadius: "var(--r-lg, 16px)",
+            padding: "14px 16px",
+            margin: "0 0 24px",
+            color: "var(--ink)",
+          }}
+        >
+          <span
+            aria-hidden="true"
+            style={{
+              width: "38px",
+              height: "38px",
+              flexShrink: 0,
+              borderRadius: "11px",
+              background: "#D8F0E1",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "20px",
+            }}
+          >
+            🎯
+          </span>
+          <span style={{ minWidth: 0 }}>
+            <span
+              style={{
+                display: "block",
+                fontSize: "15px",
+                fontWeight: 800,
+                lineHeight: 1.3,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              고르기도 귀찮다면, 룰렛
+            </span>
+            <span
+              style={{
+                display: "block",
+                fontSize: "12px",
+                color: "var(--dim)",
+                lineHeight: 1.45,
+                marginTop: "3px",
+                wordBreak: "keep-all",
+              }}
+            >
+              끼니랑 종류만 고르고 돌리면 끝
+            </span>
+          </span>
+          <span
+            aria-hidden="true"
+            style={{ marginLeft: "auto", fontSize: "15px", fontWeight: 700, color: "#2E9E5B" }}
+          >
+            →
+          </span>
+        </Link>
+
         {/* 2x2 정돈된 화이트 벤토 그리드 */}
         <section className="bentoGrid">
           <Link href="/trend" className="bentoCard">

@@ -81,6 +81,17 @@ export default function RegionClient() {
     setPicked((prev) => prev ?? r);
   }, []);
 
+  /**
+   * 지역을 고릅니다. 기록까지 여기서 함께 합니다.
+   *
+   * 어느 지역을 많이 보는지 알아야 그 지역 메뉴를 더 채울지 판단할 수 있습니다.
+   * 처음 들어올 때 위치로 자동 추정되는 건 사용자가 고른 게 아니라서 기록하지 않습니다.
+   */
+  const choose = (r: Region) => {
+    setPicked(r);
+    logInteraction(null, r.label, 0, "region_pick");
+  };
+
   const findMyRegion = async () => {
     setLocBusy(true);
     const c = await getCurrentLocation();
@@ -88,7 +99,7 @@ export default function RegionClient() {
     if (!c) { setLocDenied(true); return; }
     const r = guessRegion(c.lat, c.lng);
     setGuessed(r);
-    setPicked(r);
+    choose(r);
   };
 
   return (
@@ -140,7 +151,7 @@ export default function RegionClient() {
                 type="button"
                 style={on ? S.chipOn : S.chip}
                 aria-pressed={on}
-                onClick={() => setPicked(r)}
+                onClick={() => choose(r)}
               >
                 {r.label}
               </button>

@@ -3,7 +3,7 @@ import { Food } from "@/types/food";
 // ⚠️ 이 파일은 자동 생성됩니다. 직접 고치지 마세요.
 //    원본은 Supabase 의 foods 테이블입니다. 빌드할 때 scripts/sync-foods.mjs 가 다시 씁니다.
 //    메뉴를 고치려면 어드민 콘솔이나 Supabase 에서 수정하세요.
-//    생성 시각: 2026-10-07T10:46:04.392Z
+//    생성 시각: 2026-10-11T01:10:04.227Z
 
 export const RAW: [string, string, number, number, number, number, number, number, string[], string[], number, boolean, string | null, string | null, string | null][] = [
   ["김치찌개", "한식", 3, 3, 4, 2, 4, 2, ["퇴근", "점심", "해장", "비", "추운 날"], ["돼지고기김치찌개", "참치김치찌개", "꽁치김치찌개", "스팸김치찌개"], 2, true, "2026-10-04T09:12:57.239431+00:00", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/1.webp", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/1_thumb.webp"],
@@ -149,7 +149,7 @@ export const RAW: [string, string, number, number, number, number, number, numbe
   ["장어덮밥", "일식", 0, 4, 3, 2, 4, 2, ["주말", "점심", "든든하게"], ["장어덮밥", "히츠마부시", "특장어덮밥"], 2, false, "2026-10-04T11:55:46.47207+00:00", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/141.webp", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/141_thumb.webp"],
   ["돈코츠라멘", "일식", 0, 3, 4, 2, 4, 1, ["점심", "퇴근", "비", "추운 날"], ["돈코츠라멘", "블랙돈코츠", "차슈돈코츠"], 2, true, "2026-10-04T11:56:12.937756+00:00", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/142.webp", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/142_thumb.webp"],
   ["매운라멘", "일식", 4, 3, 4, 2, 3, 2, ["점심", "해장", "퇴근", "추운 날"], ["매운라멘", "지옥라멘", "마라라멘"], 2, true, "2026-10-04T11:57:03.718283+00:00", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/143.webp", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/143_thumb.webp"],
-  ["츠케멘", "일식", 1, 3, 2, 2, 3, 2, ["점심", "혼자"], ["츠케멘", "농후츠케멘", "매운츠케멘"], 2, false, "2026-10-07T10:22:41.325421+00:00", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/144.webp", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/144_thumb.webp"],
+  ["츠케멘", "일식", 1, 3, 2, 2, 3, 2, ["점심", "혼자"], ["츠케멘", "농후츠케멘", "매운츠케멘"], 2, false, "2026-10-07T11:32:11.537164+00:00", null, null],
   ["야키소바", "일식", 1, 3, 3, 3, 3, 2, ["야식", "혼자"], ["야키소바", "해물야키소바", "소스야키소바"], 2, false, "2026-10-04T11:59:12.085203+00:00", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/145.webp", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/145_thumb.webp"],
   ["나가사키짬뽕", "일식", 2, 3, 4, 2, 4, 2, ["해장", "퇴근", "비", "추운 날"], ["나가사키짬뽕", "해물나가사키짬뽕", "크림짬뽕"], 2, true, "2026-10-04T12:00:03.876845+00:00", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/146.webp", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/146_thumb.webp"],
   ["후토마키", "일식", 0, 3, 0, 2, 3, 3, ["주말", "모임", "점심", "더운 날", "입맛 없을 때"], ["후토마키", "우엉후토마키", "계란후토마키"], 2, false, "2026-10-04T12:01:45.795186+00:00", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/147.webp", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/147_thumb.webp"],
@@ -2022,6 +2022,14 @@ export const RAW: [string, string, number, number, number, number, number, numbe
   ["산수유차", "디저트·카페", 0, 0, 4, 3, 3, 3, ["카페·디저트"], [], 0, false, "2026-10-07T10:17:02.833151+00:00", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/2018.webp", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/2018_thumb.webp"],
   ["옥수수차", "디저트·카페", 0, 0, 2, 4, 2, 4, ["카페·디저트"], [], 1, false, "2026-10-07T10:17:47.66693+00:00", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/2019.webp", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/2019_thumb.webp"],
   ["딸기요거트드링크", "디저트·카페", 0, 1, 0, 4, 3, 3, ["카페·디저트"], [], 1, false, "2026-10-07T10:19:03.824461+00:00", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/2020.webp", "https://reqeeqcshliusbgpqwaw.supabase.co/storage/v1/object/public/food-images/2020_thumb.webp"],
+  ["고디바 모찌", "디저트·카페", 0, 1, 1, 4, 3, 2, ["카페·디저트"], ["다크초코", "밀크초코", "말차"], 1, false, "2026-10-10T11:09:55.808209+00:00", null, null],
+  ["봄동비빔밥", "한식", 1, 3, 2, 3, 3, 3, ["점심", "입맛 없을 때", "가볍게"], ["기본", "강된장", "달래간장"], 1, false, "2026-10-10T11:10:06.314083+00:00", null, null],
+  ["벨지안 딥초코 생식빵", "디저트·카페", 0, 2, 2, 4, 4, 1, ["카페·디저트"], ["기본", "하프", "홀"], 1, false, "2026-10-10T11:10:22.688988+00:00", null, null],
+  ["오트 딥라떼", "디저트·카페", 0, 2, 1, 4, 3, 3, ["카페·디저트"], ["기본", "초코", "바닐라"], 1, false, "2026-10-10T11:10:32.977583+00:00", null, null],
+  ["막창짬뽕", "중식", 3, 4, 4, 2, 3, 0, ["퇴근", "추운 날", "든든하게"], ["기본", "매운맛", "막창짬뽕밥"], 1, true, "2026-10-10T11:10:42.333037+00:00", null, null],
+  ["과일 모찌", "디저트·카페", 0, 1, 0, 4, 3, 2, ["카페·디저트"], ["딸기 모찌", "샤인머스캣 모찌", "귤 모찌", "키위 모찌"], 2, false, "2026-10-10T11:10:55.664025+00:00", null, null],
+  ["쑥라떼", "디저트·카페", 0, 1, 2, 4, 3, 3, ["카페·디저트"], ["기본", "아이스", "샷추가"], 1, false, "2026-10-10T11:11:19.829676+00:00", null, null],
+  ["밤파이", "디저트·카페", 0, 2, 2, 4, 3, 2, ["카페·디저트"], ["기본", "통밤파이", "치즈밤파이"], 1, false, "2026-10-10T11:11:39.686717+00:00", null, null],
 ];
 
 export const FOODS: Food[] = RAW.map(

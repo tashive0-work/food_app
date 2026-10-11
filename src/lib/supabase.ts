@@ -102,7 +102,14 @@ export async function logInteraction(
   diagnosisId: string | null,
   foodName: string,
   rank: number,
-  action: "view" | "recipe_click" | "map_click" | "like" | "dislike" | "favorite" | "unfavorite" | "search" | "ai_re_recommend" | "share"
+  action:
+    | "view" | "recipe_click" | "map_click" | "like" | "dislike"
+    | "favorite" | "unfavorite" | "search" | "ai_re_recommend" | "share"
+    // 룰렛 — roulette_spin 은 뽑힌 것, roulette_pick 은 실제로 고른 것.
+    // 둘을 나눠 둬야 「뽑혔는데 다시 돌린 메뉴」를 알 수 있습니다.
+    | "roulette_spin" | "roulette_pick"
+    // 지역 — 어느 지역을 많이 보는지 알아야 그 지역 메뉴를 더 채울지 판단할 수 있습니다
+    | "region_pick"
 ): Promise<void> {
   if (!supabase) {
     console.warn(`⚠️ [Supabase] Client not initialized. logInteraction('${action}') skipped.`);
